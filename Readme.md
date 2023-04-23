@@ -13,7 +13,7 @@ Provide a simple library with wrapper functions for the API provided by cdb. All
 
 ## Usage
 
-By way of example, to small application scripts are provided.
+By way of example, three small application scripts are provided.
 
 * `pgn2cdb`
 
