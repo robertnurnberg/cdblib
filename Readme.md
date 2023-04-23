@@ -9,7 +9,7 @@ Heavily inspired by, and based on, Joost VandeVondele's script
 
 ## Purpose
 
-Provide a simple library with wrapper functions for the API provided by cdb. All the wrapper functions will continuously query cdb until a satisfactory responce has been received.
+Provide a simple library with wrapper functions for the API of cdb. All the wrapper functions will continuously query cdb until a satisfactory response has been received.
 
 ## Usage
 
