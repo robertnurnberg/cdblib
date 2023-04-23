@@ -63,8 +63,7 @@ Monitor dynamic changes in a position's PV on chessdb.cn by polling it at regula
 
 options:
   -h, --help            show this help message and exit
-  --epd EPD             FEN/EPD of the position to monitor (default: rnbqkbnr/pppppppp/8/8/6P1/8/PPPPPP1P/RNBQKBNR b
-                        KQkq g3)
+  --epd EPD             FEN/EPD of the position to monitor (default: rnbqkbnr/pppppppp/8/8/6P1/8/PPPPPP1P/RNBQKBNR b KQkq g3)
   -s SLEEP, --sleep SLEEP
                         time interval between polling requests in seconds (default: 3600)
   --san                 give PV in short algebraic notation (SAN) (default: False)
