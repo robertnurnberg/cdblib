@@ -148,6 +148,7 @@ def json2eval(r):
     if "status" not in r: return ""
     if r["status"] == "checkmate": return "mated"
     if r["status"] == "stalemate": return 0
+    if r["status"] == "invalid board": return "invalid"
     if r["status"] != "ok": return ""
     if "moves" in r: return r["moves"][0]["score"]
     if "eval" in r: return r["eval"]
