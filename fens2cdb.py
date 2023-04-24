@@ -23,13 +23,13 @@ with open(args.filename) as f:
             pc = sum(p in "pnbrqk" for p in parts[0].lower())
             cf = (len(parts) >= 4 and parts[3] != "-" or
                   len(parts) >= 3 and parts[2] != "-")
-            if pc <= 7 and cf: # cdb uses 7men TBs, so no castling flags allowed
-                r = {}
-                score = f"{pc}men w/ castling flags"
-            else:
-                r = cdb.queryscore(fen)
-                if r.get("status") == "unknown": unknown += 1
-                score = cdblib.json2eval(r)
+            r = cdb.queryscore(fen)
+            score = cdblib.json2eval(r)
+            if r.get("status") == "unknown":
+                if pc <= 7 and cf: # 7men TB and castling flags
+                    score = f"{pc}men w/ castling flags"
+                else:
+                    unknown += 1
             if score != "" and args.verbose: 
                 if "ply" in r: score = f"{score}, ply: {r['ply']}"
                 score = f"cdb eval: {score}"
