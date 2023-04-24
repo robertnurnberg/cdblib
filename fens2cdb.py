@@ -12,18 +12,20 @@ args = parser.parse_args()
 cdb = cdblib.cdbAPI()
 unknown = 0
 with open(args.filename) as f:
-    for fen in f:
-        fen = fen.strip()
-        if fen:
-            if fen.startswith("#"): continue # ignore comments
-            fen, _, _ = fen.partition(";")   # ignore all beyond first ";"
+    for line in f:
+        line = line.strip()
+        if line:
+            if line.startswith("#"): # ignore comments
+                print(line)
+                continue
+            fen, _, _ = line.partition(";") # ignore all beyond first ";"
             r = cdb.queryscore(fen)
             if r.get("status") == "unknown": unknown += 1
             score = cdblib.json2eval(r)
             if score != "" and args.verbose: 
                 if "ply" in r: score = f"{score}, ply: {r['ply']}"
                 score = f"cdb eval: {score}"
-            print(f"{fen}; {score};")
+            print(f"{line}{';' if line[-1] != ';' else ''} {score};")
 
 if unknown:
     print(f"# The file {args.filename} contained {unknown} new chessdb.cn positions.")
