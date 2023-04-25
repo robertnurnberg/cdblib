@@ -22,7 +22,7 @@ class cdbAPI:
     def generic_call(self, action, fen):
         # action can be: "queryall", "querybest", "query", "querysearch", 
         #                "queryscore", "querypv", "queue"
-        # returns dict from API call to chessdb.cn with status guaranteed to 
+        # returns dict from API call to chessdb.cn with "status" guaranteed to
         # be one of: "ok", "checkmate", "stalemate", "unknown", "nobestmove",
         #            "invalid board" 
         api = "http://www.chessdb.cn/cdb.php"
@@ -89,9 +89,12 @@ class cdbAPI:
 
             elif content["status"] == "ok":
                 if ((action == "queryall" and "moves" not in content) 
-                 or (action == "querybest" and "move" not in content)
-                 or (action == "query" and "move" not in content)
-                 or (action == "querysearch" and "search_moves" not in content)
+                 or (action == "querybest" and "move" not in content
+                     and "egtb" not in content)
+                 or (action == "query" and "move" not in content
+                     and "egtb" not in content)
+                 or (action == "querysearch" and "search_moves" not in content
+                     and "egtb" not in content)
                  or (action == "queryscore" and "eval" not in content)
                  or (action == "querypv" and ("score" not in content or 
                                               "depth" not in content or 
@@ -119,15 +122,16 @@ class cdbAPI:
         return self.generic_call("queryall", fen)
 
     def querybest(self, fen):
-        # returns dictionary with keys "status" and "move"
+        # returns dictionary with keys "status" and either "move" or "egtb"
         return self.generic_call("querybest", fen)
 
     def query(self, fen):
-        # returns dictionary with keys "status" and "move"
+        # returns dictionary with keys "status" and either "move" or "egtb"
         return self.generic_call("query", fen)
 
     def querysearch(self, fen):
-        # returns dictionary with keys "status" and "search_moves"
+        # returns dictionary with keys "status" and either "search_moves" or
+        # "egtb"
         return self.generic_call("querysearch", fen)
 
     def queryscore(self, fen):
