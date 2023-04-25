@@ -40,16 +40,18 @@ options:
 A command line program to bulk-request evaluations from cdb for all the FENs/EPDs stored within a file.
 
 ```
-usage: fens2cdb.py [-h] [-v] filename
+usage: fens2cdb.py [-h] [--shortFormat] [--quiet] input [output]
 
-A simple script to request evals from chessdb.cn for a list of FENs/EPDs.
+A simple script to request evals from chessdb.cn for a list of FENs/EPDs stored in a file. The script will add "; EVALSTRING;" to every line containing a FEN. Lines beginning with "#" are ignored, as well as text after the first ";" on each line.
 
 positional arguments:
-  filename       text file with FENs/EPDs
+  input          source filename with FENs/EPDs
+  output         optional destination filename (default: None)
 
 options:
   -h, --help     show this help message and exit
-  -v, --verbose  increase output
+  --shortFormat  EVALSTRING is either just a number, or "#" for checkmate, or "". (default: False)
+  --quiet        Suppress all unnecessary output to the screen. (default: False)
 ``` 
 
 * `cdbpvpoll`
