@@ -143,12 +143,21 @@ class cdbAPI:
         return self.generic_call("queue", fen)
 
 def json2eval(r):
-    # turns a json responses from the API into an evaluation, where possible
-    # output: on success eval in cp as an int, otherwise "mated" or ""
+    # turns a json response from the API into an evaluation, if possible
+    # output: on success eval in cp as int, otherwise "mated", "invalid",
+    #         f"{pc}men w/ castling" or ""
     if "status" not in r: return ""
     if r["status"] == "checkmate": return "mated"
     if r["status"] == "stalemate": return 0
     if r["status"] == "invalid board": return "invalid"
+    if r["status"] == "unknown" and "fen" in r:
+        # 7men TB positions with castling flags will never get an eval
+        parts = r["fen"].split()
+        pc = sum(p in "pnbrqk" for p in parts[0].lower())
+        cf = (len(parts) >= 4 and parts[3] != "-" or
+              len(parts) >= 3 and parts[2] != "-")
+        if pc <= 7 and cf:
+            return f"{pc}men w/ castling"
     if r["status"] != "ok": return ""
     if "moves" in r: return r["moves"][0]["score"]
     if "eval" in r: return r["eval"]
@@ -156,7 +165,7 @@ def json2eval(r):
     return ""
 
 def json2pv(r, san=False):
-    # turns the PV from a json responses from the API into a string
+    # turns the PV from a json response from the API into a string
     # output: PV as a string, if possible, otherwise ""
     if "status" not in r: return ""
     if san:
