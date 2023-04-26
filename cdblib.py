@@ -6,6 +6,7 @@
 import requests, time
 from datetime import datetime
 
+
 class cdbAPI:
     def __init__(self):
         self.session = requests.Session()
@@ -20,11 +21,11 @@ class cdbAPI:
         return content
 
     def generic_call(self, action, fen):
-        # action can be: "queryall", "querybest", "query", "querysearch", 
+        # action can be: "queryall", "querybest", "query", "querysearch",
         #                "queryscore", "querypv", "queue"
         # returns dict from API call to chessdb.cn with "status" guaranteed to
         # be one of: "ok", "checkmate", "stalemate", "unknown", "nobestmove",
-        #            "invalid board" 
+        #            "invalid board"
         api = "http://www.chessdb.cn/cdb.php"
         timeout = 5
         success = False
@@ -88,18 +89,34 @@ class cdbAPI:
                 success = True
 
             elif content["status"] == "ok":
-                if ((action == "queryall" and "moves" not in content) 
-                 or (action == "querybest" and "move" not in content
-                     and "egtb" not in content)
-                 or (action == "query" and "move" not in content
-                     and "egtb" not in content)
-                 or (action == "querysearch" and "search_moves" not in content
-                     and "egtb" not in content)
-                 or (action == "queryscore" and "eval" not in content)
-                 or (action == "querypv" and ("score" not in content or 
-                                              "depth" not in content or 
-                                              "pv" not in content or
-                                              "pvSAN" not in content))):
+                if (
+                    (action == "queryall" and "moves" not in content)
+                    or (
+                        action == "querybest"
+                        and "move" not in content
+                        and "egtb" not in content
+                    )
+                    or (
+                        action == "query"
+                        and "move" not in content
+                        and "egtb" not in content
+                    )
+                    or (
+                        action == "querysearch"
+                        and "search_moves" not in content
+                        and "egtb" not in content
+                    )
+                    or (action == "queryscore" and "eval" not in content)
+                    or (
+                        action == "querypv"
+                        and (
+                            "score" not in content
+                            or "depth" not in content
+                            or "pv" not in content
+                            or "pvSAN" not in content
+                        )
+                    )
+                ):
                     lasterror = "Unexpectedly missing keys"
                     continue
                 else:
@@ -112,12 +129,12 @@ class cdbAPI:
                 lasterror = f"Surprise reply with status = {content['status']}"
                 continue
 
-        content["fen"] = fen # add "fen" key to dict, used e.g. for PV SAN
+        content["fen"] = fen  # add "fen" key to dict, used e.g. for PV SAN
         return content
 
     def queryall(self, fen):
         # returns dictionary with keys "status", "moves" and "ply" where
-        # "moves" is a sorted list of dict's with keys "uci", "san", "score", 
+        # "moves" is a sorted list of dict's with keys "uci", "san", "score",
         # "rank", "note" and "winrate" (sorted by eval and rank)
         return self.generic_call("queryall", fen)
 
@@ -146,46 +163,61 @@ class cdbAPI:
         # returns dict with key "status"
         return self.generic_call("queue", fen)
 
+
 def json2eval(r):
     # turns a json response from the API into an evaluation, if possible
     # output: on success eval in cp as int, otherwise "mated", "invalid",
     #         f"{pc}men w/ castling" or ""
-    if "status" not in r: return ""
-    if r["status"] == "checkmate": return "mated"
-    if r["status"] == "stalemate": return 0
-    if r["status"] == "invalid board": return "invalid"
+    if "status" not in r:
+        return ""
+    if r["status"] == "checkmate":
+        return "mated"
+    if r["status"] == "stalemate":
+        return 0
+    if r["status"] == "invalid board":
+        return "invalid"
     if r["status"] == "unknown" and "fen" in r:
         # 7men TB positions with castling flags will never get an eval
         parts = r["fen"].split()
         pc = sum(p in "pnbrqk" for p in parts[0].lower())
-        cf = (len(parts) >= 4 and parts[3] != "-" or
-              len(parts) >= 3 and parts[2] != "-")
+        cf = len(parts) >= 4 and parts[3] != "-" or len(parts) >= 3 and parts[2] != "-"
         if pc <= 7 and cf:
             return f"{pc}men w/ castling"
-    if r["status"] != "ok": return ""
-    if "moves" in r: return r["moves"][0]["score"]
-    if "eval" in r: return r["eval"]
-    if "score" in r: return r["score"]
+    if r["status"] != "ok":
+        return ""
+    if "moves" in r:
+        return r["moves"][0]["score"]
+    if "eval" in r:
+        return r["eval"]
+    if "score" in r:
+        return r["score"]
     return ""
+
 
 def json2pv(r, san=False):
     # turns the PV from a json response from the API into a string
     # output: PV as a string, if possible, otherwise ""
-    if "status" not in r: return ""
+    if "status" not in r:
+        return ""
     if san:
-        if "pvSAN" not in r: return ""
+        if "pvSAN" not in r:
+            return ""
         if "fen" in r:
-            _, _, side = r["fen"].partition(" ") # side to move for numbering
-            if side[0] == "w": ply, s = 1, "" 
-            else: ply, s = 2, "1.."
+            _, _, side = r["fen"].partition(" ")  # side to move for numbering
+            if side[0] == "w":
+                ply, s = 1, ""
+            else:
+                ply, s = 2, "1.."
             for m in r["pvSAN"]:
-                if ply % 2 == 1: s += f"{(ply+1)//2}. "
+                if ply % 2 == 1:
+                    s += f"{(ply+1)//2}. "
                 s += m + " "
                 ply += 1
-        else: # without the fen we do not know if white or black to move
+        else:  # without the fen we do not know if white or black to move
             s = " ".join(tuple(r["pvSAN"]))
         return s
     else:
-        if "pv" not in r: return ""
+        if "pv" not in r:
+            return ""
         s = " ".join(tuple(r["pv"]))
         return s
