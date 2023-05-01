@@ -42,7 +42,7 @@ parser.add_argument(
     "--backtrack",
     type=int,
     default=0,
-    help="The number of plies to walk back from newly the created leaf towards the root, queuing each position on the way for analysis.",
+    help="The number of plies to walk back from the newly created leaf towards the root, queuing each position on the way for analysis.",
 )
 parser.add_argument(
     "--forever",

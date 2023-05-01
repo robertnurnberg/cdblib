@@ -40,7 +40,7 @@ options:
   -v, --verbose         Increase output with -v, -vv, -vvv etc. (default: 0)
   --moveTemp MOVETEMP   Temperature T for move selection: in each node of the tree the probability to pick a move m will be proportional to exp((eval(m)-eval(bestMove))/T). If T is zero, then always select the best move. (default: 10)
   --backtrack BACKTRACK
-                        The number of plies to walk back from newly the created leaf towards the root, queuing each position on the way for analysis. (default: 0)
+                        The number of plies to walk back from the newly created leaf towards the root, queuing each position on the way for analysis. (default: 0)
   --forever             Run the script in an infinite loop. (default: False)
 ```
 
