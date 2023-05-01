@@ -15,11 +15,34 @@ Provide a simple library with wrapper functions for the API of cdb. All the wrap
 
 By way of example, three small application scripts are provided.
 
+* [`cdbwalk`](#cdbwalk) - walk through cdb towards the leafs, extending existing lines
 * [`pgn2cdb`](#pgn2cdb) - populate cdb with moves from games in a PGN
 * [`fens2cdb`](#fens2cdb) - request evaluations from cdb for FENs stored in a file
 * [`cdbpvpoll`](#cdbpvpoll) - monitor a position's PV on cdb over time
 
 ---
+
+### `cdbwalk`
+
+A command line program to walk within the tree of cdb, starting from (opening) lines given in a PGN file, possibly extending the explored line with cdb by one ply.
+
+```
+usage: cdbwalk.py [-h] [-v] [--moveTemp MOVETEMP] [--backtrack BACKTRACK] [--forever] filename
+
+A script that walks within the chessdb.cn tree, starting from lines in a pgn file. Based on the given parameters, the script selects a move in
+each node, walking towards the leafs. Once an unknown position is reached, it is queued for analysis and the walk terminates.
+
+positional arguments:
+  filename              pgn file
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         Increase output with -v, -vv, -vvv etc. (default: 0)
+  --moveTemp MOVETEMP   Temperature T for move selection: in each node of the tree the probability to pick a move m will be proportional to exp((eval(m)-eval(bestMove))/T). If T is zero, then always select the best move. (default: 10)
+  --backtrack BACKTRACK
+                        The number of plies to walk back from newly the created leaf towards the root, queuing each position on the way for analysis. (default: 0)
+  --forever             Run the script in an infinite loop. (default: False)
+```
 
 ### `pgn2cdb`
 
