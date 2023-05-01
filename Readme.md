@@ -13,7 +13,7 @@ Provide a simple library with wrapper functions for the API of cdb. All the wrap
 
 ## Usage
 
-By way of example, three small application scripts are provided.
+By way of example, four small application scripts are provided.
 
 * [`cdbwalk`](#cdbwalk) - walk through cdb towards the leafs, extending existing lines
 * [`pgn2cdb`](#pgn2cdb) - populate cdb with moves from games in a PGN
