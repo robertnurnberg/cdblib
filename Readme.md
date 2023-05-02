@@ -22,7 +22,7 @@ By way of example, four small application scripts are provided.
 
 ### `cdbwalk`
 
-A command line program to walk within the tree of cdb, starting from (opening) lines given in a PGN file, possibly extending the explored line with cdb by one ply.
+A command line program to walk within the tree of cdb, starting from the (opening) lines given in a PGN file, possibly extending each explored line within cdb by one ply.
 
 ```
 usage: cdbwalk.py [-h] [-v] [--moveTemp MOVETEMP] [--backtrack BACKTRACK] [--forever] filename
@@ -40,6 +40,22 @@ options:
   --backtrack BACKTRACK
                         The number of plies to walk back from the newly created leaf towards the root, queuing each position on the way for analysis. (default: 0)
   --forever             Run the script in an infinite loop. (default: False)
+```
+
+Sample usage and output:
+```
+> python cdbwalk.py TCEC_S24_sufi_book.pgn -v
+Read 50 (opening) lines from file TCEC_S24_sufi_book.pgn.
+Line 1/50: 1. e4 e5 2. d4 exd4 3. Qxd4 Nc6 4. Qe3 g6 5. Bd2 Bg7 6. Nc3 Nge7 (50cp) 7. O-O-O d6 8. Qe1 O-O 9. h4 h5 10. f3 b5 11. Bxb5 Nd4 12. g4 Nxb5 13. Nxb5 Rb8 14. Nc3 c5 15. Bg5 hxg4
+Line 2/50: 1. e4 c5 2. Nf3 d6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 a6 6. f3 e6 7. Be3 b5 8. Qd2 Bb7 9. g4 h6 10. O-O-O Nbd7 (104cp) 11. h4 b4 12. Na4 Qa5 13. b3 Nc5 14. a3 Qc7 15. axb4 Nxa4 16. bxa4 d5 17. e5 Nd7 18. f4 Nb6 19. Rh3 Nc4 20. Qc3 Qd7 21. Bxc4 Rc8 22. Ne2 Rxc4 23. Qxc4 dxc4 24. Rxd7 Kxd7 25. c3 f6 26. Bd4 Rg8 27. Kd2 Ba8 28. Ke3
+.
+.
+.
+Line 50/50: 1. d4 Nf6 2. c4 e6 3. Nf3 Bb4+ 4. Bd2 a5 5. Qc2 d5 6. e3 O-O 7. Bd3 Nc6 8. a3 Bxd2+ 9. Nbxd2 Ne7 (106cp) 10. g4 c5 11. dxc5 Kh8 12. g5 Nd7 13. cxd5 exd5 14. h4 b6 15. c6 Nc5 16. Nd4 f6 17. h5 a4 18. O-O-O fxg5 19. h6 g6 20. Kb1 
+Done processing TCEC_S24_sufi_book.pgn.
+
+> date
+Tue  2 May 10:22:59 CEST 2023
 ```
 
 ### `pgn2cdb`
