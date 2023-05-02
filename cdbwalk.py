@@ -53,7 +53,7 @@ args = parser.parse_args()
 verbose = args.verbose
 cdb = cdblib.cdbAPI()
 while True:  # if args.forever is true, run indefinitely; o/w stop after one run
-    pgn = open(args.filename)
+    pgn = open(args.filename)  # re-reading in each loop allows updates in background
     gamelist = []
     while game := chess.pgn.read_game(pgn):
         gamelist.append(game)
