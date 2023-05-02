@@ -142,7 +142,7 @@ Thu 27 Apr 15:53:13 CEST 2023
 
 ### `fens2cdb`
 
-A command line program to bulk-request evaluations from cdb for all the FENs/EPDs stored within a file.
+A command line program to bulk-request evaluations from cdb for all the FENs/EPDs stored within a file. Note that this script is extremely slow for now, and much faster alternatives are available at [dubslow/NoobChessDBPy](https://github.com/dubslow/NoobChessDBPy).
 
 ```
 usage: fens2cdb.py [-h] [--shortFormat] [--quiet] input [output]
@@ -158,6 +158,14 @@ options:
   --shortFormat  EVALSTRING is either just a number, or "#" for checkmate, or "". (default: False)
   --quiet        Suppress all unnecessary output to the screen. (default: False)
 ``` 
+
+Sample usage and output:
+```
+> sed -i 's/ bm/; bm/' ChestUCI_23102018.epd
+> python fens2cdb.py ChestUCI_23102018.epd > ChestUCI_23102018_cdbeval.epd
+FENs loaded...
+Done. Scored 6566 FENs in 2816.6s.
+```
 
 ### `cdbpvpoll`
 
