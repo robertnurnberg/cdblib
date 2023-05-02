@@ -196,6 +196,7 @@ Sample usage and output:
 # <a id="other"></a>Other repositories related to cdb
 
 * [noobpwnftw/chessdb](https://github.com/noobpwnftw/chessdb) - the backend of [chessdb.cn](https://chessdb.cn/queryc_en/)
+* [dav1312/ChessDB-Online-Book](https://github.com/dav1312/ChessDB-Online-Book) - backend for [ChessDB-Online-Book](https://dav1312.github.io/ChessDB-Online-Book/), a very nice GUI to interact with cdb
 * [vondele/cdbexplore](https://github.com/vondele/cdbexplore) - search and explore cdb from a given position, building a local search tree using a mini-max like algorithm
 * [dubslow/NoobChessDBPy](https://github.com/dubslow/NoobChessDBPy) - extremely fast bulk-queries to cdb, including breadth-first traversal of the tree with filtering options
 * [robertnurnberg/grobtrack](https://github.com/robertnurnberg/grobtrack) - monitor cdb's eval and PV for 1. g4 over time
