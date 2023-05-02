@@ -1,11 +1,9 @@
 # Library with wrapper functions for the chessdb.cn API
 
-Allows to conveniently use the API of the Chess Cloud Database (cdb), the largest online database of chess positions and openings, from within Python:
+The library `cdblib.py` allows to conveniently use the API of the Chess Cloud Database [chessdb.cn](https://chessdb.cn/queryc_en/) (cdb), the largest online database of chess positions and openings, from within Python.
 
-[chessdb](https://chessdb.cn/queryc_en/)
-
-Heavily inspired by, and based on, Joost VandeVondele's script
-[cdbexplore](https://github.com/vondele/cdbexplore).
+The library is heavily inspired by, and originally based on, Joost VandeVondele's script
+[cdbexplore](https://github.com/vondele/cdbexplore). See also [below](#other) for other repositories relevant for the interaction with cdb.
 
 ## Purpose
 
@@ -169,5 +167,13 @@ Sample usage and output:
   2023-04-28T19:04:23.983954:  126cp -- d7d5 e2e3 e7e5 d2d4 b8c6 b1c3 c8e6 d4e5 c6e5 h2h3 h7h5 g1f3 e5f3 d1f3 h5g4 h3g4 e6g4 f3g2 h8h1 g2h1 g8f6 c1d2 d8d6 c3b5 d6b6 f2f3 a7a6 b5c3 g4f5 e1c1 e8c8 c1b1 c8b8 d2c1 f8b4 c3e2 d8e8 h1h4 b4e7 h4g3 g7g6 f1h3 f5h3 g3h3 e7c5 e2d4 b6d6 a2a4 d6e5 d1d3 e5h5 h3g2 c5b6 d3d1 b8c8 d1h1 h5e5 h1h4 e5d6 c1d2 c8b8 g2h3 c7c5 d4b3 f6h5 h3g4 d6c6
 ```
 
+---
+&nbsp;
+# <a id="other"></a>Other repositories related to cdb
+
+* [noobpwnftw/chessdb](https://github.com/noobpwnftw/chessdb) - the backend of [chessdb.cn](https://chessdb.cn/queryc_en/)
+* [vondele/cdbexplore](https://github.com/vondele/cdbexplore) - search and explore cdb from a given position, building a local search tree using a mini-max like algorithm
+* [dubslow/NoobChessDBPy](https://github.com/dubslow/NoobChessDBPy) - extremely fast bulk-queries to cdb, including breadth-first traversal of the tree with filtering options
+* [robertnurnberg/grobtrack](https://github.com/robertnurnberg/grobtrack) - monitor cdb's eval and PV for 1. g4 over time
 ---
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
