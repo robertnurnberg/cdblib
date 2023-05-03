@@ -61,7 +61,7 @@ Tue  2 May 10:22:59 CEST 2023
 ### `pgn2cdb`
 
 A command line program to populate cdb with moves from games stored in a PGN
-file, up to a desired depth.
+file, up to a desired depth. Note that this script is very slow, and much faster alternatives are available at [dubslow/NoobChessDBPy](https://github.com/dubslow/NoobChessDBPy).
 
 ```
 usage: pgn2cdb.py [-h] [-v] [-d DEPTH] filename
