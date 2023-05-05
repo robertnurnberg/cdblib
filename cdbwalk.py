@@ -73,6 +73,7 @@ while True:  # if args.forever is true, run indefinitely; o/w stop after one run
             print(f"Line {i+1}/{gn}", end=": ")
             print(gamelist[i].mainline_moves(), end=" (")
             print(f"{score}{'cp' if type(score) is int else ''})", end=" ")
+            url = "https://chessdb.cn/queryc_en/?" + board.epd()
         ply0 = len(list(gamelist[i].mainline_moves()))
         ply = ply0
         while "moves" in r and ply - ply0 < args.depthLimit:
@@ -82,6 +83,9 @@ while True:  # if args.forever is true, run indefinitely; o/w stop after one run
                 if board.turn == chess.WHITE:
                     print(f"{(ply+2) // 2}.", end=" ")
                 print(board.san(move), end=" ")
+                if ply == ply0:
+                    url += " moves"
+                url += " " + m
             board.push(move)
             ply += 1
             if board.can_claim_draw() or board.is_insufficient_material():
@@ -91,7 +95,7 @@ while True:  # if args.forever is true, run indefinitely; o/w stop after one run
             else:
                 r = cdb.queryall(board.fen())
         if verbose >= 3:
-            print("\n  Final fen =", board.fen(), end="")
+            print("\n  URL:", url.replace(" ", "_"), end="")
         if verbose >= 2:
             print(f"\n  Ply queued for analysis: {ply}", end="")
         bt = 0
