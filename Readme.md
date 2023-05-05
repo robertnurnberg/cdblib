@@ -25,10 +25,9 @@ By way of example, four small application scripts are provided.
 A command line program to walk within the tree of cdb, starting from the (opening) lines given in a PGN file, possibly extending each explored line within cdb by one ply.
 
 ```
-usage: cdbwalk.py [-h] [-v] [--moveTemp MOVETEMP] [--backtrack BACKTRACK] [--forever] filename
+usage: cdbwalk.py [-h] [-v] [--moveTemp MOVETEMP] [--backtrack BACKTRACK] [--depthLimit DEPTHLIMIT] [--forever] filename
 
-A script that walks within the chessdb.cn tree, starting from lines in a pgn file. Based on the given parameters, the script selects a move in
-each node, walking towards the leafs. Once an unknown position is reached, it is queued for analysis and the walk terminates.
+A script that walks within the chessdb.cn tree, starting from lines in a pgn file. Based on the given parameters, the script selects a move in each node, walking towards the leafs. Once an unknown position is reached, it is queued for analysis and the walk terminates.
 
 positional arguments:
   filename              pgn file
@@ -39,6 +38,8 @@ options:
   --moveTemp MOVETEMP   Temperature T for move selection: in each node of the tree the probability to pick a move m will be proportional to exp((eval(m)-eval(bestMove))/T). If T is zero, then always select the best move. (default: 10)
   --backtrack BACKTRACK
                         The number of plies to walk back from the newly created leaf towards the root, queuing each position on the way for analysis. (default: 0)
+  --depthLimit DEPTHLIMIT
+                        The upper limit of plies the walk is allowed to last. (default: 200)
   --forever             Run the script in an infinite loop. (default: False)
 ```
 

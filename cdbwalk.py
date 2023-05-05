@@ -46,7 +46,7 @@ parser.add_argument(
 )
 parser.add_argument(
     "--depthLimit",
-    help="Terminate the walk at the latest after the specified number of steps.",
+    help="The upper limit of plies the walk is allowed to last.",
     type=int,
     default=200,
 )
