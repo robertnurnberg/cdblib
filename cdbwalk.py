@@ -77,8 +77,6 @@ while True:  # if args.forever is true, run indefinitely; o/w stop after one run
         ply = ply0
         while "moves" in r and ply - ply0 < args.depthLimit:
             m = select_move(r["moves"], temp=args.moveTemp)
-            if not m:
-                break
             move = chess.Move.from_uci(m)
             if verbose:
                 if board.turn == chess.WHITE:
@@ -86,7 +84,12 @@ while True:  # if args.forever is true, run indefinitely; o/w stop after one run
                 print(board.san(move), end=" ")
             board.push(move)
             ply += 1
-            r = cdb.queryall(board.fen())
+            if board.can_claim_draw() or board.is_insufficient_material():
+                r = {}
+                if verbose:
+                    print("1/2 - 1/2", end="")
+            else:
+                r = cdb.queryall(board.fen())
         if verbose >= 3:
             print("\n  Final fen =", board.fen(), end="")
         if verbose >= 2:
