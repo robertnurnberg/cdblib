@@ -45,6 +45,12 @@ parser.add_argument(
     help="The number of plies to walk back from the newly created leaf towards the root, queuing each position on the way for analysis.",
 )
 parser.add_argument(
+    "--depthLimit",
+    help="Terminate the walk at the latest after the specified number of steps.",
+    type=int,
+    default=200,
+)
+parser.add_argument(
     "--forever",
     action="store_true",
     help="Run the script in an infinite loop.",
@@ -67,8 +73,9 @@ while True:  # if args.forever is true, run indefinitely; o/w stop after one run
             print(f"Line {i+1}/{gn}", end=": ")
             print(gamelist[i].mainline_moves(), end=" (")
             print(f"{score}{'cp' if type(score) is int else ''})", end=" ")
-        ply = len(list(gamelist[i].mainline_moves()))
-        while "moves" in r:
+        ply0 = len(list(gamelist[i].mainline_moves()))
+        ply = ply0
+        while "moves" in r and ply - ply0 < args.depthLimit:
             m = select_move(r["moves"], temp=args.moveTemp)
             if not m:
                 break
