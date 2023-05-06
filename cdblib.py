@@ -207,7 +207,7 @@ def json2pv(r, san=False):
             if side[0] == "w":
                 ply, s = 1, ""
             else:
-                ply, s = 2, "1.."
+                ply, s = 2, "1..."
             for m in r["pvSAN"]:
                 if ply % 2 == 1:
                     s += f"{(ply+1)//2}. "
