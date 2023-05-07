@@ -95,6 +95,7 @@ class cdbAPI:
                         action == "querybest"
                         and "move" not in content
                         and "egtb" not in content
+                        and "search_moves" not in content
                     )
                     or (
                         action == "query"
@@ -180,7 +181,7 @@ def json2eval(r):
         # 7men TB positions with castling flags will never get an eval
         parts = r["fen"].split()
         pc = sum(p in "pnbrqk" for p in parts[0].lower())
-        cf = len(parts) >= 4 and parts[3] != "-" or len(parts) >= 3 and parts[2] != "-"
+        cf = len(parts) >= 3 and parts[2] != "-"
         if pc <= 7 and cf:
             return f"{pc}men w/ castling"
     if r["status"] != "ok":
