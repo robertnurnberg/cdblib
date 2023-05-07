@@ -86,7 +86,7 @@ for i in reversed(range(gn)):
             print(f"    Position at depth {plies} is checkmate or stalemate.")
         board.pop()
         plies -= 1
-    r = db.get(board.fen())
+    r = db.get(board.epd())
     cdbply = r.get("ply", -1)
     if r["status"] == "ok":
         seen += 1
@@ -107,14 +107,14 @@ for i in reversed(range(gn)):
         if r["status"] == "unknown":
             if not new_fens and args.verbose >= 2:
                 print(f"    Queueing new positions from ply {plies} ... ")
-            db.queue(board.fen())
+            db.queue(board.epd())
             new_fens = True
         elif new_fens:
             if args.verbose >= 2:
                 print(f"    Queued new positions until ply {plies+1}.")
             new_fens = False
         move = board.pop()
-        r = db.get(board.fen())
+        r = db.get(board.epd())
         cdbply = r.get("ply", -1)
         plies -= 1
         if args.verbose >= 4:
