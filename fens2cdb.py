@@ -1,18 +1,18 @@
 """
-   Script to bulk-evaluate FENs/EPDs with chessdb.cn.
+   Script to bulk-evaluate FENs with chessdb.cn.
 """
 import argparse, sys, time, cdblib
 
 parser = argparse.ArgumentParser(
-    description='A simple script to request evals from chessdb.cn for a list of FENs/EPDs stored in a file. The script will add "; EVALSTRING;" to every line containing a FEN. Lines beginning with "#" are ignored, as well as text after the first ";" on each line.',
+    description='A simple script to request evals from chessdb.cn for a list of FENs stored in a file. The script will add "; EVALSTRING;" to every line containing a FEN. Lines beginning with "#" are ignored, as well as any text after the first four fields of each FEN.',
     formatter_class=argparse.ArgumentDefaultsHelpFormatter,
 )
-parser.add_argument("input", help="source filename with FENs/EPDs")
+parser.add_argument("input", help="source filename with FENs (w/ or w/o move counters)")
 parser.add_argument("output", nargs="?", help="optional destination filename")
 parser.add_argument(
     "--shortFormat",
     action="store_true",
-    help='EVALSTRING is either just a number, or "#" for checkmate, or "".',
+    help='EVALSTRING will be just a number, or "#" for checkmate, or "".',
 )
 parser.add_argument(
     "--quiet",
@@ -44,7 +44,7 @@ for line in lines:
         if line.startswith("#"):  # ignore comments
             print(line, file=output)
             continue
-        fen, _, _ = line.partition(";")  # ignore all beyond first ";"
+        fen = " ".join(line.split()[:4])  # cdb ignores move counters anyway
         r = cdb.queryscore(fen)
         score = cdblib.json2eval(r)
         if r.get("status") == "unknown" and score == "":
