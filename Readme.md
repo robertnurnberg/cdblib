@@ -22,15 +22,15 @@ By way of example, four small application scripts are provided.
 
 ### `cdbwalk`
 
-A command line program to walk within the tree of cdb, starting from the (opening) lines given in a PGN file, possibly extending each explored line within cdb by one ply.
+A command line program to walk within the tree of cdb, starting either from a list of FENs or from the (opening) lines given in a PGN file, possibly extending each explored line within cdb by one ply.
 
 ```
 usage: cdbwalk.py [-h] [-v] [--moveTemp MOVETEMP] [--backtrack BACKTRACK] [--depthLimit DEPTHLIMIT] [--forever] filename
 
-A script that walks within the chessdb.cn tree, starting from lines in a pgn file. Based on the given parameters, the script selects a move in each node, walking towards the leafs. Once an unknown position is reached, it is queued for analysis and the walk terminates.
+A script that walks within the chessdb.cn tree, starting from FENs or lines in a PGN file. Based on the given parameters, the script selects a move in each node, walking towards the leafs. Once an unknown position is reached, it is queued for analysis and the walk terminates.
 
 positional arguments:
-  filename              pgn file
+  filename              PGN file if suffix is .pgn, o/w a text file with FENs
 
 options:
   -h, --help            show this help message and exit
