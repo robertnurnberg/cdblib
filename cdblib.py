@@ -94,12 +94,13 @@ class cdbAPI:
                     or (
                         action == "querybest"
                         and "move" not in content
-                        and "egtb" not in content
                         and "search_moves" not in content
+                        and "egtb" not in content
                     )
                     or (
                         action == "query"
                         and "move" not in content
+                        and "search_moves" not in content
                         and "egtb" not in content
                     )
                     or (
@@ -140,11 +141,11 @@ class cdbAPI:
         return self.generic_call("queryall", fen)
 
     def querybest(self, fen):
-        # returns dictionary with keys "status" and either "move" or "egtb"
+        # returns dictionary with keys "status" and either "move", "search_moves or "egtb"
         return self.generic_call("querybest", fen)
 
     def query(self, fen):
-        # returns dictionary with keys "status" and either "move" or "egtb"
+        # returns dictionary with keys "status" and either "move", "search_moves or "egtb"
         return self.generic_call("query", fen)
 
     def querysearch(self, fen):
