@@ -10,8 +10,16 @@ def select_move(movelist, temp):
     # in the argument (score - bestscore) / temp
     if temp <= 0:  # return best move if temp <= 0
         return movelist[0]["uci"]
-    best = int(movelist[0]["score"])
-    weights = [math.exp((int(m["score"]) - best) / temp) for m in movelist]
+    weights = []
+    first, score = True, 0
+    for m in movelist:
+        if (
+            "score" in m and type(m["score"]) == int
+        ):  # if e.g. m["score"] == "??", then use score from previous move
+            score = m["score"]
+        if first:
+            first, best = False, score
+        weights.append(math.exp((score - best) / temp))
     p = random.random() * sum(weights)
     wsum = 0
     for i, m in enumerate(movelist):
@@ -21,10 +29,12 @@ def select_move(movelist, temp):
 
 
 parser = argparse.ArgumentParser(
-    description="A script that walks within the chessdb.cn tree, starting from lines in a pgn file. Based on the given parameters, the script selects a move in each node, walking towards the leafs. Once an unknown position is reached, it is queued for analysis and the walk terminates.",
+    description="A script that walks within the chessdb.cn tree, starting from FENs or lines in a PGN file. Based on the given parameters, the script selects a move in each node, walking towards the leafs. Once an unknown position is reached, it is queued for analysis and the walk terminates.",
     formatter_class=argparse.ArgumentDefaultsHelpFormatter,
 )
-parser.add_argument("filename", help="pgn file")
+parser.add_argument(
+    "filename", help="PGN file if suffix is .pgn, o/w a text file with FENs"
+)
 parser.add_argument(
     "-v",
     "--verbose",
@@ -57,24 +67,51 @@ parser.add_argument(
 )
 args = parser.parse_args()
 verbose = args.verbose
+isPGN = args.filename.endswith(".pgn")
 cdb = cdblib.cdbAPI()
 while True:  # if args.forever is true, run indefinitely; o/w stop after one run
-    pgn = open(args.filename)  # re-reading in each loop allows updates in background
-    gamelist = []
-    while game := chess.pgn.read_game(pgn):
-        gamelist.append(game)
-    gn, seen = len(gamelist), 0
-    print(f"Read {gn} (opening) lines from file {args.filename}.")
+    # re-reading the data in each loop allows updates to it in the background
+    metalist = []
+    if isPGN:
+        pgn = open(args.filename)
+        while game := chess.pgn.read_game(pgn):
+            metalist.append(game)
+        print(f"Read {len(metalist)} (opening) lines from file {args.filename}.")
+    else:
+        with open(args.filename) as f:
+            for line in f:
+                line = line.strip()
+                if line:
+                    if line.startswith("#"):  # ignore comments
+                        continue
+                    fen = " ".join(line.split()[:4])  # cdb ignores move counters anyway
+                    metalist.append(fen)
+        print(f"Read {len(metalist)} FENs from file {args.filename}.")
+    gn, seen = len(metalist), 0
     for i in range(gn):
-        board = gamelist[i].end().board()
-        r = cdb.queryall(board.fen())
+        if isPGN:
+            board = metalist[i].end().board()
+        else:
+            board = chess.Board(metalist[i])
+        r = cdb.queryall(board.epd())
         score = cdblib.json2eval(r)
         if verbose:
-            print(f"Line {i+1}/{gn}", end=": ")
-            print(gamelist[i].mainline_moves(), end=" (")
+            if isPGN:
+                print(f"Line {i+1}/{gn}", end=": ")
+                print(metalist[i].mainline_moves(), end=" (")
+            else:
+                print(f"FEN {i+1}/{gn}: {board.epd()}", end=" (")
             print(f"{score}{'cp' if type(score) is int else ''})", end=" ")
-            url = "https://chessdb.cn/queryc_en/?" + board.epd()
-        ply0 = len(list(gamelist[i].mainline_moves()))
+            url = f"https://chessdb.cn/queryc_en/?{board.epd()}"
+        if isPGN:
+            ply0 = len(list(metalist[i].mainline_moves()))
+        else:
+            if board.turn == chess.WHITE:
+                ply0 = 0
+            else:
+                ply0 = 1
+                if verbose:
+                    print(f"1...", end=" ")
         ply = ply0
         while "moves" in r and ply - ply0 < args.depthLimit:
             m = select_move(r["moves"], temp=args.moveTemp)
@@ -93,14 +130,14 @@ while True:  # if args.forever is true, run indefinitely; o/w stop after one run
                 if verbose:
                     print("1/2 - 1/2", end="")
             else:
-                r = cdb.queryall(board.fen())
+                r = cdb.queryall(board.epd())
         if verbose >= 3:
             print("\n  URL:", url.replace(" ", "_"), end="")
         if verbose >= 2:
             print(f"\n  Ply queued for analysis: {ply}", end="")
         bt = 0
         while bt < args.backtrack and bt < ply:
-            cdb.queue(board.fen())
+            cdb.queue(board.epd())
             board.pop()
             bt += 1
         if bt and verbose >= 2:
