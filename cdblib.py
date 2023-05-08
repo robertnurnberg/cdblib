@@ -20,12 +20,9 @@ class cdbAPI:
             content = None
         return content
 
-    def generic_call(self, action, fen):
-        # action can be: "queryall", "querybest", "query", "querysearch",
-        #                "queryscore", "querypv", "queue"
-        # returns dict from API call to chessdb.cn with "status" guaranteed to
-        # be one of: "ok", "checkmate", "stalemate", "unknown", "nobestmove",
-        #            "invalid board"
+    def generic_call(self, action, fen, optionString=""):
+        # action can be: "queryall", "querybest", "query", "querysearch", "queryscore", "querypv", "queue"
+        # returns dict from API call to chessdb.cn with "status" guaranteed to be one of: "ok", "checkmate", "stalemate", "unknown", "nobestmove", "invalid board"
         api = "http://www.chessdb.cn/cdb.php"
         timeout = 5
         success = False
@@ -51,11 +48,11 @@ class cdbAPI:
             else:
                 first = False
 
-            url = api + f"?action={action}&board={fen}&json=1"
+            url = api + f"?action={action}&board={fen}{optionString}&json=1"
             content = self.__apicall(url, timeout)
 
             if content is None:
-                lasterror = f"Something went wrong with {action}"
+                lasterror = f"Something went wrong with {action}{optionString}"
                 continue
 
             elif action == "queue" and content == {}:
@@ -135,26 +132,27 @@ class cdbAPI:
         return content
 
     def queryall(self, fen):
-        # returns dictionary with keys "status", "moves" and "ply" where
-        # "moves" is a sorted list of dict's with keys "uci", "san", "score",
-        # "rank", "note" and "winrate" (sorted by eval and rank)
+        # returns dict with keys "status", "moves" and "ply" where "moves" is a sorted list of dict's with keys "uci", "san", "score", "rank", "note" and "winrate" (sorted by eval and rank)
         return self.generic_call("queryall", fen)
 
+    def showall(self, fen):
+        # same as querall, but returns _all_ possible moves, with "??" for score of unscored moves
+        return self.generic_call("queryall", fen, "&showall=1")
+
     def querybest(self, fen):
-        # returns dictionary with keys "status" and either "move", "search_moves or "egtb"
+        # returns one of the rank == 2 moves in a dict with keys "status" and either "move", "search_moves or "egtb"
         return self.generic_call("querybest", fen)
 
     def query(self, fen):
-        # returns dictionary with keys "status" and either "move", "search_moves or "egtb"
+        # returns one of the rank > 0 moves in a dict with keys "status" and either "move", "search_moves or "egtb"
         return self.generic_call("query", fen)
 
     def querysearch(self, fen):
-        # returns dictionary with keys "status" and either "search_moves" or
-        # "egtb"
+        # returns all of the rank > 0 moves in a dict with keys "status" and either "search_moves" or "egtb"
         return self.generic_call("querysearch", fen)
 
     def queryscore(self, fen):
-        # returns dictionary with keys "status", "eval", "ply"
+        # returns dict with keys "status", "eval", "ply"
         return self.generic_call("queryscore", fen)
 
     def querypv(self, fen):
@@ -168,8 +166,7 @@ class cdbAPI:
 
 def json2eval(r):
     # turns a json response from the API into an evaluation, if possible
-    # output: on success eval in cp as int, otherwise "mated", "invalid",
-    #         f"{pc}men w/ castling" or ""
+    # output: on success eval in cp as int, otherwise "mated", "invalid", f"{pc}men w/ castling" or ""
     if "status" not in r:
         return ""
     if r["status"] == "checkmate":
