@@ -6,8 +6,7 @@ import chess, chess.pgn, cdblib
 
 
 def select_move(movelist, temp):
-    # select a random move from movelist, using an exponential distribution
-    # in the argument (score - bestscore) / temp
+    # select a random move from movelist, using an exponential distribution in the argument (score - bestscore) / temp
     if temp <= 0:  # return best move if temp <= 0
         return movelist[0]["uci"]
     weights = []
@@ -46,7 +45,7 @@ parser.add_argument(
     "--moveTemp",
     type=float,
     default=10,
-    help="Temperature T for move selection: in each node of the tree the probability to pick a move m will be proportional to exp((eval(m)-eval(bestMove))/T). If T is zero, then always select the best move.",
+    help="Temperature T for move selection: in each node of the tree the probability to pick a move m will be proportional to exp((score(m)-score(bestMove))/T). Here unscored moves get assigned the score of the currently worst move. If T is zero, then always select the best move.",
 )
 parser.add_argument(
     "--backtrack",
@@ -93,7 +92,7 @@ while True:  # if args.forever is true, run indefinitely; o/w stop after one run
             board = metalist[i].end().board()
         else:
             board = chess.Board(metalist[i])
-        r = cdb.queryall(board.epd())
+        r = cdb.showall(board.epd())
         score = cdblib.json2eval(r)
         if verbose:
             if isPGN:

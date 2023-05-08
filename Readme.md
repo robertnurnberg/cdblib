@@ -35,7 +35,7 @@ positional arguments:
 options:
   -h, --help            show this help message and exit
   -v, --verbose         Increase output with -v, -vv, -vvv etc. (default: 0)
-  --moveTemp MOVETEMP   Temperature T for move selection: in each node of the tree the probability to pick a move m will be proportional to exp((eval(m)-eval(bestMove))/T). If T is zero, then always select the best move. (default: 10)
+  --moveTemp MOVETEMP   Temperature T for move selection: in each node of the tree the probability to pick a move m will be proportional to exp((score(m)-score(bestMove))/T). Here unscored moves get assigned the score of the currently worst move. If T is zero, then always select the best move. (default: 10)
   --backtrack BACKTRACK
                         The number of plies to walk back from the newly created leaf towards the root, queuing each position on the way for analysis. (default: 0)
   --depthLimit DEPTHLIMIT
