@@ -166,7 +166,10 @@ class cdbAPI:
 
 def json2eval(r):
     # turns a json response from the API into an evaluation, if possible
-    # output: on success eval in cp as int, otherwise "mated", "invalid", f"{pc}men w/ castling" or ""
+    # output: on success eval/score E as reported by cdb, otherwise "mated", "invalid", f"{pc}men w/ cr" or ""
+    # E is either "??" or an integer E. in the latter case 30000-ply = mate in ply, 20000-ply cursed win in ply, 25000-ply tb win in ply
+    if r is None:  # only needed for buggy json responses from cdb
+        return "invalid json reply"
     if "status" not in r:
         return ""
     if r["status"] == "checkmate":
@@ -175,27 +178,34 @@ def json2eval(r):
         return 0
     if r["status"] == "invalid board":
         return "invalid"
-    if r["status"] == "unknown" and "fen" in r:
-        # 7men TB positions with castling flags will never get an eval
+    s = ""
+    if "moves" in r:
+        s = r["moves"][0]["score"]
+    elif "eval" in r:
+        s = r["eval"]
+    elif "score" in r:
+        s = r["score"]
+    if type(s) == int and abs(s) > 25000:
+        ply = 30000 - abs(s)
+        s = "" if s > 0 else "-"
+        s += f"M{ply}"
+    if (r["status"] == "unknown" or s == "??") and "fen" in r:
+        # 7men TB positions with castling rights will never get an eval
         parts = r["fen"].split()
         pc = sum(p in "pnbrqk" for p in parts[0].lower())
         cf = len(parts) >= 3 and parts[2] != "-"
         if pc <= 7 and cf:
-            return f"{pc}men w/ castling"
-    if r["status"] != "ok":
-        return ""
-    if "moves" in r:
-        return r["moves"][0]["score"]
-    if "eval" in r:
-        return r["eval"]
-    if "score" in r:
-        return r["score"]
-    return ""
+            return f"{pc}men w/ cr"
+    if s == "??":
+        s = ""
+    return s
 
 
 def json2pv(r, san=False):
     # turns the PV from a json response from the API into a string
     # output: PV as a string, if possible, otherwise ""
+    if r is None:  # only needed for buggy json responses from cdb
+        return "invalid json reply"
     if "status" not in r:
         return ""
     if san:

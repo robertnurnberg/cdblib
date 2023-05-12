@@ -162,7 +162,7 @@ positional arguments:
 
 options:
   -h, --help     show this help message and exit
-  --shortFormat  EVALSTRING will be just a number, or "#" for checkmate, or "". (default: False)
+  --shortFormat  EVALSTRING will be just a number, or an "M"-ply mate score, or "#" for checkmate, or "". (default: False)
   --quiet        Suppress all unnecessary output to the screen. (default: False)
 ``` 
 

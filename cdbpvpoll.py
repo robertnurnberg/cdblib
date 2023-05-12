@@ -34,7 +34,10 @@ while True:
     r = cdb.querypv(args.epd)
     pv = cdblib.json2pv(r, san=args.san)
     e = cdblib.json2eval(r)
-    e = "      " if e == "" else f"{e:4d}cp"
+    if type(e) == int:
+        e = f"{e:4d}cp"
+    else:
+        e = " " * max(0, 6 - len(e)) + e
     print(f"  {datetime.now().isoformat()}: {e} -- {pv}")
     print("", flush=True)
     time.sleep(args.sleep)
