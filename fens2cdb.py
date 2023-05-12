@@ -12,7 +12,7 @@ parser.add_argument("output", nargs="?", help="optional destination filename")
 parser.add_argument(
     "--shortFormat",
     action="store_true",
-    help='EVALSTRING will be just a number, or "#" for checkmate, or "".',
+    help='EVALSTRING will be just a number, or an "M"-ply mate score, or "#" for checkmate, or "".',
 )
 parser.add_argument(
     "--quiet",
@@ -53,7 +53,9 @@ for line in lines:
             if score == "mated":
                 score = "#"
             elif type(score) != int:
-                score = ""
+                _, M, ply = score.partition("M")
+                if M == "" or not ply.isnumeric():
+                    score = ""
         elif score != "":
             if "ply" in r:
                 score = f"{score}, ply: {r['ply']}"
