@@ -18,6 +18,12 @@ By way of example, four small application scripts are provided.
 * [`fens2cdb`](#fens2cdb) - request evaluations from cdb for FENs stored in a file
 * [`cdbpvpoll`](#cdbpvpoll) - monitor a position's PV on cdb over time
 
+## Installation
+
+```shell
+git clone https://github.com/robertnurnberg/cdblib && pip install -r cdblib/requirements.txt
+```
+
 ---
 
 ### `cdbwalk`
