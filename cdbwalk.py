@@ -135,7 +135,7 @@ while True:  # if args.forever is true, run indefinitely; o/w stop after one run
         if verbose >= 2:
             print(f"\n  Ply queued for analysis: {ply}", end="")
         bt = 0
-        while bt < args.backtrack and bt < ply:
+        while bt < args.backtrack and board.move_stack:
             cdb.queue(board.epd())
             board.pop()
             bt += 1
