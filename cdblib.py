@@ -201,7 +201,7 @@ def json2eval(r):
     return s
 
 
-def json2pv(r, san=False):
+def json2pv(r, san=False, ply=None):
     # turns the PV from a json response from the API into a string
     # output: PV as a string, if possible, otherwise ""
     if r is None:  # only needed for buggy json responses from cdb
@@ -211,12 +211,12 @@ def json2pv(r, san=False):
     if san:
         if "pvSAN" not in r:
             return ""
-        if "fen" in r:
-            _, _, side = r["fen"].partition(" ")  # side to move for numbering
-            if side[0] == "w":
-                ply, s = 1, ""
-            else:
-                ply, s = 2, "1..."
+        if ply is not None or "fen" in r:
+            if ply is None:
+                _, _, side = r["fen"].partition(" ")  # side to move for numbering
+                ply = 0 if side[0] == "w" else 1
+            ply += 1
+            s = f"{ply//2}..." if ply % 2 == 0 else ""
             for m in r["pvSAN"]:
                 if ply % 2 == 1:
                     s += f"{(ply+1)//2}. "
