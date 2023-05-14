@@ -46,6 +46,7 @@ options:
                         The number of plies to walk back from the newly created leaf towards the root, queuing each position on the way for analysis. (default: 0)
   --depthLimit DEPTHLIMIT
                         The upper limit of plies the walk is allowed to last. (default: 200)
+  --TBwalk              Continue the walk in 7men EGTB land. (default: False)
   --forever             Run the script in an infinite loop. (default: False)
 ```
 

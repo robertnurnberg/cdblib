@@ -60,6 +60,11 @@ parser.add_argument(
     default=200,
 )
 parser.add_argument(
+    "--TBwalk",
+    action="store_true",
+    help="Continue the walk in 7men EGTB land.",
+)
+parser.add_argument(
     "--forever",
     action="store_true",
     help="Run the script in an infinite loop.",
@@ -128,6 +133,13 @@ while True:  # if args.forever is true, run indefinitely; o/w stop after one run
                 r = {}
                 if verbose:
                     print("1/2 - 1/2", end="")
+            elif (
+                not args.TBwalk
+                and (pc := sum(p in "pnbrqk" for p in board.epd().lower())) <= 7
+            ):
+                r = {}
+                if verbose:
+                    print(f"{pc}men EGTB")
             else:
                 r = cdb.queryall(board.epd())
         if verbose >= 3:
