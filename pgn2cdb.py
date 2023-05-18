@@ -61,7 +61,7 @@ print(f"Read {gn} pgns from file {args.filename}.")
 print(f"Starting to pass these to chessdb.cn to depth {args.depth} ...", flush=True)
 db = dbcache()
 for i in reversed(range(gn)):
-    board = chess.Board()
+    board = gamelist[i].board()
     if args.verbose >= 4:
         print("    pgn {i+1}/{gn}:" + str(gamelist[i].mainline_moves()))
     plies, pc = 0, 32
@@ -121,7 +121,7 @@ for i in reversed(range(gn)):
             print(f"      plies = {plies}, cdbply = {cdbply}.")
     if new_fens and args.verbose >= 2:
         print(f"    Queued new positions until ply {plies+1}.")
-    if plies < startply and args.verbose:
+    if cdbply > -1 and args.verbose:
         print(f"    Position at depth {plies} is connected to the root.")
 
 print(f"Done processing {args.filename} to depth {args.depth}.")
