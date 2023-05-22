@@ -244,5 +244,6 @@ Sun 14 May 16:58:59 CEST 2023
 * [vondele/cdbexplore](https://github.com/vondele/cdbexplore) - search and explore cdb from a given position, building a local search tree using a mini-max like algorithm
 * [vondele/chessgraph](https://github.com/vondele/chessgraph) - a utility to create a graph of moves from a specified position, using e.g. cdb
 * [robertnurnberg/grobtrack](https://github.com/robertnurnberg/grobtrack) - monitor cdb's eval and PV for 1. g4 over time
+* [robertnurnberg/cdbmatetrack](https://github.com/robertnurnberg/cdbmatetrack) - track cdb's progress on the problem suite from [matetrack](https://github.com/vondele/matetrack)
 ---
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
