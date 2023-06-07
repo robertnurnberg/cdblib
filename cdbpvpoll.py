@@ -22,9 +22,14 @@ parser.add_argument(
 parser.add_argument(
     "--san", action="store_true", help="give PV in short algebraic notation (SAN)"
 )
+parser.add_argument(
+    "-u",
+    "--user",
+    help="username for the http user-agent header",
+)
 args = parser.parse_args()
 
-cdb = cdblib.cdbAPI()
+cdb = cdblib.cdbAPI(args.user)
 s = cdb.queryscore(args.epd).get("status")
 if s != "ok" and s != "unknown":
     print("  It is imposssible to obtain a valid PV for the given position.")

@@ -8,12 +8,18 @@ from datetime import datetime
 
 
 class cdbAPI:
-    def __init__(self):
+    def __init__(self, user=None):
+        # use a session to keep alive the connection to the server
         self.session = requests.Session()
+        self.user = "" if user is None else str(user)
 
     def __apicall(self, url, timeout):
         try:
-            response = self.session.get(url, timeout=timeout)
+            response = self.session.get(
+                url,
+                timeout=timeout,
+                headers={"user-agent": "cdblib" + bool(self.user) * "/" + self.user},
+            )
             response.raise_for_status()
             content = response.json()
         except Exception:
