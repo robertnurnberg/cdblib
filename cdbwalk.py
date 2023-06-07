@@ -65,6 +65,11 @@ parser.add_argument(
     help="Continue the walk in 7men EGTB land.",
 )
 parser.add_argument(
+    "-u",
+    "--user",
+    help="Add this username to the http user-agent header",
+)
+parser.add_argument(
     "--forever",
     action="store_true",
     help="Run the script in an infinite loop.",
@@ -72,7 +77,7 @@ parser.add_argument(
 args = parser.parse_args()
 verbose = args.verbose
 isPGN = args.filename.endswith(".pgn")
-cdb = cdblib.cdbAPI()
+cdb = cdblib.cdbAPI(args.user)
 while True:  # if args.forever is true, run indefinitely; o/w stop after one run
     # re-reading the data in each loop allows updates to it in the background
     metalist = []

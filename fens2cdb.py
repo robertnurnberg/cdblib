@@ -19,6 +19,11 @@ parser.add_argument(
     action="store_true",
     help="Suppress all unnecessary output to the screen.",
 )
+parser.add_argument(
+    "-u",
+    "--user",
+    help="Add this username to the http user-agent header",
+)
 args = parser.parse_args()
 
 if args.output:
@@ -36,7 +41,7 @@ if display:
     print(f"FENs loaded...", file=display)
     tic = time.time()
 
-cdb = cdblib.cdbAPI()
+cdb = cdblib.cdbAPI(args.user)
 scored, unknown = 0, 0
 for line in lines:
     line = line.strip()

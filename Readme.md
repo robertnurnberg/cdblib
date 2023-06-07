@@ -32,7 +32,7 @@ git clone https://github.com/robertnurnberg/cdblib && pip install -r cdblib/requ
 A command line program to walk within the tree of cdb, starting either from a list of FENs or from the (opening) lines given in a PGN file, possibly extending each explored line within cdb by one ply.
 
 ```
-usage: cdbwalk.py [-h] [-v] [--moveTemp MOVETEMP] [--backtrack BACKTRACK] [--depthLimit DEPTHLIMIT] [--forever] filename
+usage: cdbwalk.py [-h] [-v] [--moveTemp MOVETEMP] [--backtrack BACKTRACK] [--depthLimit DEPTHLIMIT] [--TBwalk] [-u USER] [--forever] filename
 
 A script that walks within the chessdb.cn tree, starting from FENs or lines in a PGN file. Based on the given parameters, the script selects a move in each node, walking towards the leafs. Once an unknown position is reached, it is queued for analysis and the walk terminates.
 
@@ -48,6 +48,7 @@ options:
   --depthLimit DEPTHLIMIT
                         The upper limit of plies the walk is allowed to last. (default: 200)
   --TBwalk              Continue the walk in 7men EGTB land. (default: False)
+  -u USER, --user USER  Add this username to the http user-agent header (default: None)
   --forever             Run the script in an infinite loop. (default: False)
 ```
 
@@ -73,7 +74,7 @@ A command line program to populate cdb with moves from games stored in a PGN
 file, up to a desired depth. Note that this script is very slow, and much faster alternatives are available at [dubslow/NoobChessDBPy](https://github.com/dubslow/NoobChessDBPy).
 
 ```
-usage: pgn2cdb.py [-h] [-v] [-d DEPTH] filename
+usage: pgn2cdb.py [-h] [-v] [-d DEPTH] [-u USER] filename
 
 A simple script to pass pgns to chessdb.cn.
 
@@ -85,6 +86,7 @@ options:
   -v, --verbose         increase output with -v, -vv, -vvv etc. (default: 0)
   -d DEPTH, --depth DEPTH
                         number of plies to be added to chessdb.cn (default: 30)
+  -u USER, --user USER  username for the http user-agent header (default: None)
 ``` 
 
 Sample usage and output:
@@ -154,7 +156,7 @@ Thu 27 Apr 15:53:13 CEST 2023
 A command line program to bulk-request evaluations from cdb for all the FENs/EPDs stored within a file. Note that this script is extremely slow for now, and much faster alternatives are available at [dubslow/NoobChessDBPy](https://github.com/dubslow/NoobChessDBPy).
 
 ```
-usage: fens2cdb.py [-h] [--shortFormat] [--quiet] input [output]
+usage: fens2cdb.py [-h] [--shortFormat] [--quiet] [-u USER] input [output]
 
 A simple script to request evals from chessdb.cn for a list of FENs stored in a file. The script will add "; EVALSTRING;" to every line containing a FEN. Lines beginning with "#" are ignored, as well as any text after the first four fields of each FEN.
 
@@ -163,9 +165,10 @@ positional arguments:
   output         optional destination filename (default: None)
 
 options:
-  -h, --help     show this help message and exit
-  --shortFormat  EVALSTRING will be just a number, or an "M"-ply mate score, or "#" for checkmate, or "". (default: False)
-  --quiet        Suppress all unnecessary output to the screen. (default: False)
+  -h, --help            show this help message and exit
+  --shortFormat         EVALSTRING will be just a number, or an "M"-ply mate score, or "#" for checkmate, or "". (default: False)
+  --quiet               Suppress all unnecessary output to the screen. (default: False)
+  -u USER, --user USER  Add this username to the http user-agent header (default: None)
 ``` 
 
 Sample usage and output:
@@ -181,7 +184,7 @@ Done. Scored 6566 FENs in 2816.6s.
 A command line program to monitor dynamic changes in a position's PV on cdb.
 
 ```
-usage: cdbpvpoll.py [-h] [--epd EPD] [-sleep SLEEP] [--san]
+usage: cdbpvpoll.py [-h] [--epd EPD] [-sleep SLEEP] [--san] [-u USER]
 
 Monitor dynamic changes in a position's PV on chessdb.cn by polling it at regular intervals.
 
@@ -190,6 +193,7 @@ options:
   --epd EPD             FEN/EPD of the position to monitor (default: rnbqkbnr/pppppppp/8/8/6P1/8/PPPPPP1P/RNBQKBNR b KQkq g3)
   --sleep SLEEP         time interval between polling requests in seconds (default: 3600)
   --san                 give PV in short algebraic notation (SAN) (default: False)
+  -u USER, --user USER  username for the http user-agent header (default: None)
 ``` 
 
 Sample usage and output:
@@ -205,7 +209,7 @@ Sample usage and output:
 A command line program to bulk-request from cdb the PVs of all the positions stored in a file.
 
 ```
-usage: cdbbulkpv.py [-h] [-v] [--forever] filename
+usage: cdbbulkpv.py [-h] [-v] [-u USER] [--forever] filename
 
 A script that queries chessdb.cn for the PV of all positions in a file.
 
@@ -213,9 +217,10 @@ positional arguments:
   filename       PGN file if suffix is .pgn, o/w a text file with FENs
 
 options:
-  -h, --help     show this help message and exit
-  -v, --verbose  Increase output with -v, -vv, -vvv etc. (default: 0)
-  --forever      Run the script in an infinite loop. (default: False)
+  -h, --help            show this help message and exit
+  -v, --verbose         Increase output with -v, -vv, -vvv etc. (default: 0)
+  -u USER, --user USER  Add this username to the http user-agent header (default: None)
+  --forever             Run the script in an infinite loop. (default: False)
 ```
 
 Sample usage and output:

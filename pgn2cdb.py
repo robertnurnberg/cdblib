@@ -8,8 +8,8 @@ import chess, chess.pgn, cdblib
 
 class dbcache:
     # local cache for cdbAPI responses that avoids duplicate queries to API
-    def __init__(self):
-        self.cdbAPI = cdblib.cdbAPI()
+    def __init__(self, user=False):
+        self.cdbAPI = cdblib.cdbAPI(user)
         self.cache = {}
         self.req_received, self.req_cached, self.queued = 0, 0, 0
 
@@ -51,6 +51,11 @@ parser.add_argument(
     default=30,
     help="number of plies to be added to chessdb.cn",
 )
+parser.add_argument(
+    "-u",
+    "--user",
+    help="username for the http user-agent header",
+)
 args = parser.parse_args()
 pgn = open(args.filename)
 gamelist = []
@@ -59,7 +64,7 @@ while game := chess.pgn.read_game(pgn):
 gn, seen = len(gamelist), 0
 print(f"Read {gn} pgns from file {args.filename}.")
 print(f"Starting to pass these to chessdb.cn to depth {args.depth} ...", flush=True)
-db = dbcache()
+db = dbcache(args.user)
 for i in reversed(range(gn)):
     board = gamelist[i].board()
     if args.verbose >= 4:
