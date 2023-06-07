@@ -141,10 +141,12 @@ class cdbAPI:
 
     def querybest(self, fen):
         # returns one of the rank == 2 moves in a dict with keys "status" and either "move", "search_moves or "egtb"
+        # also triggers automatic back-propagation on cdb
         return self.generic_call("querybest", fen)
 
     def query(self, fen):
         # returns one of the rank > 0 moves in a dict with keys "status" and either "move", "search_moves or "egtb"
+        # also triggers automatic back-propagation on cdb
         return self.generic_call("query", fen)
 
     def querysearch(self, fen):
@@ -157,10 +159,12 @@ class cdbAPI:
 
     def querypv(self, fen):
         # returns dict with keys "status", "score", "depth", "pv", "pvSAN"
+        # also triggers automatic back-propagation on cdb
         return self.generic_call("querypv", fen)
 
     def queue(self, fen):
         # returns dict with key "status"
+        # also triggers automatic back-propagation on cdb
         return self.generic_call("queue", fen)
 
 
