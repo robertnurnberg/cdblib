@@ -93,7 +93,7 @@ while True:  # if args.forever is true, run indefinitely; o/w stop after one run
                 if line:
                     if line.startswith("#"):  # ignore comments
                         continue
-                    fen = " ".join(line.split()[:4])  # cdb ignores move counters anyway
+                    fen = " ".join(line.split()[:6])  # include move counters
                     metalist.append(fen)
         print(f"Read {len(metalist)} FENs from file {args.filename}.")
     gn, seen = len(metalist), 0
