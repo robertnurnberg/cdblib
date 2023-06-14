@@ -139,6 +139,7 @@ class cdbAPI:
 
     def queryall(self, fen):
         # returns dict with keys "status", "moves" and "ply" where "moves" is a sorted list of dict's with keys "uci", "san", "score", "rank", "note" and "winrate" (sorted by eval and rank)
+        # goes 1 ply along scored moves, gets eval of these children, makes that the (updated) scores of the scored moves and reports these
         return self.generic_call("queryall", fen)
 
     def showall(self, fen):
