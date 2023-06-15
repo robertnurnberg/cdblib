@@ -45,4 +45,6 @@ while True:
         e = " " * max(0, 6 - len(e)) + e
     print(f"  {datetime.now().isoformat()}: {e} -- {pv}")
     print("", flush=True)
+    if args.sleep == 0:
+        break
     time.sleep(args.sleep)
