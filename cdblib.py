@@ -171,6 +171,7 @@ class cdbAPI:
 
     def queue(self, fen):
         # returns dict with key "status"
+        # schedules position for analysis, scoring at least 5 moves, and does some recursion
         # also triggers automatic back-propagation on cdb
         return self.generic_call("queue", fen)
 
