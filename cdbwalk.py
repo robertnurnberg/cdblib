@@ -93,7 +93,12 @@ while True:  # if args.forever is true, run indefinitely; o/w stop after one run
                 if line:
                     if line.startswith("#"):  # ignore comments
                         continue
-                    fen = " ".join(line.split()[:6])  # include move counters
+                    fen = line.split()[:6]  # include potential move counters
+                    if len(fen) == 6 and not (
+                        fen[4].isnumeric() and fen[5].isnumeric()
+                    ):
+                        fen = fen[:4]
+                    fen = " ".join(fen)
                     metalist.append(fen)
         print(f"Read {len(metalist)} FENs from file {args.filename}.")
     gn, seen = len(metalist), 0
