@@ -40,7 +40,7 @@ class cdbAPI:
             if not first:
                 # adjust timeout increasing after every attempt, up to a max.
                 if timeout < 60:
-                    timeout = timeout * 1.5
+                    timeout *= 1.5
                 else:
                     print(
                         datetime.now().isoformat(),
@@ -77,18 +77,15 @@ class cdbAPI:
                 success = True
 
             elif content["status"] == "rate limit exceeded":
-                # special case, request to clear the limit
-                url = api + "?action=clearlimit"
-                self.__apicall(url, timeout)
-                lasterror = "asked to clearlimit"
+                lasterror = "Rate limit exceeded"
                 continue
 
             elif content["status"] == "unknown":
-                lasterror = "queried an unknown position"
+                lasterror = "Queried an unknown position"
                 success = True
 
             elif content["status"] == "nobestmove":
-                lasterror = "asked for move in mate/stalemate/unknown position"
+                lasterror = "Asked for a move in mate/stalemate/unknown position"
                 success = True
 
             elif content["status"] == "ok":
