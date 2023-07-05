@@ -38,9 +38,9 @@ class cdbAPI:
         while not success:
             # sleep a bit before further requests
             if not first:
-                # adjust timeout increasing after every attempt, up to a max.
+                # increase timeout after every attempt, up to a maximum
                 if timeout < 60:
-                    timeout *= 1.5
+                    timeout = min(timeout * 1.5, 60)
                 else:
                     print(
                         datetime.now().isoformat(),
