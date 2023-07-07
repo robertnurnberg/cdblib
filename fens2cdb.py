@@ -3,11 +3,19 @@
 """
 import argparse, asyncio, sys, time, cdblib
 
+
 class fens2cdb:
     def __init__(self, filename, output, quiet, shortFormat, concurrency, user):
         self.input = filename
+        self.lines = []
+        self.scored = 0
         with open(filename) as f:
-            self.lines = [line for line in f]
+            for line in f:
+                line = line.strip()
+                if line:
+                    self.lines.append(line)
+                    if not line.startswith("#"):  # ignore comments
+                        self.scored += 1
         if output:
             self.output = open(output, "w")
             self.display = sys.stdout
@@ -17,23 +25,31 @@ class fens2cdb:
         if quiet:
             self.display = None
         if self.display:
-            print(f"FENs loaded...", file=self.display)
+            print(f"Loaded {self.scored} FENs ...", file=self.display)
         self.shortFormat = shortFormat
+        self.concurrency = concurrency
         self.cdb = cdblib.cdbAPI(concurrency, user)
-        self.scored = cdblib.AtomicInteger()
         self.unknown = cdblib.AtomicInteger()
 
     async def parse_all(self):
+        if self.display:
+            print(
+                f"Started parsing the FENs with concurrency {self.concurrency} ...",
+                file=self.display,
+            )
         self.tic = time.time()
+        tasks = []
         for line in self.lines:
-            line = line.strip()
-            if line:
-                line = await self.parse_single_line(line)
-                print(line, file=self.output)
-                self.scored.inc()
+            tasks.append(asyncio.create_task(self.parse_single_line(line)))
+
+        for parse_line in tasks:
+            print(await parse_line, file=self.output)
+
         if self.display:
             elapsed = time.time() - self.tic
-            print(f"Done. Scored {self.scored.get()} FENs in {elapsed:.1f}s.", file=self.display)
+            print(
+                f"Done. Scored {self.scored} FENs in {elapsed:.1f}s.", file=self.display
+            )
             if self.unknown.get():
                 print(
                     f"The file {self.input} contained {self.unknown.get()} new chessdb.cn positions.",
@@ -51,7 +67,7 @@ class fens2cdb:
         r = await self.cdb.queryscore(fen)
         score = cdblib.json2eval(r)
         if r.get("status") == "unknown" and score == "":
-            unknown.inc()
+            self.unknown.inc()
         if self.shortFormat:
             if score == "mated":
                 score = "#"
@@ -65,12 +81,15 @@ class fens2cdb:
             score = f"cdb eval: {score}"
         return f"{line}{';' if line[-1] != ';' else ''} {score};"
 
+
 def main():
     parser = argparse.ArgumentParser(
         description='A simple script to request evals from chessdb.cn for a list of FENs stored in a file. The script will add "; EVALSTRING;" to every line containing a FEN. Lines beginning with "#" are ignored, as well as any text after the first four fields of each FEN.',
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument("input", help="source filename with FENs (w/ or w/o move counters)")
+    parser.add_argument(
+        "input", help="source filename with FENs (w/ or w/o move counters)"
+    )
     parser.add_argument("output", nargs="?", help="optional destination filename")
     parser.add_argument(
         "--shortFormat",
@@ -96,7 +115,14 @@ def main():
     )
     args = parser.parse_args()
 
-    f2c = fens2cdb(args.input, args.output, args.quiet, args.shortFormat, args.concurrency, args.user)
+    f2c = fens2cdb(
+        args.input,
+        args.output,
+        args.quiet,
+        args.shortFormat,
+        args.concurrency,
+        args.user,
+    )
 
     asyncio.run(f2c.parse_all())
 

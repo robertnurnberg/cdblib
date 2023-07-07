@@ -6,6 +6,7 @@
 import asyncio, requests, time, threading, concurrent.futures
 from datetime import datetime
 
+
 class AtomicInteger:
     def __init__(self, value=0):
         self._value = int(value)
@@ -27,6 +28,7 @@ class AtomicInteger:
         with self._lock:
             self._value = int(v)
             return self._value
+
 
 class cdbAPI:
     def __init__(self, concurrency, user=None):
@@ -91,7 +93,9 @@ class cdbAPI:
             else:
                 first = False
 
-            content = await self.__cdbapicall(f"?action={action}&board={fen}{optionString}&json=1", timeout)
+            content = await self.__cdbapicall(
+                f"?action={action}&board={fen}{optionString}&json=1", timeout
+            )
 
             if content is None:
                 lasterror = f"Something went wrong with {action}{optionString}"
