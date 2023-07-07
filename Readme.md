@@ -2,12 +2,12 @@
 
 The library `cdblib.py` allows to conveniently use the API of the Chess Cloud Database [chessdb.cn](https://chessdb.cn/queryc_en/) (cdb), the largest online database of chess positions and openings, from within Python.
 
-The library is heavily inspired by, and originally based on, Joost VandeVondele's script
+The library is heavily inspired by, and originally based on, Joost VandeVondele's 
 [cdbexplore](https://github.com/vondele/cdbexplore). See also [below](#other) for other repositories relevant for the interaction with cdb.
 
 ## Purpose
 
-Provide a simple library with wrapper functions for the API of cdb. All the wrapper functions will continuously query cdb until a satisfactory response has been received.
+Provide a simple library with wrapper functions for the API of cdb. All the wrapper functions will continuously query cdb until a satisfactory response has been received. The latest version of the library allows for concurrency.
 
 ## Usage
 
@@ -153,10 +153,10 @@ Thu 27 Apr 15:53:13 CEST 2023
 
 ### `fens2cdb`
 
-A command line program to bulk-request evaluations from cdb for all the FENs/EPDs stored within a file. Note that this script is extremely slow for now, and much faster alternatives are available at [dubslow/NoobChessDBPy](https://github.com/dubslow/NoobChessDBPy).
+A command line program to bulk-request evaluations from cdb for all the FENs/EPDs stored within a file. 
 
 ```
-usage: fens2cdb.py [-h] [--shortFormat] [--quiet] [-u USER] input [output]
+usage: fens2cdb.py [-h] [--shortFormat] [--quiet] [-c CONCURRENCY] [-u USER] input [output]
 
 A simple script to request evals from chessdb.cn for a list of FENs stored in a file. The script will add "; EVALSTRING;" to every line containing a FEN. Lines beginning with "#" are ignored, as well as any text after the first four fields of each FEN.
 
@@ -168,15 +168,17 @@ options:
   -h, --help            show this help message and exit
   --shortFormat         EVALSTRING will be just a number, or an "M"-ply mate score, or "#" for checkmate, or "". (default: False)
   --quiet               Suppress all unnecessary output to the screen. (default: False)
+  -c CONCURRENCY, --concurrency CONCURRENCY
+                        Maximum concurrency of requests to cdb. (default: 16)
   -u USER, --user USER  Add this username to the http user-agent header (default: None)
 ``` 
 
 Sample usage and output:
 ```
-> sed -i 's/ bm/; bm/' ChestUCI_23102018.epd
-> python fens2cdb.py ChestUCI_23102018.epd > ChestUCI_23102018_cdbeval.epd
-FENs loaded...
-Done. Scored 6566 FENs in 2816.6s.
+> python fens2cdb.py matetrack.epd > matetrack_cdbeval.epd
+Loaded 6561 FENs ...
+Started parsing the FENs with concurrency 16 ...
+Done. Scored 6561 FENs in 142.6s
 ```
 
 ### `cdbpvpoll`
