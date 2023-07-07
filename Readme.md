@@ -178,7 +178,7 @@ Sample usage and output:
 > python fens2cdb.py matetrack.epd > matetrack_cdbeval.epd
 Loaded 6561 FENs ...
 Started parsing the FENs with concurrency 16 ...
-Done. Scored 6561 FENs in 142.6s
+Done. Scored 6561 FENs in 142.6s.
 ```
 
 ### `cdbpvpoll`
