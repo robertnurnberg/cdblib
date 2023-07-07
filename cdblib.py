@@ -3,7 +3,7 @@
    Heavily based on Joost VandeVondele's https://github.com/vondele/cdbexplore
    See API documentation at https://www.chessdb.cn/cloudbookc_api_en.html
 """
-import requests, time
+import requests, time, sys
 from datetime import datetime
 
 
@@ -48,6 +48,7 @@ class cdbAPI:
                         fen,
                         " last error: ",
                         lasterror,
+                        file=sys.stderr,
                         flush=True,
                     )
                 time.sleep(timeout)
