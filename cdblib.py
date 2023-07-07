@@ -68,7 +68,6 @@ class cdbAPI:
     async def generic_call(self, action, fen, optionString=""):
         # action can be: "queryall", "querybest", "query", "querysearch", "queryscore", "querypv", "queue"
         # returns dict from API call to chessdb.cn with "status" guaranteed to be one of: "ok", "checkmate", "stalemate", "unknown", "nobestmove", "invalid board"
-        api = "http://www.chessdb.cn/cdb.php"
         timeout = 5
         success = False
         first = True
@@ -89,7 +88,7 @@ class cdbAPI:
                         lasterror,
                         flush=True,
                     )
-                time.sleep(timeout)
+                await asyncio.sleep(timeout)
             else:
                 first = False
 
