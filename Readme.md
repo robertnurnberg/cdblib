@@ -211,7 +211,7 @@ Sample usage and output:
 A command line program to bulk-request from cdb the PVs of all the positions stored in a file.
 
 ```
-usage: cdbbulkpv.py [-h] [-v] [-u USER] [--forever] filename
+usage: cdbbulkpv.py [-h] [--san] [-c CONCURRENCY] [-u USER] [--forever] filename
 
 A script that queries chessdb.cn for the PV of all positions in a file.
 
@@ -220,7 +220,9 @@ positional arguments:
 
 options:
   -h, --help            show this help message and exit
-  -v, --verbose         Increase output with -v, -vv, -vvv etc. (default: 0)
+  --san                 For PGN files, give PVs in short algebraic notation (SAN). (default: False)
+  -c CONCURRENCY, --concurrency CONCURRENCY
+                        Maximum concurrency of requests to cdb. (default: 16)
   -u USER, --user USER  Add this username to the http user-agent header (default: None)
   --forever             Run the script in an infinite loop. (default: False)
 ```
