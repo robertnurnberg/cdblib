@@ -229,18 +229,20 @@ options:
 
 Sample usage and output:
 ```
-> python cdbbulkpv.py TCEC_S24_sufi_book.pgn -v
-Read 50 (opening) lines from file TCEC_S24_sufi_book.pgn.
-Line 1/50: 1. e4 e5 2. d4 exd4 3. Qxd4 Nc6 4. Qe3 g6 5. Bd2 Bg7 6. Nc3 Nge7 (69cp) 7. O-O-O d6 8. Nce2 Ng8 9. Nf4 Nf6 10. h4 h5 11. f3 Ne5 12. Be2 Bd7 13. Kb1 a5 14. Ngh3 b5 15. Nf2 b4 16. g4 hxg4 17. fxg4 Nfxg4 18. Nxg4 Bxg4 19. Bxg4 Nxg4 20. Qe2 Ne5 21. h5 Kd7 22. Be3 Bh6 23. Qb5+ Kc8 24. hxg6 fxg6 25. Ne6 Qd7 26. Nxc7 Qxc7 27. Rxh6 Rxh6 28. Bxh6 Qc5 29. Qe2 Kb7 30. b3 Rh8 31. Bc1 Kc7 32. Be3 Qc6 33. Bf4 Rh5 34. Qf2 Kb7 35. Qf1 Kc8 36. Bg3 
-Line 2/50: 1. e4 c5 2. Nf3 d6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 a6 6. f3 e6 7. Be3 b5 8. Qd2 Bb7 9. g4 h6 10. O-O-O Nbd7 (80cp) 11. h4 b4 12. Na4 Qa5 13. b3 Nc5 14. a3 Qc7 15. axb4 Nxa4 16. bxa4 Nd7 17. c4 Nb6 18. Rh2 Nxa4 19. Qc2 Nb6 20. Kb1 Rb8 21. Qb2 Nd7 22. Rhd2 Ne5 
+> python cdbbulkpv.py TCEC_S24_sufi_book.pgn --san
+Read 50 (opening) lines from file /home/rn/python/cdb/TCEC_S24_sufi_book.pgn.
+Started parsing the positions with concurrency 16 ...
+1. e4 e5 2. d4 exd4 3. Qxd4 Nc6 4. Qe3 g6 5. Bd2 Bg7 6. Nc3 Nge7; cdb eval: 65; PV: 7. O-O-O d6 8. Nce2 Ng8 9. h4 h5 10. Nf4 Nf6 11. f3 Rb8 12. Bb5 a6 13. Bxc6+ bxc6 14. Bc3 Qe7 15. Nge2 Bb7 16. Rde1 c5 17. Qd2 Kf8 18. Kb1 Bc6 19. b3 Nd7 20. Nd5 Bxd5 21. exd5 Qd8 22. Qd3 Bxc3 23. Nxc3 Rb4 24. Re4 Nf6 25. Rxb4 cxb4 26. Ne4 Nxe4 27. Qxe4 a5 28. Qd4 Kg8 29. Qa7 Kg7 30. Qxa5 c5 31. Qxd8 Rxd8 
+1. e4 c5 2. Nf3 d6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 a6 6. f3 e6 7. Be3 b5 8. Qd2 Bb7 9. g4 h6 10. O-O-O Nbd7; cdb eval: 106; PV: 11. h4 Nb6 12. a3 Rc8 13. Be2 Nfd7 14. Kb1 Qc7 15. g5 hxg5 16. hxg5 Nc4 17. Bxc4 Rxh1 18. Rxh1 Qxc4 19. Bf2 Be7 20. Nb3 b4 21. axb4 Qxb4 22. Bd4 e5 23. Be3 Nf8 24. Rh8 a5 25. Rg8 a4 26. Nd5 Qxd2 27. Nxd2 Bd8 28. f4 g6 29. fxe5 dxe5 30. c3 Ba6 31. Kc2 Be2
 .
 .
 .
-Line 50/50: 1. d4 Nf6 2. c4 e6 3. Nf3 Bb4+ 4. Bd2 a5 5. Qc2 d5 6. e3 O-O 7. Bd3 Nc6 8. a3 Bxd2+ 9. Nbxd2 Ne7 (87cp) 10. g4 g6 11. g5 Nd7 12. h4 c5 13. h5 cxd4 14. exd4 dxc4 15. Be4 c3 16. bxc3 e5 17. O-O-O exd4 18. Nxd4 Nc5 19. hxg6 Nxg6 20. f4 Bd7 21. Rh6 Ba4 22. Qa2 Bxd1 23. Bxg6 hxg6 24. Rxg6+ Kh8 25. Rh6+ 
-Done processing TCEC_S24_sufi_book.pgn.
+1. Nf3 d5 2. c4 e6 3. d4 Nf6 4. Nc3 c6 5. Bg5 dxc4 6. e4 b5 7. a4 Bb4; cdb eval: 43; PV: 8. e5 h6 9. exf6 hxg5 10. fxg7 Rg8 11. g3 g4 12. Ne5 Qd5 13. Rg1 Qe4+ 14. Be2 Nd7 15. Nxg4 Bb7 16. Kf1 Bxc3 17. bxc3 O-O-O 18. Bf3 Qd3+ 19. Qxd3 cxd3 20. Ne3 Rxg7 21. Be4 d2 22. axb5 cxb5 23. Bxb7+ Kxb7 24. Ke2 f5 25. Rgd1 f4 26. gxf4 Rf7 27. Kf3 Nb6 28. Rxd2 Rdf8 29. f5 exf5 30. Rda2 Ra8 31. h4 a6 32. h5 Rh7 33. Rh1 Rah8 34. Rg1 Na4 35. Ra3 Rxh5 36. Rg7+ Kb8 37. Rf7 R8h7 38. Rf6 Kb7 39. Ke2 Rh3 40. Rxf5 Nb6 41. Rf6 R3h6 42. Rf5 Rh5 43. Rf4 Rh4 44. Rf5 R4h5 
+1. d4 Nf6 2. c4 e6 3. Nf3 Bb4+ 4. Bd2 a5 5. Qc2 d5 6. e3 O-O 7. Bd3 Nc6 8. a3 Bxd2+ 9. Nbxd2 Ne7; cdb eval: 94; PV: 10. g4 g6 11. g5 Nd7 12. h4 c5 13. h5 cxd4 14. exd4 b6 15. O-O-O Ba6 16. Rh3 Kg7 17. Rdh1 Rg8 18. Nh2 Rc8 19. Kb1 Kf8 
+Done. Polled 50 positions in 9.3s.
 
 > date
-Sun 14 May 16:58:59 CEST 2023
+Fri  7 Jul 22:00:03 CEST 2023
 ```
 
 ---
