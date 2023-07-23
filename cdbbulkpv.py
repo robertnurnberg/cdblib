@@ -48,7 +48,7 @@ while True:  # if args.forever is true, run indefinitely; o/w stop after one run
                     fen = " ".join(line.split()[:4])  # cdb ignores move counters anyway
                     metalist.append(fen)
         print(f"Read {len(metalist)} FENs from file {args.filename}.")
-    gn, seen = len(metalist), 0
+    gn = len(metalist)
     for i in range(gn):
         if isPGN:
             board = metalist[i].end().board()
