@@ -149,7 +149,7 @@ while True:  # if args.forever is true, run indefinitely; o/w stop after one run
             ):
                 r = {}
                 if verbose:
-                    print(f"{pc}men EGTB")
+                    print(f"{pc}men EGTB", end="")
             else:
                 r = cdb.queryall(board.epd())
         if verbose >= 3:
