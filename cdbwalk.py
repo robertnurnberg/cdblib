@@ -154,15 +154,15 @@ while True:  # if args.forever is true, run indefinitely; o/w stop after one run
                 r = cdb.queryall(board.epd())
         if verbose >= 3:
             print("\n  URL:", url.replace(" ", "_"), end="")
-        if verbose >= 2:
-            print(f"\n  Ply queued for analysis: {ply}", end="")
         bt = 0
-        while bt < args.backtrack and board.move_stack:
+        while bt <= args.backtrack:
             cdb.queue(board.epd())
-            board.pop()
             bt += 1
+            if not board.move_stack:
+                break
+            board.pop()
         if bt and verbose >= 2:
-            print(f" ... {ply-bt}.", end="")
+            print(f"\n  Plies queued for analysis: {ply} ... {ply-bt+1}.", end="")
         if verbose:
             print("", flush=True)
     print(f"Done processing {args.filename}.")
