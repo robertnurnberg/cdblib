@@ -93,10 +93,13 @@ for i in reversed(range(gn)):
         )
     if plies == 0:
         continue  # some pgn's include empty games
-    if board.is_checkmate() or board.is_stalemate():
-        # mates and stalemates are not stored as nodes on chessdb.cn
+    if board.is_checkmate() or board.is_stalemate() or pc <= 7:
+        # mates, stalemates and 7men are not stored as nodes on chessdb.cn
         if args.verbose:
-            print(f"    Position at depth {plies} is checkmate or stalemate.")
+            if board.is_checkmate() or board.is_stalemate():
+                print(f"    Position at depth {plies} is checkmate or stalemate.")
+            else:
+                print(f"    Position at depth {plies} is in 7men EGTB.")
         board.pop()
         plies -= 1
     r = db.get(board.epd())
