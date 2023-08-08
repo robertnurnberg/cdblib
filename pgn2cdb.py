@@ -52,6 +52,13 @@ parser.add_argument(
     help="number of plies to be added to chessdb.cn",
 )
 parser.add_argument(
+    "-p",
+    "--paint",
+    type=int,
+    default=0,
+    help="depth in plies to try to extend the root's connected component to in each line",
+)
+parser.add_argument(
     "-u",
     "--user",
     help="username for the http user-agent header",
@@ -61,7 +68,8 @@ pgn = open(args.filename)
 gamelist = []
 while game := chess.pgn.read_game(pgn):
     gamelist.append(game)
-gn, seen = len(gamelist), 0
+gn, seen, painted = len(gamelist), 0, 0
+args.paint = min(args.paint, args.depth)
 print(f"Read {gn} pgns from file {args.filename}.")
 print(f"Starting to pass these to chessdb.cn to depth {args.depth} ...", flush=True)
 db = dbcache(args.user)
@@ -107,8 +115,9 @@ for i in reversed(range(gn)):
     elif r["status"] == "unknown":
         if args.verbose:
             print(f"    Position at depth {plies} is new to chessdb.cn.")
-    new_fens, startply = False, plies
-    while plies and cdbply != plies:  # walk back until we are connected to root
+    new_fens, finalply, poppedMoves = False, plies, []
+    # now walk back until we are connected to root
+    while plies and (cdbply == -1 or cdbply > plies):
         if r["status"] == "unknown":
             if not new_fens and args.verbose >= 2:
                 print(f"    Queueing new positions from ply {plies} ... ")
@@ -119,6 +128,7 @@ for i in reversed(range(gn)):
                 print(f"    Queued new positions until ply {plies+1}.")
             new_fens = False
         move = board.pop()
+        poppedMoves.append(move)
         r = db.get(board.epd())
         cdbply = r.get("ply", -1)
         plies -= 1
@@ -126,11 +136,37 @@ for i in reversed(range(gn)):
             print(f"      plies = {plies}, cdbply = {cdbply}.")
     if new_fens and args.verbose >= 2:
         print(f"    Queued new positions until ply {plies+1}.")
-    if cdbply > -1 and args.verbose:
-        print(f"    Position at depth {plies} is connected to the root.")
+    if cdbply > -1 and plies < finalply:
+        if args.verbose:
+            print(
+                f"    Position at depth {plies} is connected to the root, with distance {cdbply}."
+            )
+        paintTo = min(args.paint, finalply)  # depth to extend connected component to
+        if paintTo > plies:
+            if args.verbose:
+                print(f"    Finally painting positions to depth {paintTo}.")
+            for move in reversed(poppedMoves):
+                if args.verbose >= 3:
+                    print(f"    pgn {i+1}/{gn}, ply {plies+1:3d}: " + str(move))
+                board.push(move)
+                db.cdbAPI.queryscore(board.epd())
+                painted += 1
+                plies += 1
+                if plies >= paintTo:
+                    break
+
 
 print(f"Done processing {args.filename} to depth {args.depth}.")
 print(f"{seen}/{gn} final positions already in chessdb.cn. ({seen/gn*100:.2f}%)")
 print(
     f"Queued {db.queued} new positions to chessdb.cn. Local cache hit rate: {db.req_cached}/{db.req_received} = {db.req_cached/db.req_received*100:.2f}%."
 )
+if args.paint:
+    if painted:
+        print(
+            f"Painted {painted} positions to help extend the starting position's connected component to depth {args.paint}."
+        )
+    else:
+        print(
+            f"All lines are already in starting position's connected component to depth {args.paint}."
+        )

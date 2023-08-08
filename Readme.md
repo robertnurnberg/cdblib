@@ -74,7 +74,7 @@ A command line program to populate cdb with moves from games stored in a PGN
 file, up to a desired depth. Note that this script is very slow, and much faster alternatives are available at [dubslow/NoobChessDBPy](https://github.com/dubslow/NoobChessDBPy).
 
 ```
-usage: pgn2cdb.py [-h] [-v] [-d DEPTH] [-u USER] filename
+usage: pgn2cdb.py [-h] [-v] [-d DEPTH] [-p PAINT] [-u USER] filename
 
 A simple script to pass pgns to chessdb.cn.
 
@@ -86,6 +86,8 @@ options:
   -v, --verbose         increase output with -v, -vv, -vvv etc. (default: 0)
   -d DEPTH, --depth DEPTH
                         number of plies to be added to chessdb.cn (default: 30)
+  -p PAINT, --paint PAINT
+                        depth in plies to try to extend the root's connected component to in each line (default: 0)
   -u USER, --user USER  username for the http user-agent header (default: None)
 ``` 
 
