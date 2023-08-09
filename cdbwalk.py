@@ -142,7 +142,8 @@ class cdbwalk:
                     retStr += "1/2 - 1/2"
             elif (
                 not self.TBwalk
-                and (pc := sum(p in "pnbrqk" for p in board.epd().lower())) <= 7
+                and (pc := sum(p in "pnbrqk" for p in board.epd().lower().split()[0]))
+                <= 7
             ):
                 r = {}
                 if self.verbose:
