@@ -145,7 +145,8 @@ while True:  # if args.forever is true, run indefinitely; o/w stop after one run
                     print("1/2 - 1/2", end="")
             elif (
                 not args.TBwalk
-                and (pc := sum(p in "pnbrqk" for p in board.epd().lower())) <= 7
+                and (pc := sum(p in "pnbrqk" for p in board.epd().lower().split()[0]))
+                <= 7
             ):
                 r = {}
                 if verbose:
