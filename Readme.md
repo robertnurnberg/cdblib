@@ -279,5 +279,7 @@ Fri  7 Jul 22:00:03 CEST 2023
 * [vondele/chessgraph](https://github.com/vondele/chessgraph) - a utility to create a graph of moves from a specified position, using e.g. cdb
 * [robertnurnberg/grobtrack](https://github.com/robertnurnberg/grobtrack) - monitor cdb's eval and PV for 1. g4 over time
 * [robertnurnberg/cdbmatetrack](https://github.com/robertnurnberg/cdbmatetrack) - track cdb's progress on the problem suite from [matetrack](https://github.com/vondele/matetrack)
+* [robertnurnberg/caissatrack](https://github.com/robertnurnberg/caissatrack) - track cdb's evaluations of the 100k most popular positions in
+[Caissabase](http://www.caissabase.co.uk)
 ---
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
