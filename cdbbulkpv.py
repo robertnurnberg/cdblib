@@ -43,19 +43,25 @@ while True:  # if args.forever is true, run indefinitely; o/w stop after one run
             file=sys.stderr,
         )
     else:
+        comments = 0
         with open(args.filename) as f:
             for line in f:
                 line = line.strip()
                 if line:
+                    if line.startswith("#"):
+                        comments += 1
                     metalist.append(line)
-        print(f"Read {len(metalist)} FENs from file {args.filename}.", file=sys.stderr)
+        print(
+            f"Read {len(metalist)-comments} FENs from file {args.filename}.",
+            file=sys.stderr,
+        )
     gn = len(metalist)
     for i in range(gn):
         if isPGN:
             epd = metalist[i].end().board().epd()
         else:
-            if line.startswith("#"):  # ignore comments
-                print(line)
+            if metalist[i].startswith("#"):  # ignore comments
+                print(metalist[i])
                 continue
             epd = " ".join(metalist[i].split()[:4])  # cdb ignores move counters anyway
         r = cdb.querypvstable(epd) if args.stable else cdb.querypv(epd)
