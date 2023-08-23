@@ -194,7 +194,7 @@ class cdbAPI:
         return await self.generic_call("queryall", fen)
 
     async def showall(self, fen):
-        # same as querall, but returns _all_ possible moves, with "??" for score of unscored moves
+        # same as queryall, but returns _all_ possible moves, with "??" for score of unscored moves
         return await self.generic_call("queryall", fen, "&showall=1")
 
     async def querybest(self, fen):
@@ -219,6 +219,10 @@ class cdbAPI:
         # returns dict with keys "status", "score", "depth", "pv", "pvSAN"
         # also triggers automatic back-propagation on cdb
         return await self.generic_call("querypv", fen)
+
+    async def querypvstable(self, fen):
+        # same as querypv, but returns stable PV (no random selection from best moves)
+        return await self.generic_call("querypv", fen, "&stable=1")
 
     async def queue(self, fen):
         # returns dict with key "status"

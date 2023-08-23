@@ -207,13 +207,14 @@ Done. Scored 6561 FENs in 142.6s.
 A command line program to monitor dynamic changes in a position's PV on cdb.
 
 ```
-usage: cdbpvpoll.py [-h] [--epd EPD] [-sleep SLEEP] [--san] [-u USER]
+usage: cdbpvpoll.py [-h] [--epd EPD] [--stable] [-sleep SLEEP] [--san] [-u USER]
 
 Monitor dynamic changes in a position's PV on chessdb.cn by polling it at regular intervals.
 
 options:
   -h, --help            show this help message and exit
   --epd EPD             FEN/EPD of the position to monitor (default: rnbqkbnr/pppppppp/8/8/6P1/8/PPPPPP1P/RNBQKBNR b KQkq g3)
+  --stable              pass "&stable=1" option to API (default: False)
   --sleep SLEEP         time interval between polling requests in seconds (default: 3600)
   --san                 give PV in short algebraic notation (SAN) (default: False)
   -u USER, --user USER  username for the http user-agent header (default: None)
@@ -232,7 +233,7 @@ Sample usage and output:
 A command line program to bulk-request from cdb the PVs of all the positions stored in a file.
 
 ```
-usage: cdbbulkpv.py [-h] [--san] [-c CONCURRENCY] [-b BATCHSIZE] [-u USER] [--forever] filename
+usage: cdbbulkpv.py [-h] [--stable] [--san] [-c CONCURRENCY] [-b BATCHSIZE] [-u USER] [--forever] filename
 
 A script that queries chessdb.cn for the PV of all positions in a file.
 
@@ -241,6 +242,7 @@ positional arguments:
 
 options:
   -h, --help            show this help message and exit
+  --stable              pass "&stable=1" option to API (default: False)
   --san                 For PGN files, give PVs in short algebraic notation (SAN). (default: False)
   -c CONCURRENCY, --concurrency CONCURRENCY
                         Maximum concurrency of requests to cdb. (default: 16)

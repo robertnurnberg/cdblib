@@ -3,8 +3,9 @@ import chess, chess.pgn, cdblib
 
 
 class bulkpv:
-    def __init__(self, filename, san, concurrency, user):
+    def __init__(self, filename, stable, san, concurrency, user):
         self.filename = filename
+        self.stable = stable
         self.isPGN = filename.endswith(".pgn")
         self.san = san if self.isPGN else False
         self.concurrency = concurrency
@@ -61,7 +62,9 @@ class bulkpv:
             if line.startswith("#"):  # ignore comments
                 return line
             epd = " ".join(line.split()[:4])  # cdb ignores move counters anyway
-        r = await self.cdb.querypv(epd)
+        r = await (
+            self.cdb.querypvstable(epd) if self.stable else self.cdb.querypv(epd)
+        )
         score = cdblib.json2eval(r)
         if self.san:
             ply = len(list(line.mainline_moves()))
@@ -81,6 +84,9 @@ async def main():
     )
     parser.add_argument(
         "filename", help="PGN file if suffix is .pgn, o/w a text file with FENs"
+    )
+    parser.add_argument(
+        "--stable", action="store_true", help='pass "&stable=1" option to API'
     )
     parser.add_argument(
         "--san",
@@ -112,7 +118,7 @@ async def main():
         help="Run the script in an infinite loop.",
     )
     args = parser.parse_args()
-    bpv = bulkpv(args.filename, args.san, args.concurrency, args.user)
+    bpv = bulkpv(args.filename, args.stable, args.san, args.concurrency, args.user)
     while True:  # if args.forever is true, run indefinitely; o/w stop after one run
         # re-reading the data in each loop allows updates to it in the background
         bpv.reload()
