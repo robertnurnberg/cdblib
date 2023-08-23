@@ -14,6 +14,9 @@ parser.add_argument(
     default="rnbqkbnr/pppppppp/8/8/6P1/8/PPPPPP1P/RNBQKBNR b KQkq g3",
 )
 parser.add_argument(
+    "--stable", action="store_true", help='pass "&stable=1" option to API'
+)
+parser.add_argument(
     "--sleep",
     type=int,
     default=3600,
@@ -36,7 +39,7 @@ if s != "ok" and s != "unknown":
     quit()
 
 while True:
-    r = cdb.querypv(args.epd)
+    r = cdb.querypvstable(args.epd) if args.stable else cdb.querypv(args.epd)
     pv = cdblib.json2pv(r, san=args.san)
     e = cdblib.json2eval(r)
     if type(e) == int:
