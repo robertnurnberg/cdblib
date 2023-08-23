@@ -186,13 +186,14 @@ Done. Scored 6566 FENs in 2816.6s.
 A command line program to monitor dynamic changes in a position's PV on cdb.
 
 ```
-usage: cdbpvpoll.py [-h] [--epd EPD] [-sleep SLEEP] [--san] [-u USER]
+usage: cdbpvpoll.py [-h] [--epd EPD] [--stable] [-sleep SLEEP] [--san] [-u USER]
 
 Monitor dynamic changes in a position's PV on chessdb.cn by polling it at regular intervals.
 
 options:
   -h, --help            show this help message and exit
   --epd EPD             FEN/EPD of the position to monitor (default: rnbqkbnr/pppppppp/8/8/6P1/8/PPPPPP1P/RNBQKBNR b KQkq g3)
+  --stable              pass "&stable=1" option to API (default: False)
   --sleep SLEEP         time interval between polling requests in seconds (default: 3600)
   --san                 give PV in short algebraic notation (SAN) (default: False)
   -u USER, --user USER  username for the http user-agent header (default: None)
@@ -211,7 +212,7 @@ Sample usage and output:
 A command line program to bulk-request from cdb the PVs of all the positions stored in a file.
 
 ```
-usage: cdbbulkpv.py [-h] [-v] [-u USER] [--forever] filename
+usage: cdbbulkpv.py [-h] [--stable] [-v] [-u USER] [--forever] filename
 
 A script that queries chessdb.cn for the PV of all positions in a file.
 
@@ -220,6 +221,7 @@ positional arguments:
 
 options:
   -h, --help            show this help message and exit
+  --stable              pass "&stable=1" option to API (default: False)
   -v, --verbose         Increase output with -v, -vv, -vvv etc. (default: 0)
   -u USER, --user USER  Add this username to the http user-agent header (default: None)
   --forever             Run the script in an infinite loop. (default: False)
@@ -252,5 +254,7 @@ Sun 14 May 16:58:59 CEST 2023
 * [vondele/chessgraph](https://github.com/vondele/chessgraph) - a utility to create a graph of moves from a specified position, using e.g. cdb
 * [robertnurnberg/grobtrack](https://github.com/robertnurnberg/grobtrack) - monitor cdb's eval and PV for 1. g4 over time
 * [robertnurnberg/cdbmatetrack](https://github.com/robertnurnberg/cdbmatetrack) - track cdb's progress on the problem suite from [matetrack](https://github.com/vondele/matetrack)
+* [robertnurnberg/caissatrack](https://github.com/robertnurnberg/caissatrack) - track cdb's evaluations of the 100k most popular positions in
+[Caissabase](http://www.caissabase.co.uk)
 ---
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)

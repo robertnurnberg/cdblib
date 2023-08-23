@@ -10,6 +10,9 @@ parser.add_argument(
     "filename", help="PGN file if suffix is .pgn, o/w a text file with FENs"
 )
 parser.add_argument(
+    "--stable", action="store_true", help='pass "&stable=1" option to API'
+)
+parser.add_argument(
     "-v",
     "--verbose",
     action="count",
@@ -54,7 +57,7 @@ while True:  # if args.forever is true, run indefinitely; o/w stop after one run
             board = metalist[i].end().board()
         else:
             board = chess.Board(metalist[i])
-        r = cdb.querypv(board.epd())
+        r = cdb.querypvstable(board.epd()) if args.stable else cdb.querypv(board.epd())
         if verbose:
             score = cdblib.json2eval(r)
             if isPGN:
