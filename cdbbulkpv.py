@@ -17,18 +17,23 @@ class bulkpv:
             pgn = open(self.filename)
             while game := chess.pgn.read_game(pgn):
                 self.metalist.append(game)
+            self.count = len(self.metalist)
             print(
-                f"Read {len(self.metalist)} (opening) lines from file {self.filename}.",
+                f"Read {self.count} (opening) lines from file {self.filename}.",
                 file=sys.stderr,
             )
         else:
+            comments = 0
             with open(self.filename) as f:
                 for line in f:
                     line = line.strip()
                     if line:
                         self.metalist.append(line)
+                        if line.startswith("#"):
+                            comments += 1
+            self.count = len(self.metalist) - comments
             print(
-                f"Read {len(self.metalist)} FENs from file {self.filename}.",
+                f"Read {self.count} FENs from file {self.filename}.",
                 file=sys.stderr,
             )
 
@@ -51,7 +56,7 @@ class bulkpv:
 
         elapsed = time.time() - self.tic
         print(
-            f"Done. Polled {len(self.metalist)} positions in {elapsed:.1f}s.",
+            f"Done. Polled {self.count} positions in {elapsed:.1f}s.",
             file=sys.stderr,
         )
 
