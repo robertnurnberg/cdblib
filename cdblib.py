@@ -168,7 +168,7 @@ class cdbAPI:
         return self.generic_call("querypv", fen)
 
     def querypvstable(self, fen):
-        # same as querypv, but returns stable PV (no random selection from best moves)
+        # same as querypv, but returns _stable_ PV (always GUI's top move)
         return self.generic_call("querypv", fen, "&stable=1")
 
     def queue(self, fen):
