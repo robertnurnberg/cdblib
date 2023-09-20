@@ -105,14 +105,14 @@ Sample usage and output:
 > python pgn2cdb.py -d 1000 -vv TCEC_Season_25_-_Entrance_League.pgn
 Read 93 pgns from file TCEC_Season_25_-_Entrance_League.pgn.
 Started to parse these to chessdb.cn to depth 1000 with concurrency 16 ...
-  For pgn 93/93 read 143/1000 plies. Final pos has 7 pieces.
+  For pgn 93/93 read 143/1000 plies. Final position has 7 pieces.
     Position at depth 143 is already in chessdb.cn, not yet connected to root.
     Queueing new positions from ply 142 ... 
     Queued new positions until ply 24.
     Queueing new positions from ply 21 ... 
     Queued new positions until ply 21.
     Position at depth 16 is connected to the root.
-  For pgn 92/93 read 184/1000 plies. Final pos has 7 pieces.
+  For pgn 92/93 read 184/1000 plies. Final position has 7 pieces.
     Position at depth 184 is already in chessdb.cn, not yet connected to root.
     Queueing new positions from ply 183 ... 
     Queued new positions until ply 29.
@@ -120,7 +120,7 @@ Started to parse these to chessdb.cn to depth 1000 with concurrency 16 ...
   .
   .
   .
-  For pgn 1/93 read 143/1000 plies. Final pos has 15 pieces.
+  For pgn 1/93 read 143/1000 plies. Final position has 15 pieces.
     Position at depth 143 is checkmate or stalemate.
     Position at depth 142 is new to chessdb.cn.
     Queueing new positions from ply 142 ... 
@@ -142,12 +142,12 @@ Sat  5 Aug 19:32:36 CEST 2023
 > python pgn2cdb.py -d 50 -vv Trompowsky2e6.pgn
 Read 9436 pgns from file Trompowsky2e6.pgn.
 Started to parse these to chessdb.cn to depth 50 with concurrency 16 ...
-  For pgn 9436/9436 read 50/50 plies. Final pos has 21 pieces.
+  For pgn 9436/9436 read 50/50 plies. Final position has 21 pieces.
     Position at depth 50 is new to chessdb.cn.
     Queueing new positions from ply 50 ... 
     Queued new positions until ply 42.
     Position at depth 33 is connected to the root.
-  For pgn 9435/9436 read 50/50 plies. Final pos has 20 pieces.
+  For pgn 9435/9436 read 50/50 plies. Final position has 20 pieces.
     Position at depth 50 is new to chessdb.cn.
     Queueing new positions from ply 50 ... 
     Queued new positions until ply 41.
@@ -155,7 +155,7 @@ Started to parse these to chessdb.cn to depth 50 with concurrency 16 ...
   .
   .
   .
-  For pgn 1/9436 read 50/50 plies. Final pos has 20 pieces.
+  For pgn 1/9436 read 50/50 plies. Final position has 20 pieces.
     Position at depth 50 is new to chessdb.cn.
     Queueing new positions from ply 50 ... 
     Queued new positions until ply 42.

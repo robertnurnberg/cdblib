@@ -111,7 +111,7 @@ class pgn2cdb:
             if plies >= self.depth or pc <= 7:
                 break  # cdb only stores pos if >= 8
         if self.verbose:
-            retStr += f"  For pgn {lineIdx+1}/{self.gn} read {plies}/{self.depth} plies. Final pos has {pc} pieces.\n"
+            retStr += f"  For pgn {lineIdx+1}/{self.gn} read {plies}/{self.depth} plies. Final position has {pc} pieces.\n"
 
         if plies == 0:
             return retStr  # some pgn's include empty games
