@@ -88,7 +88,7 @@ for i in reversed(range(gn)):
             break  # cdb only stores pos if >= 8
     if args.verbose:
         print(
-            f"  For pgn {i+1}/{gn} read {plies}/{args.depth} plies. Final pos has {pc} pieces.",
+            f"  For pgn {i+1}/{gn} read {plies}/{args.depth} plies. Final position has {pc} pieces.",
             flush=True,
         )
     if plies == 0:

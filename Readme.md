@@ -96,14 +96,14 @@ Sample usage and output:
 > python pgn2cdb.py -d 1000 TCEC_Season_24_-_Superfinal.pgn -vv
 Read 100 pgns from file TCEC_Season_24_-_Superfinal.pgn.
 Starting to pass these to chessdb.cn to depth 1000 ...
-  For pgn 100/100 read 111/1000 plies. Final pos has 7 pieces.
+  For pgn 100/100 read 111/1000 plies. Final position has 7 pieces.
     Position at depth 111 is already in chessdb.cn, not yet connected to root.
     Queueing new positions from ply 110 ... 
     Queued new positions until ply 91.
     Queueing new positions from ply 87 ... 
     Queued new positions until ply 40.
     Position at depth 27 is connected to the root.
-  For pgn 99/100 read 149/1000 plies. Final pos has 9 pieces.
+  For pgn 99/100 read 149/1000 plies. Final position has 9 pieces.
     Position at depth 149 is checkmate or stalemate.
     Position at depth 148 is new to chessdb.cn.
     Queueing new positions from ply 148 ... 
@@ -112,7 +112,7 @@ Starting to pass these to chessdb.cn to depth 1000 ...
   .
   .
   .
-  For pgn 1/100 read 179/1000 plies. Final pos has 7 pieces.
+  For pgn 1/100 read 179/1000 plies. Final position has 7 pieces.
     Position at depth 179 is already in chessdb.cn, not yet connected to root.
     Position at depth 57 is connected to the root.
 Done processing TCEC_Season_24_-_Superfinal.pgn to depth 1000.
@@ -127,12 +127,12 @@ Fri 27 Apr 09:15:48 CEST 2023
 > python pgn2cdb.py -d 40 Trompowsky2e6.pgn -vv 
 Read 9436 pgns from file Trompowsky2e6.pgn.
 Starting to pass these to chessdb.cn to depth 40 ...
-  For pgn 9436/9436 read 40/40 plies. Final pos has 26 pieces.
+  For pgn 9436/9436 read 40/40 plies. Final position has 26 pieces.
     Position at depth 40 is new to chessdb.cn.
     Queueing new positions from ply 40 ...
     Queued new positions until ply 32.
     Position at depth 18 is connected to the root.
-  For pgn 9435/9436 read 40/40 plies. Final pos has 22 pieces.
+  For pgn 9435/9436 read 40/40 plies. Final position has 22 pieces.
     Position at depth 40 is new to chessdb.cn.
     Queueing new positions from ply 40 ...
     Queued new positions until ply 31.
@@ -140,7 +140,7 @@ Starting to pass these to chessdb.cn to depth 40 ...
   .
   .
   .
-  For pgn 1/9436 read 40/40 plies. Final pos has 22 pieces.
+  For pgn 1/9436 read 40/40 plies. Final position has 22 pieces.
     Position at depth 40 is new to chessdb.cn.
     Queueing new positions from ply 40 ...
     Queued new positions until ply 18.
