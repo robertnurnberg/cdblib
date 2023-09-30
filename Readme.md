@@ -256,5 +256,7 @@ Wed 23 Aug 11:18:55 CEST 2023
 * [robertnurnberg/cdbmatetrack](https://github.com/robertnurnberg/cdbmatetrack) - track cdb's progress on the problem suite from [matetrack](https://github.com/vondele/matetrack)
 * [robertnurnberg/caissatrack](https://github.com/robertnurnberg/caissatrack) - track cdb's evaluations of the 100k most popular positions in
 [Caissabase](http://www.caissabase.co.uk)
+* [robertnurnberg/uhotrack](https://github.com/robertnurnberg/uhotrack) - track cdb's evaluations of the positions in the UHO books from
+[sp-cc.de](https://www.sp-cc.de/uho_xxl_project.htm)
 ---
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
