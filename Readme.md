@@ -197,7 +197,7 @@ options:
 Sample usage and output:
 ```
 > python fens2cdb.py matetrack.epd > matetrack_cdbeval.epd
-Loaded 6561 FENs ...
+Read 6561 FENs from file matetrack.epd.
 Started parsing the FENs with concurrency 16 ...
 Done. Scored 6561 FENs in 142.6s.
 ```
