@@ -25,7 +25,7 @@ class fens2cdb:
         if quiet:
             self.display = None
         if self.display:
-            print(f"Loaded {self.scored} FENs ...", file=self.display)
+            print(f"Loaded {self.scored} FENs ...", file=self.display, flush=True)
         self.shortFormat = shortFormat
         self.concurrency = concurrency
         self.cdb = cdblib.cdbAPI(concurrency, user)
@@ -37,6 +37,7 @@ class fens2cdb:
                 f"Started parsing the FENs with concurrency {self.concurrency}"
                 + (" ..." if batchSize == None else f" and batch size {batchSize} ..."),
                 file=self.display,
+                flush=True,
             )
         if batchSize is None:
             batchSize = len(self.lines)

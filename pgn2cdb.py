@@ -45,7 +45,7 @@ class pgn2cdb:
         while game := chess.pgn.read_game(pgn):
             self.gamelist.append(game)
         self.gn = len(self.gamelist)
-        print(f"Read {self.gn} pgns from file {self.filename}.")
+        print(f"Read {self.gn} pgns from file {self.filename}.", flush=True)
         self.db = dbcache(self.concurrency, user)
         self.seen = cdblib.AtomicInteger()
         self.painted = cdblib.AtomicInteger()
@@ -54,6 +54,7 @@ class pgn2cdb:
         print(
             f"Started to parse these to chessdb.cn to depth {self.depth} with concurrency {self.concurrency}"
             + (" ..." if batchSize == None else f" and batch size {batchSize} ..."),
+            flush=True,
         )
         if batchSize is None:
             batchSize = len(self.gamelist)

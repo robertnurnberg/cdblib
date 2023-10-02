@@ -21,6 +21,7 @@ class bulkpv:
             print(
                 f"Read {self.count} (opening) lines from file {self.filename}.",
                 file=sys.stderr,
+                flush=True,
             )
         else:
             comments = 0
@@ -35,6 +36,7 @@ class bulkpv:
             print(
                 f"Read {self.count} FENs from file {self.filename}.",
                 file=sys.stderr,
+                flush=True,
             )
 
     async def parse_all(self, batchSize=None):
@@ -42,6 +44,7 @@ class bulkpv:
             f"Started parsing the positions with concurrency {self.concurrency}"
             + (" ..." if batchSize == None else f" and batch size {batchSize} ..."),
             file=sys.stderr,
+            flush=True,
         )
         if batchSize is None:
             batchSize = len(self.metalist)

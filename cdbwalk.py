@@ -55,7 +55,8 @@ class cdbwalk:
             while game := chess.pgn.read_game(pgn):
                 self.metalist.append(game)
             print(
-                f"Read {len(self.metalist)} (opening) lines from file {self.filename}."
+                f"Read {len(self.metalist)} (opening) lines from file {self.filename}.",
+                flush=True,
             )
         else:
             with open(self.filename) as f:
@@ -71,13 +72,16 @@ class cdbwalk:
                             fen = fen[:4]
                         fen = " ".join(fen)
                         self.metalist.append(fen)
-            print(f"Read {len(self.metalist)} FENs from file {self.filename}.")
+            print(
+                f"Read {len(self.metalist)} FENs from file {self.filename}.", flush=True
+            )
         self.gn = len(self.metalist)
 
     async def parse_all(self, batchSize=None):
         print(
             f"Started parsing the positions with concurrency {self.concurrency}"
             + (" ..." if batchSize == None else f" and batch size {batchSize} ..."),
+            flush=True,
         )
         if batchSize is None:
             batchSize = len(self.metalist)
