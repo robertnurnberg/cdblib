@@ -25,7 +25,11 @@ class fens2cdb:
         if quiet:
             self.display = None
         if self.display:
-            print(f"Loaded {self.scored} FENs ...", file=self.display, flush=True)
+            print(
+                f"Read {self.scored} FENs from file {self.input}.",
+                file=self.display,
+                flush=True,
+            )
         self.shortFormat = shortFormat
         self.concurrency = concurrency
         self.cdb = cdblib.cdbAPI(concurrency, user)
