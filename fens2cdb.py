@@ -88,7 +88,7 @@ class fens2cdb:
             if "ply" in r:
                 score = f"{score}, ply: {r['ply']}"
             score = f"cdb eval: {score}"
-        return f"{line}{';' if line[-1] != ';' else ''} {score};"
+        return f"{line}{' ;' if line[-1] != ';' else ''} {score};"
 
 
 async def main():
