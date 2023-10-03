@@ -65,7 +65,7 @@ for line in lines:
             if "ply" in r:
                 score = f"{score}, ply: {r['ply']}"
             score = f"cdb eval: {score}"
-        print(f"{line}{';' if line[-1] != ';' else ''} {score};", file=output)
+        print(f"{line}{' ;' if line[-1] != ';' else ''} {score};", file=output)
         scored += 1
 
 if display:
