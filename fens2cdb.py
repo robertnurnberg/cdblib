@@ -5,7 +5,9 @@ import argparse, asyncio, sys, time, cdblib
 
 
 class fens2cdb:
-    def __init__(self, filename, output, quiet, shortFormat, concurrency, user):
+    def __init__(
+        self, filename, output, shortFormat, quiet, enqueue, concurrency, user
+    ):
         self.input = filename
         self.lines = []
         self.scored = 0
@@ -31,6 +33,7 @@ class fens2cdb:
                 flush=True,
             )
         self.shortFormat = shortFormat
+        self.enqueue = enqueue
         self.concurrency = concurrency
         self.cdb = cdblib.cdbAPI(concurrency, user)
         self.unknown = cdblib.AtomicInteger()
@@ -64,10 +67,21 @@ class fens2cdb:
                     f"The file {self.input} contained {self.unknown.get()} new chessdb.cn positions.",
                     file=self.display,
                 )
-                print(
-                    f"Rerunning the script after a short break should provide their evals.",
-                    file=self.display,
-                )
+                if self.enqueue == 0:
+                    print(
+                        "Rerunning the script after a short break should provide their evals.",
+                        file=self.display,
+                    )
+                elif self.enqueue == 1:
+                    print(
+                        "They have now been queued for analysis.",
+                        file=self.display,
+                    )
+                else:
+                    print(
+                        "They have been queued for analysis, and their evals have been obtained.",
+                        file=self.display,
+                    )
 
     async def parse_single_line(self, line):
         if line.startswith("#"):  # ignore comments
@@ -77,6 +91,12 @@ class fens2cdb:
         score = cdblib.json2eval(r)
         if r.get("status") == "unknown" and score == "":
             self.unknown.inc()
+            while self.enqueue and r["status"] == "unknown":
+                r = await self.cdb.queue(fen)
+                if self.enqueue >= 2:
+                    await asyncio.sleep(5)
+                    r = await self.cdb.queryscore(fen)
+                    score = cdblib.json2eval(r)
         if self.shortFormat:
             if score == "mated":
                 score = "#"
@@ -111,6 +131,13 @@ async def main():
         help="Suppress all unnecessary output to the screen.",
     )
     parser.add_argument(
+        "-e",
+        "--enqueue",
+        action="count",
+        default=0,
+        help="-e queues unknown positions once, -ee until an eval comes back.",
+    )
+    parser.add_argument(
         "-c",
         "--concurrency",
         help="Maximum concurrency of requests to cdb.",
@@ -134,8 +161,9 @@ async def main():
     f2c = fens2cdb(
         args.input,
         args.output,
-        args.quiet,
         args.shortFormat,
+        args.quiet,
+        args.enqueue,
         args.concurrency,
         args.user,
     )
