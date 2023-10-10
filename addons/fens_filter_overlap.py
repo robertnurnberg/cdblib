@@ -1,0 +1,71 @@
+import argparse, sys
+
+
+def line2fen(line):
+    line = line.strip()
+    if line and not line.startswith("#"):
+        fen = " ".join(line.split()[:4])
+        return fen[:-1] if fen[-1] == ";" else fen
+    return ""
+
+
+def read_epd_file(filename):
+    positions = set()
+    with open(filename) as f:
+        for line in f:
+            positions.add(line2fen(line))
+    positions.discard("")
+    return positions
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Find proportion of unique EPDs in source that exist in the given list of references, and print lines in source with EPDs not found in the references to stdout (for duplicate EPDs only the first occurrence in source will be printed).",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument("source", help="The source .epd file.")
+    parser.add_argument(
+        "references", nargs="*", help="List of reference .epd files, may be empty."
+    )
+    args = parser.parse_args()
+
+    all_others = set()
+    positions = [read_epd_file(args.source)]
+
+    for file in args.references:
+        positions.append(read_epd_file(file))
+        all_others |= set(positions[-1])
+
+    print(
+        f"{args.source} has {len(positions[0])} unique positions. Of these ...",
+        file=sys.stderr,
+    )
+    l0 = len(positions[0])
+    common = len(positions[0].intersection(all_others))
+    l = len(all_others)
+    p = common / max(l, 1) * 100
+    p0 = common / l0 * 100
+    print(
+        f"{common} ({p0:.2f}%) are found within the {l} unique positions in all the reference files ({p:.2f}% overlap)",
+        file=sys.stderr,
+    )
+    for i, file in enumerate(args.references):
+        common = len(positions[0].intersection(positions[i + 1]))
+        l = len(positions[i + 1])
+        p = common / max(l, 1) * 100
+        p0 = common / l0 * 100
+        print(
+            f"{common} ({p0:.2f}%) are found within the {l} unique positions in {file} ({p:.2f}% overlap)",
+            file=sys.stderr,
+        )
+
+    with open(args.source) as f:
+        for line in f:
+            fen = line2fen(line)
+            if fen and fen not in all_others:
+                print(line, end="")
+                all_others |= {fen}
+
+
+if __name__ == "__main__":
+    main()
