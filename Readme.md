@@ -203,7 +203,7 @@ Started parsing the FENs with concurrency 16 ...
 Done. Scored 6561 FENs in 142.6s.
 ```
 
-See also [Addons](addons).
+See also [Addons](addons/Readme.md).
 
 ### `cdbpvpoll`
 
