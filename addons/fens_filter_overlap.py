@@ -1,4 +1,4 @@
-import argparse, sys
+import argparse, gzip, sys
 
 
 def line2fen(line):
@@ -9,9 +9,14 @@ def line2fen(line):
     return ""
 
 
+def open_file(filename):
+    open_func = gzip.open if filename.endswith(".gz") else open
+    return open_func(filename, "rt")
+
+
 def read_epd_file(filename):
     positions = set()
-    with open(filename) as f:
+    with open_file(filename) as f:
         for line in f:
             positions.add(line2fen(line))
     positions.discard("")
@@ -23,9 +28,9 @@ def main():
         description="Find proportion of unique EPDs in source that exist in the given list of references, and print lines in source with EPDs not found in the references to stdout (for duplicate EPDs only the first occurrence in source will be printed).",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument("source", help="The source .epd file.")
+    parser.add_argument("source", help="The source .epd(.gz) file.")
     parser.add_argument(
-        "references", nargs="*", help="List of reference .epd files, may be empty."
+        "references", nargs="*", help="List of reference .epd(.gz) files, may be empty."
     )
     args = parser.parse_args()
 
@@ -59,7 +64,7 @@ def main():
             file=sys.stderr,
         )
 
-    with open(args.source) as f:
+    with open_file(args.source) as f:
         for line in f:
             fen = line2fen(line)
             if fen and fen not in all_others:
