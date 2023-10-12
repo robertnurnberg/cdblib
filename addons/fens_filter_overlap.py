@@ -9,14 +9,14 @@ def line2fen(line):
     return ""
 
 
-def open_file(filename):
+def open_file_rt(filename):
     open_func = gzip.open if filename.endswith(".gz") else open
     return open_func(filename, "rt")
 
 
 def read_epd_file(filename):
     positions = set()
-    with open_file(filename) as f:
+    with open_file_rt(filename) as f:
         for line in f:
             positions.add(line2fen(line))
     positions.discard("")
@@ -64,7 +64,7 @@ def main():
             file=sys.stderr,
         )
 
-    with open_file(args.source) as f:
+    with open_file_rt(args.source) as f:
         for line in f:
             fen = line2fen(line)
             if fen and fen not in all_others:

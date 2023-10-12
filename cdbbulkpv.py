@@ -6,7 +6,7 @@ class bulkpv:
     def __init__(self, filename, stable, san, concurrency, user):
         self.filename = filename
         self.stable = stable
-        self.isPGN = filename.endswith(".pgn")
+        self.isPGN = filename.endswith(".pgn") or filename.endswith(".pgn.gz")
         self.san = san if self.isPGN else False
         self.concurrency = concurrency
         self.cdb = cdblib.cdbAPI(concurrency, user)
@@ -14,7 +14,7 @@ class bulkpv:
     def reload(self):
         self.metalist = []
         if self.isPGN:
-            pgn = open(self.filename)
+            pgn = cdblib.open_file_rt(self.filename)
             while game := chess.pgn.read_game(pgn):
                 self.metalist.append(game)
             self.count = len(self.metalist)
@@ -25,7 +25,7 @@ class bulkpv:
             )
         else:
             comments = 0
-            with open(self.filename) as f:
+            with cdblib.open_file_rt(self.filename) as f:
                 for line in f:
                     line = line.strip()
                     if line:
@@ -93,10 +93,10 @@ async def main():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
-        "filename", help="PGN file if suffix is .pgn, o/w a text file with FENs"
+        "filename", help="PGN file if suffix is .pgn(.gz), o/w a file with FENs."
     )
     parser.add_argument(
-        "--stable", action="store_true", help='pass "&stable=1" option to API'
+        "--stable", action="store_true", help='Pass "&stable=1" option to API.'
     )
     parser.add_argument(
         "--san",

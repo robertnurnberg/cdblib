@@ -39,7 +39,7 @@ class cdbwalk:
         user,
     ):
         self.filename = filename
-        self.isPGN = filename.endswith(".pgn")
+        self.isPGN = filename.endswith(".pgn") or filename.endswith(".pgn.gz")
         self.verbose = verbose
         self.moveTemp = moveTemp
         self.backtrack = backtrack
@@ -51,7 +51,7 @@ class cdbwalk:
     def reload(self):
         self.metalist = []
         if self.isPGN:
-            pgn = open(self.filename)
+            pgn = cdblib.open_file_rt(self.filename)
             while game := chess.pgn.read_game(pgn):
                 self.metalist.append(game)
             print(
@@ -59,7 +59,7 @@ class cdbwalk:
                 flush=True,
             )
         else:
-            with open(self.filename) as f:
+            with cdblib.open_file_rt(self.filename) as f:
                 for line in f:
                     line = line.strip()
                     if line:
@@ -174,7 +174,7 @@ async def main():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
-        "filename", help="PGN file if suffix is .pgn, o/w a text file with FENs"
+        "filename", help="PGN file if suffix is .pgn(.gz), o/w a file with FENs."
     )
     parser.add_argument(
         "-v",
@@ -223,7 +223,7 @@ async def main():
     parser.add_argument(
         "-u",
         "--user",
-        help="Add this username to the http user-agent header",
+        help="Add this username to the http user-agent header.",
     )
     parser.add_argument(
         "--forever",
