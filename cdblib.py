@@ -3,7 +3,7 @@
    Heavily based on Joost VandeVondele's https://github.com/vondele/cdbexplore
    See API documentation at https://www.chessdb.cn/cloudbookc_api_en.html
 """
-import asyncio, requests, sys, time, threading, concurrent.futures
+import asyncio, concurrent.futures, gzip, requests, sys, time, threading
 from datetime import datetime
 
 
@@ -297,3 +297,9 @@ def json2pv(r, san=False, ply=None):
             return ""
         s = " ".join(tuple(r["pv"]))
         return s
+
+
+def open_file_rt(filename):
+    # allow reading text files either plain or in gzip format
+    open_func = gzip.open if filename.endswith(".gz") else open
+    return open_func(filename, "rt")

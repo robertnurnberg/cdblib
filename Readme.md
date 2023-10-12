@@ -37,7 +37,7 @@ usage: cdbwalk.py [-h] [-v] [--moveTemp MOVETEMP] [--backtrack BACKTRACK] [--dep
 A script that walks within the chessdb.cn tree, starting from FENs or lines in a PGN file. Based on the given parameters, the script selects a move in each node, walking towards the leafs. Once an unknown position is reached, it is queued for analysis and the walk terminates.
 
 positional arguments:
-  filename              PGN file if suffix is .pgn, o/w a text file with FENs
+  filename              PGN file if suffix is .pgn(.gz), o/w a file with FENs.
 
 options:
   -h, --help            show this help message and exit
@@ -52,7 +52,7 @@ options:
                         Maximum concurrency of requests to cdb. (default: 16)
   -b BATCHSIZE, --batchSize BATCHSIZE
                         Number of positions processed in parallel. Small values guarantee more responsive output, large values give faster turnaround. (default: None)
-  -u USER, --user USER  Add this username to the http user-agent header (default: None)
+  -u USER, --user USER  Add this username to the http user-agent header. (default: None)
   --forever             Run the script in an infinite loop. (default: False)
 ```
 
@@ -83,7 +83,7 @@ usage: pgn2cdb.py [-h] [-v] [-d DEPTH] [-p PAINT] [-c CONCURRENCY] [-b BATCHSIZE
 A simple script to pass pgns to chessdb.cn.
 
 positional arguments:
-  filename              pgn file
+  filename              .pgn(.gz) file
 
 options:
   -h, --help            show this help message and exit
@@ -97,7 +97,6 @@ options:
   -b BATCHSIZE, --batchSize BATCHSIZE
                         Number of FENs processed in parallel. Small values guarantee more responsive output, large values give faster turnaround. (default: None)
   -u USER, --user USER  username for the http user-agent header (default: None)
-
 ``` 
 
 Sample usage and output:
@@ -241,11 +240,11 @@ usage: cdbbulkpv.py [-h] [--stable] [--san] [-c CONCURRENCY] [-b BATCHSIZE] [-u 
 A script that queries chessdb.cn for the PV of all positions in a file.
 
 positional arguments:
-  filename              PGN file if suffix is .pgn, o/w a text file with FENs
+  filename              PGN file if suffix is .pgn(.gz), o/w a file with FENs.
 
 options:
   -h, --help            show this help message and exit
-  --stable              pass "&stable=1" option to API (default: False)
+  --stable              Pass "&stable=1" option to API. (default: False)
   --san                 For PGN files, give PVs in short algebraic notation (SAN). (default: False)
   -c CONCURRENCY, --concurrency CONCURRENCY
                         Maximum concurrency of requests to cdb. (default: 16)

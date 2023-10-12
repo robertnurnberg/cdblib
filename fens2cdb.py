@@ -11,7 +11,7 @@ class fens2cdb:
         self.input = filename
         self.lines = []
         self.scored = 0
-        with open(filename) as f:
+        with cdblib.open_file_rt(filename) as f:
             for line in f:
                 line = line.strip()
                 if line:

@@ -40,7 +40,7 @@ class pgn2cdb:
         self.depth = depth
         self.paint = min(paint, depth)
         self.concurrency = concurrency
-        pgn = open(self.filename)
+        pgn = cdblib.open_file_rt(self.filename)
         self.gamelist = []
         while game := chess.pgn.read_game(pgn):
             self.gamelist.append(game)
@@ -185,7 +185,7 @@ async def main():
         description="A simple script to pass pgns to chessdb.cn.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument("filename", help="pgn file")
+    parser.add_argument("filename", help=".pgn(.gz) file")
     parser.add_argument(
         "-v",
         "--verbose",
