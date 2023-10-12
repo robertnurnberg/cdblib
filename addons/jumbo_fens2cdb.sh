@@ -3,8 +3,10 @@
 script_dir="$(dirname "$0")"
 fens2cdb="$script_dir/../fens2cdb.py"
 
-concurrency=32
-size=100000
+default_concurrency=32
+default_size=100000
+concurrency=$default_concurrency
+size=$default_size
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -19,8 +21,8 @@ while [[ $# -gt 0 ]]; do
     -h | --help)
         echo "Usage: $0 [OPTIONS] file.epd(.gz)"
         echo "Options:"
-        echo "  -c, --concurrency CONCURRENCY   Set the concurrency level (default: 32)"
-        echo "  -s, --size SIZE                 Set the size (default: 100000)"
+        echo "  -c, --concurrency CONCURRENCY   Set the concurrency level (default: $default_concurrency)"
+        echo "  -s, --size SIZE                 Set the size (default: $default_size)"
         echo
         echo "The script can be used for massive data uploads to chessdb.cn. It splits"
         echo "file.epd(.gz) into chunks of SIZE, then feeds them sequentially to cdb"
@@ -37,7 +39,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [ $# -ne 1 ]; then
-    echo "Usage: $0 [OPTIONS] <.epd(.gz)>"
+    echo "Usage: $0 [--help] [OPTIONS] file.epd(.gz)"
     exit 1
 fi
 
