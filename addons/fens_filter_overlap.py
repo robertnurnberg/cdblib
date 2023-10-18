@@ -32,6 +32,11 @@ def main():
     parser.add_argument(
         "references", nargs="*", help="List of reference .epd(.gz) files, may be empty."
     )
+    parser.add_argument(
+        "--saveMemory",
+        action="store_true",
+        help="Non functional if source contains no duplicate EPDs.",
+    )
     args = parser.parse_args()
 
     all_others = set()
@@ -39,7 +44,10 @@ def main():
 
     for file in args.references:
         positions.append(read_epd_file(file))
-        all_others |= set(positions[-1])
+        if len(args.references) == 1:  # save memory for single reference file
+            all_others = positions[-1]
+        else:
+            all_others |= positions[-1]
 
     print(
         f"{args.source} has {len(positions[0])} unique positions. Of these ...",
@@ -69,7 +77,8 @@ def main():
             fen = line2fen(line)
             if fen and fen not in all_others:
                 print(line, end="")
-                all_others |= {fen}
+                if not args.saveMemory:
+                    all_others |= {fen}
 
 
 if __name__ == "__main__":
