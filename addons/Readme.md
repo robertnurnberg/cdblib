@@ -40,7 +40,7 @@ memory. Then a strategy is to first run
 `python fens_filter_overlap.py popularpos.epd.gz > popularpos_unique.epd` to
 filter out any possible duplicates in `popularpos.epd.gz`, and then run in
 place of the first step the command `python fens_filter_overlap.py --noStats --saveMemory popularpos_unique.epd oracle1.epd.gz oracle2.epd.gz > new_popularpos.epd`. If `popularpos.epd.gz` is known to only contain unique positions, then
-just the first command with the additional switch `--saveMemory`.
+just run the first command as stated, but with the additional switch `--saveMemory`.
 
 ## Visualization
 
