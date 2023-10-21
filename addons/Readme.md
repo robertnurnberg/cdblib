@@ -14,7 +14,7 @@ contain all the EPDs with their cdb scores, as if `popularpos.epd.gz` was
 directly fed through `fens2cdb.py` to cdb.
 
 ```
-python fens_filter_overlap.py popularpos.epd.gz oracle1.epd.gz oracle2.epd.gz > new_popularpos.epd
+python fens_filter_overlap.py --noStats popularpos.epd.gz oracle1.epd.gz oracle2.epd.gz > new_popularpos.epd
 jumbo_fens2cdb.sh -c 64 new_popularpos.epd >&log.txt &
 score_fens_locally.py popularpos.epd.gz new_popularpos_cdb.epd oracle1.epd.gz oracle2.epd.gz > popularpos_cdb.epd
 ```
@@ -34,6 +34,13 @@ The three steps do the following:
    in `popularpos.epd.gz` from the locally available scores in
    `new_popularpos_cdb.epd`, `oracle1.epd.gz` and `oracle2.epd.gz` to produce
    the final `popularpos_cdb.epd`.
+
+For very large `popularpos.epd.gz` the first step may require too much 
+memory. Then a strategy is to first run 
+`python fens_filter_overlap.py popularpos.epd.gz > popularpos_unique.epd` to
+filter out any possible duplicates in `popularpos.epd.gz`, and then run in
+place of the first step the command `python fens_filter_overlap.py --noStats --saveMemory popularpos_unique.epd oracle1.epd.gz oracle2.epd.gz > new_popularpos.epd`. If `popularpos.epd.gz` is known to only contain unique positions, then
+just run the first command as stated, but with the additional switch `--saveMemory`.
 
 ## Visualization
 
