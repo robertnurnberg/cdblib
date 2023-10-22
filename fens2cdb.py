@@ -91,12 +91,15 @@ class fens2cdb:
         score = cdblib.json2eval(r)
         if r.get("status") == "unknown" and score == "":
             self.unknown.inc()
+            timeout = 5
             while self.enqueue and r["status"] == "unknown":
                 r = await self.cdb.queue(fen)
                 if self.enqueue >= 2:
-                    await asyncio.sleep(5)
+                    await asyncio.sleep(timeout)
                     r = await self.cdb.queryscore(fen)
                     score = cdblib.json2eval(r)
+                    if timeout < 120:
+                        timeout = min(timeout * 1.5, 120)
         if self.shortFormat:
             if score == "mated":
                 score = "#"
