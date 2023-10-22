@@ -95,7 +95,7 @@ class fens2cdb:
             while self.enqueue and r["status"] == "unknown":
                 r = await self.cdb.queue(fen)
                 if self.enqueue >= 2:
-                    await asyncio.sleep(5)
+                    await asyncio.sleep(timeout)
                     r = await self.cdb.queryscore(fen)
                     score = cdblib.json2eval(r)
                     if timeout < 120:
