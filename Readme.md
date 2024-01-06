@@ -231,12 +231,12 @@ Sample usage and output:
 ```
 > python cdbbulkpv.py TCEC_S24_sufi_book.pgn --san
 Read 50 (opening) lines from file TCEC_S24_sufi_book.pgn.
-1. e4 e5 2. d4 exd4 3. Qxd4 Nc6 4. Qe3 g6 5. Bd2 Bg7 6. Nc3 Nge7; cdb eval: 69; PV: 7. O-O-O d6 8. Nce2 Ng8 9. h4 Nf6 10. f3 h5 11. Nf4 Ne5 12. Be2 Qe7 13. Ngh3 Bxh3 14. Rxh3 a5 15. Kb1 c6 16. Bc1 Rd8 17. Rhh1 Nfd7 18. Bd2 Nc5 19. Bxa5 Rd7 20. Bb6 Qf6 
-1. e4 c5 2. Nf3 d6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 a6 6. f3 e6 7. Be3 b5 8. Qd2 Bb7 9. g4 h6 10. O-O-O Nbd7; cdb eval: 109; PV: 11. h4 b4 12. Na4 Qa5 13. b3 Nc5 14. a3 Qc7 15. axb4 Nxa4 16. bxa4 d5 17. e5 Nd7 18. f4 Nb6 19. Rh3 Bc8 20. Bf2 Bd7 21. f5 Nc4 22. Qc3 Be7 23. Bxc4 Qxc4 24. Qxc4 dxc4 25. Rc3 Bxa4 26. fxe6 O-O 27. Ra3 Be8 28. exf7+ Rxf7 29. Be1 Rf4 30. Nf5 Bf8 31. Re3 a5 32. e6 axb4 33. e7 Bxe7 34. Nxe7+ Kh7 35. Kb1 Rxg4 36. Bxb4 Rb8 37. c3 Rxh4 38. Re5 Rh2 39. Kc1 Rb6 40. Rd6 Rb7 41. Rd2 Rh1+ 42. Rd1 Rh2 43. Rde1 Bh5 44. Nf5 Bg6 45. Nd4 Ra7 46. R5e2 Rh4 47. Kb2 Bd3 48. Rf2 g5 49. Bc5 Rb7+ 50. Ka3 Re4 51. Rxe4 Bxe4 52. Rf6 Bd3 53. Ka4 
+1. e4 e5 2. d4 exd4 3. Qxd4 Nc6 4. Qe3 g6 5. Bd2 Bg7 6. Nc3 Nge7 ; cdb eval: 69; PV: 7. O-O-O d6 8. Nce2 Ng8 9. h4 Nf6 10. f3 h5 11. Nf4 Ne5 12. Be2 Qe7 13. Ngh3 Bxh3 14. Rxh3 a5 15. Kb1 c6 16. Bc1 Rd8 17. Rhh1 Nfd7 18. Bd2 Nc5 19. Bxa5 Rd7 20. Bb6 Qf6 ;
+1. e4 c5 2. Nf3 d6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 a6 6. f3 e6 7. Be3 b5 8. Qd2 Bb7 9. g4 h6 10. O-O-O Nbd7 ; cdb eval: 109; PV: 11. h4 b4 12. Na4 Qa5 13. b3 Nc5 14. a3 Qc7 15. axb4 Nxa4 16. bxa4 d5 17. e5 Nd7 18. f4 Nb6 19. Rh3 Bc8 20. Bf2 Bd7 21. f5 Nc4 22. Qc3 Be7 23. Bxc4 Qxc4 24. Qxc4 dxc4 25. Rc3 Bxa4 26. fxe6 O-O 27. Ra3 Be8 28. exf7+ Rxf7 29. Be1 Rf4 30. Nf5 Bf8 31. Re3 a5 32. e6 axb4 33. e7 Bxe7 34. Nxe7+ Kh7 35. Kb1 Rxg4 36. Bxb4 Rb8 37. c3 Rxh4 38. Re5 Rh2 39. Kc1 Rb6 40. Rd6 Rb7 41. Rd2 Rh1+ 42. Rd1 Rh2 43. Rde1 Bh5 44. Nf5 Bg6 45. Nd4 Ra7 46. R5e2 Rh4 47. Kb2 Bd3 48. Rf2 g5 49. Bc5 Rb7+ 50. Ka3 Re4 51. Rxe4 Bxe4 52. Rf6 Bd3 53. Ka4 ;
 .
 .
 .
-1. d4 Nf6 2. c4 e6 3. Nf3 Bb4+ 4. Bd2 a5 5. Qc2 d5 6. e3 O-O 7. Bd3 Nc6 8. a3 Bxd2+ 9. Nbxd2 Ne7; cdb eval: 99; PV: 10. g4 g6 11. g5 Nd7 12. h4 c5 13. h5 cxd4 14. exd4 dxc4 15. Be4 Ra7 16. O-O-O b5 17. Rh3 f5 18. gxf6 Nxf6 19. hxg6 h5 20. Ng5 Ned5 21. Kb1 b4 22. Nxc4 bxa3 23. Nf7 Qc7 24. Rxa3 Bb7 25. f3 Rb8 26. Rc1 Ba6 27. Bxd5 Nxd5 28. Nce5 Qxc2+ 
+1. d4 Nf6 2. c4 e6 3. Nf3 Bb4+ 4. Bd2 a5 5. Qc2 d5 6. e3 O-O 7. Bd3 Nc6 8. a3 Bxd2+ 9. Nbxd2 Ne7 ; cdb eval: 99; PV: 10. g4 g6 11. g5 Nd7 12. h4 c5 13. h5 cxd4 14. exd4 dxc4 15. Be4 Ra7 16. O-O-O b5 17. Rh3 f5 18. gxf6 Nxf6 19. hxg6 h5 20. Ng5 Ned5 21. Kb1 b4 22. Nxc4 bxa3 23. Nf7 Qc7 24. Rxa3 Bb7 25. f3 Rb8 26. Rc1 Ba6 27. Bxd5 Nxd5 28. Nce5 Qxc2+ ;
 Done processing TCEC_S24_sufi_book.pgn.
 
 > date
