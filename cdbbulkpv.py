@@ -77,13 +77,13 @@ class bulkpv:
         if self.san:
             ply = len(list(line.mainline_moves()))
             pv = cdblib.json2pv(r, san=True, ply=ply)
-            return f"{line.mainline_moves()} ; cdb eval: {score}; PV: {pv}"
+            return f"{line.mainline_moves()} ; cdb eval: {score}; PV: {pv};"
         else:
             pv = cdblib.json2pv(r)
             if self.isPGN:
                 line = epd
             return (
-                f"{line}{' ;' if line[-1] != ';' else ''} cdb eval: {score}; PV: {pv}"
+                f"{line}{' ;' if line[-1] != ';' else ''} cdb eval: {score}; PV: {pv};"
             )
 
 

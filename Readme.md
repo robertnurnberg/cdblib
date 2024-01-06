@@ -257,15 +257,15 @@ options:
 Sample usage and output:
 ```
 > python cdbbulkpv.py TCEC_S24_sufi_book.pgn --san
-Read 50 (opening) lines from file /home/rn/python/cdb/TCEC_S24_sufi_book.pgn.
+Read 50 (opening) lines from file TCEC_S24_sufi_book.pgn.
 Started parsing the positions with concurrency 16 ...
-1. e4 e5 2. d4 exd4 3. Qxd4 Nc6 4. Qe3 g6 5. Bd2 Bg7 6. Nc3 Nge7; cdb eval: 65; PV: 7. O-O-O d6 8. Nce2 Ng8 9. h4 h5 10. Nf4 Nf6 11. f3 Rb8 12. Bb5 a6 13. Bxc6+ bxc6 14. Bc3 Qe7 15. Nge2 Bb7 16. Rde1 c5 17. Qd2 Kf8 18. Kb1 Bc6 19. b3 Nd7 20. Nd5 Bxd5 21. exd5 Qd8 22. Qd3 Bxc3 23. Nxc3 Rb4 24. Re4 Nf6 25. Rxb4 cxb4 26. Ne4 Nxe4 27. Qxe4 a5 28. Qd4 Kg8 29. Qa7 Kg7 30. Qxa5 c5 31. Qxd8 Rxd8 
-1. e4 c5 2. Nf3 d6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 a6 6. f3 e6 7. Be3 b5 8. Qd2 Bb7 9. g4 h6 10. O-O-O Nbd7; cdb eval: 106; PV: 11. h4 Nb6 12. a3 Rc8 13. Be2 Nfd7 14. Kb1 Qc7 15. g5 hxg5 16. hxg5 Nc4 17. Bxc4 Rxh1 18. Rxh1 Qxc4 19. Bf2 Be7 20. Nb3 b4 21. axb4 Qxb4 22. Bd4 e5 23. Be3 Nf8 24. Rh8 a5 25. Rg8 a4 26. Nd5 Qxd2 27. Nxd2 Bd8 28. f4 g6 29. fxe5 dxe5 30. c3 Ba6 31. Kc2 Be2
+1. e4 e5 2. d4 exd4 3. Qxd4 Nc6 4. Qe3 g6 5. Bd2 Bg7 6. Nc3 Nge7 ; cdb eval: 65; PV: 7. O-O-O d6 8. Nce2 Ng8 9. h4 h5 10. Nf4 Nf6 11. f3 Rb8 12. Bb5 a6 13. Bxc6+ bxc6 14. Bc3 Qe7 15. Nge2 Bb7 16. Rde1 c5 17. Qd2 Kf8 18. Kb1 Bc6 19. b3 Nd7 20. Nd5 Bxd5 21. exd5 Qd8 22. Qd3 Bxc3 23. Nxc3 Rb4 24. Re4 Nf6 25. Rxb4 cxb4 26. Ne4 Nxe4 27. Qxe4 a5 28. Qd4 Kg8 29. Qa7 Kg7 30. Qxa5 c5 31. Qxd8 Rxd8 ;
+1. e4 c5 2. Nf3 d6 3. d4 cxd4 4. Nxd4 Nf6 5. Nc3 a6 6. f3 e6 7. Be3 b5 8. Qd2 Bb7 9. g4 h6 10. O-O-O Nbd7 ; cdb eval: 106; PV: 11. h4 Nb6 12. a3 Rc8 13. Be2 Nfd7 14. Kb1 Qc7 15. g5 hxg5 16. hxg5 Nc4 17. Bxc4 Rxh1 18. Rxh1 Qxc4 19. Bf2 Be7 20. Nb3 b4 21. axb4 Qxb4 22. Bd4 e5 23. Be3 Nf8 24. Rh8 a5 25. Rg8 a4 26. Nd5 Qxd2 27. Nxd2 Bd8 28. f4 g6 29. fxe5 dxe5 30. c3 Ba6 31. Kc2 Be2 ;
 .
 .
 .
-1. Nf3 d5 2. c4 e6 3. d4 Nf6 4. Nc3 c6 5. Bg5 dxc4 6. e4 b5 7. a4 Bb4; cdb eval: 43; PV: 8. e5 h6 9. exf6 hxg5 10. fxg7 Rg8 11. g3 g4 12. Ne5 Qd5 13. Rg1 Qe4+ 14. Be2 Nd7 15. Nxg4 Bb7 16. Kf1 Bxc3 17. bxc3 O-O-O 18. Bf3 Qd3+ 19. Qxd3 cxd3 20. Ne3 Rxg7 21. Be4 d2 22. axb5 cxb5 23. Bxb7+ Kxb7 24. Ke2 f5 25. Rgd1 f4 26. gxf4 Rf7 27. Kf3 Nb6 28. Rxd2 Rdf8 29. f5 exf5 30. Rda2 Ra8 31. h4 a6 32. h5 Rh7 33. Rh1 Rah8 34. Rg1 Na4 35. Ra3 Rxh5 36. Rg7+ Kb8 37. Rf7 R8h7 38. Rf6 Kb7 39. Ke2 Rh3 40. Rxf5 Nb6 41. Rf6 R3h6 42. Rf5 Rh5 43. Rf4 Rh4 44. Rf5 R4h5 
-1. d4 Nf6 2. c4 e6 3. Nf3 Bb4+ 4. Bd2 a5 5. Qc2 d5 6. e3 O-O 7. Bd3 Nc6 8. a3 Bxd2+ 9. Nbxd2 Ne7; cdb eval: 94; PV: 10. g4 g6 11. g5 Nd7 12. h4 c5 13. h5 cxd4 14. exd4 b6 15. O-O-O Ba6 16. Rh3 Kg7 17. Rdh1 Rg8 18. Nh2 Rc8 19. Kb1 Kf8 
+1. Nf3 d5 2. c4 e6 3. d4 Nf6 4. Nc3 c6 5. Bg5 dxc4 6. e4 b5 7. a4 Bb4 ; cdb eval: 43; PV: 8. e5 h6 9. exf6 hxg5 10. fxg7 Rg8 11. g3 g4 12. Ne5 Qd5 13. Rg1 Qe4+ 14. Be2 Nd7 15. Nxg4 Bb7 16. Kf1 Bxc3 17. bxc3 O-O-O 18. Bf3 Qd3+ 19. Qxd3 cxd3 20. Ne3 Rxg7 21. Be4 d2 22. axb5 cxb5 23. Bxb7+ Kxb7 24. Ke2 f5 25. Rgd1 f4 26. gxf4 Rf7 27. Kf3 Nb6 28. Rxd2 Rdf8 29. f5 exf5 30. Rda2 Ra8 31. h4 a6 32. h5 Rh7 33. Rh1 Rah8 34. Rg1 Na4 35. Ra3 Rxh5 36. Rg7+ Kb8 37. Rf7 R8h7 38. Rf6 Kb7 39. Ke2 Rh3 40. Rxf5 Nb6 41. Rf6 R3h6 42. Rf5 Rh5 43. Rf4 Rh4 44. Rf5 R4h5 ;
+1. d4 Nf6 2. c4 e6 3. Nf3 Bb4+ 4. Bd2 a5 5. Qc2 d5 6. e3 O-O 7. Bd3 Nc6 8. a3 Bxd2+ 9. Nbxd2 Ne7 ; cdb eval: 94; PV: 10. g4 g6 11. g5 Nd7 12. h4 c5 13. h5 cxd4 14. exd4 b6 15. O-O-O Ba6 16. Rh3 Kg7 17. Rdh1 Rg8 18. Nh2 Rc8 19. Kb1 Kf8 ;
 Done. Polled 50 positions in 9.3s.
 
 > date
