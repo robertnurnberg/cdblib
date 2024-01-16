@@ -79,7 +79,8 @@ class data:
         plt.savefig(pgnname, dpi=300)
         print(f"Saved eval distribution plot in file {pgnname}.")
 
-    def create_plygraph(self, bucketSize=2):
+    def create_plygraph(self, bucketSize=2, cutoff=200):
+        plies = [min(p, cutOff) for p in self.plies]
         rangeMin, rangeMax = min(self.plies), max(self.plies)
         fig, ax = plt.subplots()
         ax.hist(
@@ -93,6 +94,11 @@ class data:
         )
         fig.suptitle(
             f"min_ply distribution for {self.filename}.",
+        )
+        ax.set_title(
+            f"(Ply values > {cutOff} are included in the {cutOff} bucket.)",
+            fontsize=6,
+            family="monospace",
         )
         prefix, _, _ = self.filename.rpartition(".")
         pgnname = prefix + "_ply.png"
@@ -134,6 +140,12 @@ if __name__ == "__main__":
         type=int,
         default=2,
         help="bucket size for min_ply",
+    )
+    parser.add_argument(
+        "--plyCutOff",
+        help="Cutoff value for the ply distribution plot.",
+        type=int,
+        default=200,
     )
     parser.add_argument(
         "--debug",
