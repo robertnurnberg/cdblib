@@ -145,7 +145,7 @@ if __name__ == "__main__":
         "--plyCutOff",
         help="Cutoff value for the ply distribution plot.",
         type=int,
-        default=200,
+        default=60,
     )
     parser.add_argument(
         "--debug",
