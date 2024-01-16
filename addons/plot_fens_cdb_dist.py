@@ -79,7 +79,7 @@ class data:
         plt.savefig(pgnname, dpi=300)
         print(f"Saved eval distribution plot in file {pgnname}.")
 
-    def create_plygraph(self, bucketSize=2, cutoff=200):
+    def create_plygraph(self, bucketSize=2, cutOff=200):
         plies = [min(p, cutOff) for p in self.plies]
         rangeMin, rangeMax = min(self.plies), max(self.plies)
         fig, ax = plt.subplots()
@@ -156,4 +156,4 @@ if __name__ == "__main__":
 
     d = data(args.filename, args.debug)
     d.create_evalgraph(args.bucket, args.cutOff, args.absEval)
-    d.create_plygraph(args.plyBucket)
+    d.create_plygraph(args.plyBucket, args.plyCutOff)
