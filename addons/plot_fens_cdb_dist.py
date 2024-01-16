@@ -81,10 +81,10 @@ class data:
 
     def create_plygraph(self, bucketSize=2, cutOff=200):
         plies = [min(p, cutOff) for p in self.plies]
-        rangeMin, rangeMax = min(self.plies), max(self.plies)
+        rangeMin, rangeMax = min(plies), max(plies)
         fig, ax = plt.subplots()
         ax.hist(
-            self.plies,
+            plies,
             range=(rangeMin, rangeMax),
             bins=(rangeMax - rangeMin) // bucketSize,
             density=True,
