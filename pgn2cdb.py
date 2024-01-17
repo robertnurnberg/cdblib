@@ -76,7 +76,7 @@ db = dbcache(args.user)
 for i in reversed(range(gn)):
     board = gamelist[i].board()
     if args.verbose >= 4:
-        print("    pgn {i+1}/{gn}:" + str(gamelist[i].mainline_moves()))
+        print(f"    pgn {i+1}/{gn}:" + str(gamelist[i].mainline_moves()))
     plies, pc = 0, 32
     for move in gamelist[i].mainline_moves():
         if args.verbose >= 3:
