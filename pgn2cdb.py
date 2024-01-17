@@ -2,7 +2,7 @@
    Script that sends the first --depth plies of games in a PGN file to cdb at
    chessdb.cn. Use local cache to reduce API requests for large PGN files.
 """
-import argparse, time
+import argparse, logging, time
 import chess, chess.pgn, cdblib
 
 
@@ -64,9 +64,16 @@ parser.add_argument(
     help="username for the http user-agent header",
 )
 args = parser.parse_args()
+logging.getLogger("chess.pgn").setLevel(logging.CRITICAL)
 pgn = open(args.filename)
 gamelist = []
 while game := chess.pgn.read_game(pgn):
+    for e in game.errors:
+        if isinstance(e, chess.IllegalMoveError):
+            move = str(e).split(":")[-1].strip()
+            print(f"Ignoring illegal move {move}")
+        else:
+            print(f'Encountered error "{e}". Will try to continue.')
     gamelist.append(game)
 gn, seen, painted = len(gamelist), 0, 0
 args.paint = min(args.paint, args.depth)
@@ -162,7 +169,7 @@ for i in reversed(range(gn)):
 print(f"Done processing {args.filename} to depth {args.depth}.")
 print(f"{seen}/{gn} final positions already in chessdb.cn. ({seen/gn*100:.2f}%)")
 print(
-    f"Queued {db.queued} new positions to chessdb.cn. Local cache hit rate: {db.req_cached}/{db.req_received} = {db.req_cached/db.req_received*100:.2f}%."
+    f"Queued {db.queued} new positions to chessdb.cn. Local cache hit rate: {db.req_cached}/{db.req_received} = {db.req_cached/max(db.req_received,1)*100:.2f}%."
 )
 if args.paint:
     if painted:
