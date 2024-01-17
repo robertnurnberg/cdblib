@@ -2,7 +2,7 @@
    Script that sends the first --depth plies of games in a PGN file to cdb at
    chessdb.cn. Use local cache to reduce API requests for large PGN files.
 """
-import argparse, asyncio, time, chess, chess.pgn, cdblib
+import argparse, asyncio, logging, time, chess, chess.pgn, cdblib
 
 
 class dbcache:
@@ -41,8 +41,15 @@ class pgn2cdb:
         self.paint = min(paint, depth)
         self.concurrency = concurrency
         pgn = cdblib.open_file_rt(self.filename)
+        logging.getLogger("chess.pgn").setLevel(logging.CRITICAL)
         self.gamelist = []
         while game := chess.pgn.read_game(pgn):
+            for e in game.errors:
+                if isinstance(e, chess.IllegalMoveError):
+                    move = str(e).split(":")[-1].strip()
+                    print(f"Ignoring illegal move {move}")
+                else:
+                    print(f'Encountered error "{e}". Will try to continue.')
             self.gamelist.append(game)
         self.gn = len(self.gamelist)
         print(f"Read {self.gn} pgns from file {self.filename}.", flush=True)
@@ -81,7 +88,7 @@ class pgn2cdb:
             f"{s}/{self.gn} final positions already in chessdb.cn. ({s/self.gn*100:.2f}%)"
         )
         print(
-            f"Queued {q} new positions to chessdb.cn. Local cache hit rate: {c}/{r} = {c/r*100:.2f}%."
+            f"Queued {q} new positions to chessdb.cn. Local cache hit rate: {c}/{r} = {c/max(r,1)*100:.2f}%."
         )
         if self.paint:
             p = self.painted.get()
