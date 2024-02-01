@@ -80,12 +80,6 @@ async def main():
     )
     parser.add_argument("filenames", nargs="+", help=".pgn(.gz) file")
     parser.add_argument(
-        "-o",
-        "--outFile",
-        help="filename to store cdb evaluations, if requested",
-        default="bulkpgn2cdb.epd",
-    )
-    parser.add_argument(
         "-v",
         "--verbose",
         action="count",
@@ -102,7 +96,7 @@ async def main():
     parser.add_argument(
         "-c",
         "--concurrency",
-        help="Maximum concurrency of requests to cdb.",
+        help="maximum concurrency of requests to cdb",
         type=int,
         default=16,
     )
