@@ -9,6 +9,7 @@ class bulkpgn2cdb:
         self.fens = set()
         self.gameCount = 0
         print(f"Loading games from {len(filenames)} file(s) ...", flush=True)
+        self.tic = time.time()
         for f in filenames:
             pgn = cdblib.open_file_rt(f)
             logging.getLogger("chess.pgn").setLevel(logging.CRITICAL)
@@ -39,6 +40,10 @@ class bulkpgn2cdb:
                 if self.verbose:
                     print(f"For game {self.gameCount} found {plies} positions.")
 
+        elapsed = time.time() - self.tic
+        print(
+            f"Done. Parsed {self.gameCount} games to depth {self.depth} in {elapsed:.1f}s."
+        )
         print(
             f"Found {len(self.fens)} unique positions from {self.gameCount} games in {len(filenames)} file(s) to send to cdb.",
             flush=True,
