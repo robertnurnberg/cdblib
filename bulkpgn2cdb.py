@@ -7,13 +7,13 @@ class bulkpgn2cdb:
         self.depth = depth
         self.concurrency = concurrency
         self.fens = set()
-        gameCount = 0
+        self.gameCount = 0
         print(f"Loading games from {len(filenames)} file(s) ...", flush=True)
         for f in filenames:
             pgn = cdblib.open_file_rt(f)
             logging.getLogger("chess.pgn").setLevel(logging.CRITICAL)
             while game := chess.pgn.read_game(pgn):
-                gameCount += 1
+                self.gameCount += 1
                 for e in game.errors:
                     if isinstance(e, chess.IllegalMoveError):
                         move = str(e).split(":")[-1].strip()
@@ -22,7 +22,7 @@ class bulkpgn2cdb:
                         print(f'Encountered error "{e}". Will try to continue.')
                 board = game.board()
                 if self.verbose >= 2:
-                    print(f"game {gameCount}: {str(game.mainline_moves())}")
+                    print(f"game {self.gameCount}: {str(game.mainline_moves())}")
                 plies, pc = 0, 32
                 for move in game.mainline_moves():
                     pc = 64 - str(board).count(".")  # piece count
@@ -37,10 +37,10 @@ class bulkpgn2cdb:
                     board.push(move)
                     plies += 1
                 if self.verbose:
-                    print(f"For game {gameCount} found {plies} positions.")
+                    print(f"For game {self.gameCount} found {plies} positions.")
 
         print(
-            f"Found {len(self.fens)} unique positions from {gameCount} games in {len(filenames)} file(s) to send to cdb.",
+            f"Found {len(self.fens)} unique positions from {self.gameCount} games in {len(filenames)} file(s) to send to cdb.",
             flush=True,
         )
         self.cdb = cdblib.cdbAPI(concurrency, user)
@@ -59,7 +59,9 @@ class bulkpgn2cdb:
             await parse_fen
 
         elapsed = time.time() - self.tic
-        print(f"Done. Queued {len(self.fens)} FENs in {elapsed:.1f}s.")
+        print(
+            f"Done. Queued {len(self.fens)} FENs from {self.gameCount} games to depth {self.depth} in {elapsed:.1f}s."
+        )
 
     async def parse_single_fen(self, fen):
         timeout = 0
