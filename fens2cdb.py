@@ -157,7 +157,7 @@ async def main():
     parser.add_argument(
         "-u",
         "--user",
-        help="Add this username to the http user-agent header",
+        help="Add this username to the http user-agent header.",
     )
     args = parser.parse_args()
 

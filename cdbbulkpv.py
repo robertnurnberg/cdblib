@@ -96,7 +96,7 @@ async def main():
         "filename", help="PGN file if suffix is .pgn(.gz), o/w a file with FENs."
     )
     parser.add_argument(
-        "--stable", action="store_true", help='Pass "&stable=1" option to API.'
+        "--stable", action="store_true", help='Pass "&stable=1" option to the API.'
     )
     parser.add_argument(
         "--san",
@@ -120,7 +120,7 @@ async def main():
     parser.add_argument(
         "-u",
         "--user",
-        help="Add this username to the http user-agent header",
+        help="Add this username to the http user-agent header.",
     )
     parser.add_argument(
         "--forever",

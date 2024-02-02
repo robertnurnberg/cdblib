@@ -198,21 +198,21 @@ async def main():
         "--verbose",
         action="count",
         default=0,
-        help="increase output with -v, -vv, -vvv etc.",
+        help="Increase output with -v, -vv, -vvv etc.",
     )
     parser.add_argument(
         "-d",
         "--depth",
         type=int,
         default=30,
-        help="number of plies to be added to chessdb.cn",
+        help="Number of plies to be added to chessdb.cn.",
     )
     parser.add_argument(
         "-p",
         "--paint",
         type=int,
         default=0,
-        help="depth in plies to try to extend the root's connected component to in each line",
+        help="Depth in plies to try to extend the root's connected component to in each line.",
     )
     parser.add_argument(
         "-c",
@@ -231,7 +231,7 @@ async def main():
     parser.add_argument(
         "-u",
         "--user",
-        help="username for the http user-agent header",
+        help="Add this username to the http user-agent header.",
     )
     args = parser.parse_args()
     p2c = pgn2cdb(

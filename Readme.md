@@ -11,10 +11,11 @@ Provide a simple library with wrapper functions for the API of cdb. All the wrap
 
 ## Usage
 
-By way of example, five small application scripts are provided.
+By way of example, six small application scripts are provided.
 
 * [`cdbwalk`](#cdbwalk) - walk through cdb towards the leafs, extending existing lines
-* [`pgn2cdb`](#pgn2cdb) - populate cdb with moves from games in a PGN
+* [`pgn2cdb`](#pgn2cdb) - populate cdb with moves from games in a PGN, and monitoring their coverage on cdb
+* [`bulkpgn2cdb`](#bulkpgn2cdb) - populate cdb with moves from games in PGNs
 * [`fens2cdb`](#fens2cdb) - request evaluations from cdb for FENs stored in a file
 * [`cdbpvpoll`](#cdbpvpoll) - monitor a position's PV on cdb over time
 * [`cdbbulkpv`](#cdbbulkpv) - bulk-request PVs from cdb for positions stored in a file
@@ -75,7 +76,7 @@ Sun 23 Jul 14:13:42 CEST 2023
 
 ### `pgn2cdb`
 
-A command line program to populate cdb with moves from games stored in a PGN file, up to a desired depth. 
+A command line program to populate cdb with moves from games stored in a PGN file, up to a desired depth. The script also provides information about the existing coverage of the lines on cdb.
 
 ```
 usage: pgn2cdb.py [-h] [-v] [-d DEPTH] [-p PAINT] [-c CONCURRENCY] [-b BATCHSIZE] [-u USER] filename
@@ -87,16 +88,16 @@ positional arguments:
 
 options:
   -h, --help            show this help message and exit
-  -v, --verbose         increase output with -v, -vv, -vvv etc. (default: 0)
+  -v, --verbose         Increase output with -v, -vv, -vvv etc. (default: 0)
   -d DEPTH, --depth DEPTH
-                        number of plies to be added to chessdb.cn (default: 30)
+                        Number of plies to be added to chessdb.cn. (default: 30)
   -p PAINT, --paint PAINT
-                        depth in plies to try to extend the root's connected component to in each line (default: 0)
+                        Depth in plies to try to extend the root's connected component to in each line. (default: 0)
   -c CONCURRENCY, --concurrency CONCURRENCY
                         Maximum concurrency of requests to cdb. (default: 16)
   -b BATCHSIZE, --batchSize BATCHSIZE
                         Number of FENs processed in parallel. Small values guarantee more responsive output, large values give faster turnaround. (default: None)
-  -u USER, --user USER  username for the http user-agent header (default: None)
+  -u USER, --user USER  Add this username to the http user-agent header. (default: None)
 ``` 
 
 Sample usage and output:
@@ -169,6 +170,40 @@ Queued 76852 new positions to chessdb.cn. Local cache hit rate: 449/221243 = 0.2
 Sat  5 Aug 23:11:51 CEST 2023
 ```
 
+### `bulkpgn2cdb`
+
+A command line program to populate cdb with moves from games stored in a collection of PGN files, up to a desired depth. In contrast to `pgn2cdb`, this script provides no information about existing coverage on cdb, and simply queues _all_ positions of interest for analysis on cdb.
+
+```
+usage: bulkpgn2cdb.py [-h] [-o OUTFILE] [-v] [-d DEPTH] [-c CONCURRENCY] [-u USER] filenames [filenames ...]
+
+A script to pass many positions from pgns to chessdb.cn.
+
+positional arguments:
+  filenames             .pgn(.gz) file(s)
+
+options:
+  -h, --help            show this help message and exit
+  -o OUTFILE, --outFile OUTFILE
+                        Filename to write unique FENs to. (default: None)
+  -v, --verbose         Increase output with -v, -vv, -vvv etc. (default: 0)
+  -d DEPTH, --depth DEPTH
+                        Number of plies to be added to chessdb.cn. (default: 100)
+  -c CONCURRENCY, --concurrency CONCURRENCY
+                        Maximum concurrency of requests to cdb. (default: 16)
+  -u USER, --user USER  Add this username to the http user-agent header. (default: None)
+```
+
+Sample usage and output:
+```
+> python bulkpgn2cdb.py Trompowsky2e6.pgn -d 50
+Loading games from 1 file(s) ...
+Done. Parsed 9436 games to depth 50 in 71.3s.
+Found 311297 unique positions from 9436 games in 1 file(s) to send to cdb.
+Started parsing the FENs with concurrency 16 ...
+Done. Queued 311297 FENs from 9436 games to depth 50 in 7932.7s.
+```
+
 ### `fens2cdb`
 
 A command line program to bulk-request evaluations from cdb for all the FENs/EPDs stored within a file. 
@@ -191,7 +226,7 @@ options:
                         Maximum concurrency of requests to cdb. (default: 16)
   -b BATCHSIZE, --batchSize BATCHSIZE
                         Number of FENs processed in parallel. Small values guarantee more responsive output, large values give faster turnaround. (default: None)
-  -u USER, --user USER  Add this username to the http user-agent header (default: None)
+  -u USER, --user USER  Add this username to the http user-agent header. (default: None)
 ``` 
 
 Sample usage and output:
@@ -215,11 +250,11 @@ Monitor dynamic changes in a position's PV on chessdb.cn by polling it at regula
 
 options:
   -h, --help            show this help message and exit
-  --epd EPD             FEN/EPD of the position to monitor (default: rnbqkbnr/pppppppp/8/8/6P1/8/PPPPPP1P/RNBQKBNR b KQkq g3)
-  --stable              pass "&stable=1" option to API (default: False)
-  --sleep SLEEP         time interval between polling requests in seconds (default: 3600)
-  --san                 give PV in short algebraic notation (SAN) (default: False)
-  -u USER, --user USER  username for the http user-agent header (default: None)
+  --epd EPD             FEN/EPD of the position to monitor. (default: rnbqkbnr/pppppppp/8/8/6P1/8/PPPPPP1P/RNBQKBNR b KQkq g3)
+  --stable              Pass "&stable=1" option to the API. (default: False)
+  --sleep SLEEP         Time interval between polling requests in seconds. (default: 3600)
+  --san                 Give PV in short algebraic notation (SAN). (default: False)
+  -u USER, --user USER  Add this username to the http user-agent header. (default: None)
 ``` 
 
 Sample usage and output:
@@ -244,13 +279,13 @@ positional arguments:
 
 options:
   -h, --help            show this help message and exit
-  --stable              Pass "&stable=1" option to API. (default: False)
+  --stable              Pass "&stable=1" option to the API. (default: False)
   --san                 For PGN files, give PVs in short algebraic notation (SAN). (default: False)
   -c CONCURRENCY, --concurrency CONCURRENCY
                         Maximum concurrency of requests to cdb. (default: 16)
   -b BATCHSIZE, --batchSize BATCHSIZE
                         Number of positions processed in parallel. Small values guarantee more responsive output, large values give faster turnaround. (default: None)
-  -u USER, --user USER  Add this username to the http user-agent header (default: None)
+  -u USER, --user USER  Add this username to the http user-agent header. (default: None)
   --forever             Run the script in an infinite loop. (default: False)
 ```
 
