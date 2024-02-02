@@ -11,10 +11,11 @@ Provide a simple library with wrapper functions for the API of cdb. All the wrap
 
 ## Usage
 
-By way of example, five small application scripts are provided.
+By way of example, six small application scripts are provided.
 
 * [`cdbwalk`](#cdbwalk) - walk through cdb towards the leafs, extending existing lines
-* [`pgn2cdb`](#pgn2cdb) - populate cdb with moves from games in a PGN
+* [`pgn2cdb`](#pgn2cdb) - populate cdb with moves from games in a PGN, and monitoring their coverage on cdb
+* [`bulkpgn2cdb`](#bulkpgn2cdb) - populate cdb with moves from games in PGNs
 * [`fens2cdb`](#fens2cdb) - request evaluations from cdb for FENs stored in a file
 * [`cdbpvpoll`](#cdbpvpoll) - monitor a position's PV on cdb over time
 * [`cdbbulkpv`](#cdbbulkpv) - bulk-request PVs from cdb for positions stored in a file
@@ -75,7 +76,7 @@ Sun 23 Jul 14:13:42 CEST 2023
 
 ### `pgn2cdb`
 
-A command line program to populate cdb with moves from games stored in a PGN file, up to a desired depth. The script also provides information about evaluations and existing coverage of the lines on cdb.
+A command line program to populate cdb with moves from games stored in a PGN file, up to a desired depth. The script also provides information about the existing coverage of the lines on cdb.
 
 ```
 usage: pgn2cdb.py [-h] [-v] [-d DEPTH] [-p PAINT] [-c CONCURRENCY] [-b BATCHSIZE] [-u USER] filename
@@ -171,7 +172,7 @@ Sat  5 Aug 23:11:51 CEST 2023
 
 ### `bulkpgn2cdb`
 
-A command line program to populate cdb with moves from games stored in a collection of PGN files, up to a desired depth. In contrast to `pgn2cdb`, this script provides no information about evaluations or coverage on cdb, and simply queues _all_ positions of interest for analysis on cdb.
+A command line program to populate cdb with moves from games stored in a collection of PGN files, up to a desired depth. In contrast to `pgn2cdb`, this script provides no information about existing coverage on cdb, and simply queues _all_ positions of interest for analysis on cdb.
 
 ```
 usage: bulkpgn2cdb.py [-h] [-o OUTFILE] [-v] [-d DEPTH] [-c CONCURRENCY] [-u USER] filenames [filenames ...]
