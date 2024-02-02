@@ -2,7 +2,7 @@ import argparse, asyncio, logging, time, chess, chess.pgn, cdblib
 
 
 class bulkpgn2cdb:
-    def __init__(self, filenames, verbose, depth, concurrency, user):
+    def __init__(self, filenames, outFile, verbose, depth, concurrency, user):
         self.verbose = verbose
         self.depth = depth
         self.concurrency = concurrency
@@ -48,6 +48,13 @@ class bulkpgn2cdb:
             f"Found {len(self.fens)} unique positions from {self.gameCount} games in {len(filenames)} file(s) to send to cdb.",
             flush=True,
         )
+        if outFile:
+            fens = sorted(list(self.fens))
+            with open(outFile, "w") as f:
+                for fen in fens:
+                    f.write(fen + "\n")
+            print(f"Wrote the unique positions to {outFile}.")
+
         self.cdb = cdblib.cdbAPI(concurrency, user)
 
     async def parse_all(self):
@@ -85,36 +92,43 @@ async def main():
         description="A script to pass many positions from pgns to chessdb.cn.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument("filenames", nargs="+", help=".pgn(.gz) file")
+    parser.add_argument("filenames", nargs="+", help=".pgn(.gz) file(s)")
+    parser.add_argument(
+        "-o",
+        "--outFile",
+        help="Filename to write unique FENs to.",
+        default=None,
+    )
     parser.add_argument(
         "-v",
         "--verbose",
         action="count",
         default=0,
-        help="increase output with -v, -vv, -vvv etc.",
+        help="Increase output with -v, -vv, -vvv etc.",
     )
     parser.add_argument(
         "-d",
         "--depth",
         type=int,
         default=100,
-        help="number of plies to be added to chessdb.cn",
+        help="Number of plies to be added to chessdb.cn.",
     )
     parser.add_argument(
         "-c",
         "--concurrency",
-        help="maximum concurrency of requests to cdb",
+        help="Maximum concurrency of requests to cdb.",
         type=int,
         default=16,
     )
     parser.add_argument(
         "-u",
         "--user",
-        help="username for the http user-agent header",
+        help="Add this username to the http user-agent header.",
     )
     args = parser.parse_args()
     p2c = bulkpgn2cdb(
         args.filenames,
+        args.outFile,
         args.verbose,
         args.depth,
         args.concurrency,
