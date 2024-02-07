@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# exit on errors
+set -e
+
 script_dir="$(dirname "$0")"
 fens2cdb="$script_dir/../fens2cdb.py"
 
