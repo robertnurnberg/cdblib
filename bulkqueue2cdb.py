@@ -169,7 +169,7 @@ async def main():
     parser.add_argument(
         "filenames",
         nargs="+",
-        help="""PGN file if suffix is .pgn(.gz), o/w a file with FENs/EPDs. The latter may use the extended "moves m1 m2 m3" syntax from cdb's API.""",
+        help="""Files that contain games/lines to be uploaded. Suffix .pgn(.gz) indicates PGN format, o/w a (.gz) text file with FENs/EPDs. The latter may use the extended "moves m1 m2 m3" syntax from cdb's API.""",
     )
     parser.add_argument(
         "-o",

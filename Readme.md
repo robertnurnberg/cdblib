@@ -180,7 +180,7 @@ usage: bulkqueue2cdb.py [-h] [-o OUTFILE] [-v] [--plyBegin PLYBEGIN] [--plyEnd P
 A script to queue positions from files to chessdb.cn.
 
 positional arguments:
-  filenames             PGN file if suffix is .pgn(.gz), o/w a file with FENs/EPDs. The latter may use the extended "moves m1 m2 m3" syntax from cdb's API.
+  filenames             Files that contain games/lines to be uploaded. Suffix .pgn(.gz) indicates PGN format, o/w a (.gz) text file with FENs/EPDs. The latter may use the extended "moves m1 m2 m3" syntax from cdb's API.
 
 options:
   -h, --help            show this help message and exit
