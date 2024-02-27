@@ -15,7 +15,7 @@ By way of example, six small application scripts are provided.
 
 * [`cdbwalk`](#cdbwalk) - walk through cdb towards the leafs, extending existing lines
 * [`pgn2cdb`](#pgn2cdb) - populate cdb with moves from games in a PGN, and monitoring their coverage on cdb
-* [`bulkqueue2cdb`](#bulkpgn2cdb) - bulk queue positions from files to cdb
+* [`bulkqueue2cdb`](#bulkqueue2cdb) - bulk queue positions from files to cdb
 * [`fens2cdb`](#fens2cdb) - request evaluations from cdb for FENs stored in a file
 * [`cdbpvpoll`](#cdbpvpoll) - monitor a position's PV on cdb over time
 * [`cdbbulkpv`](#cdbbulkpv) - bulk-request PVs from cdb for positions stored in a file
