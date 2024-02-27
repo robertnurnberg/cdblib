@@ -15,7 +15,7 @@ By way of example, six small application scripts are provided.
 
 * [`cdbwalk`](#cdbwalk) - walk through cdb towards the leafs, extending existing lines
 * [`pgn2cdb`](#pgn2cdb) - populate cdb with moves from games in a PGN, and monitoring their coverage on cdb
-* [`bulkpgn2cdb`](#bulkpgn2cdb) - populate cdb with moves from games in PGNs
+* [`bulkqueue2cdb`](#bulkpgn2cdb) - bulk queue positions from files to cdb
 * [`fens2cdb`](#fens2cdb) - request evaluations from cdb for FENs stored in a file
 * [`cdbpvpoll`](#cdbpvpoll) - monitor a position's PV on cdb over time
 * [`cdbbulkpv`](#cdbbulkpv) - bulk-request PVs from cdb for positions stored in a file
@@ -170,25 +170,27 @@ Queued 76852 new positions to chessdb.cn. Local cache hit rate: 449/221243 = 0.2
 Sat  5 Aug 23:11:51 CEST 2023
 ```
 
-### `bulkpgn2cdb`
+### `bulkqueue2cdb`
 
-A command line program to populate cdb with moves from games stored in a collection of PGN files, up to a desired depth. In contrast to `pgn2cdb`, this script provides no information about existing coverage on cdb, and simply queues _all_ positions of interest for analysis on cdb.
+A command line program to queue positions from games in PGN files, or from extended EPDs, to cdb. In contrast to `pgn2cdb`, this script provides no information about existing coverage on cdb, and simply queues _all_ positions of interest for analysis on cdb.
 
 ```
-usage: bulkpgn2cdb.py [-h] [-o OUTFILE] [-v] [-d DEPTH] [-c CONCURRENCY] [-u USER] filenames [filenames ...]
+usage: bulkqueue2cdb.py [-h] [-o OUTFILE] [-v] [--plyBegin PLYBEGIN] [--plyEnd PLYEND] [--pieceMin PIECEMIN] [--pieceMax PIECEMAX] [-c CONCURRENCY] [-u USER] filenames [filenames ...]
 
-A script to pass many positions from pgns to chessdb.cn.
+A script to queue positions from files to chessdb.cn.
 
 positional arguments:
-  filenames             .pgn(.gz) file(s)
+  filenames             Files that contain games/lines to be uploaded. Suffix .pgn(.gz) indicates PGN format, o/w a (.gz) text file with FENs/EPDs. The latter may use the extended "moves m1 m2 m3" syntax from cdb's API.
 
 options:
   -h, --help            show this help message and exit
   -o OUTFILE, --outFile OUTFILE
                         Filename to write unique FENs to. (default: None)
   -v, --verbose         Increase output with -v, -vv, -vvv etc. (default: 0)
-  -d DEPTH, --depth DEPTH
-                        Number of plies to be added to chessdb.cn. (default: 100)
+  --plyBegin PLYBEGIN   Ply in each line from which positions will be queued to cdb. A value of 0 corresponds to the starting FEN without any moves played. Negative values count from the back, as per the Python standard. (default: 0)
+  --plyEnd PLYEND       Ply in each line until which positions will be queued to cdb. A value of None means including the final move of the line. (default: None)
+  --pieceMin PIECEMIN   Only queue positions with at least this many pieces (cdb only stores positions with 8 pieces or more). (default: 8)
+  --pieceMax PIECEMAX   Only queue positions with at most this many pieces. (default: 32)
   -c CONCURRENCY, --concurrency CONCURRENCY
                         Maximum concurrency of requests to cdb. (default: 16)
   -u USER, --user USER  Add this username to the http user-agent header. (default: None)
@@ -196,12 +198,14 @@ options:
 
 Sample usage and output:
 ```
-> python bulkpgn2cdb.py Trompowsky2e6.pgn -d 50
+> python bulkqueue2cdb.py Trompowsky2e6.pgn --plyBegin 51 --plyEnd 60 -c 32
 Loading games from 1 file(s) ...
-Done. Parsed 9436 games to depth 50 in 71.3s.
-Found 311297 unique positions from 9436 games in 1 file(s) to send to cdb.
-Started parsing the FENs with concurrency 16 ...
-Done. Queued 311297 FENs from 9436 games to depth 50 in 7932.7s.
+Loaded 9436 games from file Trompowsky2e6.pgn.
+Loaded 66984 unique EPDs from file Trompowsky2e6.pgn.
+Done. Parsed 9436 games/lines in 57.0s.
+Found 66984 unique positions from 9436 games/lines in 1 file(s) to send to cdb.
+Started parsing the FENs with concurrency 32 ...
+Done. Queued 66984 FENs from 9436 games in 791.6s.
 ```
 
 ### `fens2cdb`
