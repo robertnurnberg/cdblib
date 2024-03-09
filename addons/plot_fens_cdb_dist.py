@@ -11,8 +11,8 @@ def open_file(filename):
 class data:
     def __init__(self, filename, debug=False):
         self.connected = 0
-        self.evals = []
-        self.plies = []
+        self.evals = Counter()
+        self.plies = Counter()
         with open_file(filename) as f:
             for line in f:
                 line = line.strip()
@@ -23,42 +23,47 @@ class data:
                     if "ply" in cdb:
                         self.connected += 1
                         cdb, _, ply = cdb.partition(", ply: ")
-                        self.plies.append(int(ply[:-1]))
+                        self.plies[int(ply[:-1])] += 1
                     else:
                         cdb, _, _ = cdb.partition(";")
                     if cdb.lstrip("-").isnumeric():
-                        self.evals.append(int(cdb))
+                        e = int(cdb)
                     elif cdb.startswith("M"):
-                        self.evals.append(30000 - int(cdb[1:]))
+                        e = 30000 - int(cdb[1:])
                     elif cdb.startswith("-M"):
-                        self.evals.append(-30000 + int(cdb[2:]))
+                        e = -30000 + int(cdb[2:])
+                    self.evals[e] += 1
         self.filename = filename[:-3] if filename.endswith(".gz") else filename
         print(
-            f"Loaded {len(self.evals)} EPDs with evals in [{min(self.evals)}, {max(self.evals)}], {self.connected} of which are connected to root on cdb."
+            f"Loaded {sum(self.evals.values())} EPDs with evals in [{min(self.evals.keys())}, {max(self.evals.keys())}], {self.connected} of which are connected to root on cdb."
         )
-        l = len(self.plies)
+        s = sum(key * count for key, count in self.plies.items())
+        l = sum(self.plies.values())
         print(
-            f"{l} of the EPDs have ply in [{min(self.plies)}, {max(self.plies)}], average = {sum(self.plies)/l:.2f}."
+            f"{l} of the EPDs have ply in [{min(self.plies.keys())}, {max(self.plies.keys())}], average = {s/l:.2f}."
         )
         if debug:
             print("eval frequencies:", end=" ")
             eval_count = sorted(
-                Counter(self.evals).items(), key=lambda t: abs(t[0]) + 0.5 * (t[0] < 0)
+                self.evals.items(), key=lambda t: abs(t[0]) + 0.5 * (t[0] < 0)
             )
             print(", ".join([f"{eval}: {frequency}" for eval, frequency in eval_count]))
             print("ply frequencies:", end=" ")
-            ply_count = sorted(Counter(self.plies).items(), key=lambda x: x[0])
+            ply_count = sorted(self.plies.items(), key=lambda x: x[0])
             print(", ".join([f"{ply}: {frequency}" for ply, frequency in ply_count]))
 
     def create_evalgraph(self, bucketSize=10, cutOff=200, absEval=False):
-        if absEval:
-            evals = [min(abs(e), cutOff) for e in self.evals]
-        else:
-            evals = [min(max(-cutOff, e), cutOff) for e in self.evals]
-        rangeMin, rangeMax = min(evals), max(evals)
+        evals = Counter()
+
+        for e, freq in self.evals.items():
+            e = min(abs(e), cutOff) if absEval else min(max(-cutOff, e), cutOff)
+
+            evals[e] += freq
+        rangeMin, rangeMax = min(evals.keys()), max(evals.keys())
         fig, ax = plt.subplots()
         ax.hist(
-            evals,
+            evals.keys(),
+            weights=evals.values(),
             range=(rangeMin, rangeMax),
             bins=(rangeMax - rangeMin) // bucketSize,
             density=True,
@@ -80,11 +85,14 @@ class data:
         print(f"Saved eval distribution plot in file {pgnname}.")
 
     def create_plygraph(self, bucketSize=2, cutOff=200):
-        plies = [min(p, cutOff) for p in self.plies]
-        rangeMin, rangeMax = min(plies), max(plies)
+        plies = Counter()
+        for p, freq in self.plies.items():
+            plies[min(p, cutOff)] += freq
+        rangeMin, rangeMax = min(plies.keys()), max(plies.keys())
         fig, ax = plt.subplots()
         ax.hist(
-            plies,
+            plies.keys(),
+            weights=plies.values(),
             range=(rangeMin, rangeMax),
             bins=(rangeMax - rangeMin) // bucketSize,
             density=True,
