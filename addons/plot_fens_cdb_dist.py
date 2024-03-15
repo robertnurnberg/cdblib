@@ -39,9 +39,10 @@ class data:
         )
         s = sum(key * count for key, count in self.plies.items())
         l = sum(self.plies.values())
-        print(
-            f"{l} of the EPDs have ply in [{min(self.plies.keys())}, {max(self.plies.keys())}], average = {s/l:.2f}."
-        )
+        if l:
+            print(
+                f"{l} of the EPDs have ply in [{min(self.plies.keys())}, {max(self.plies.keys())}], average = {s/l:.2f}."
+            )
         if debug:
             print("eval frequencies:", end=" ")
             eval_count = sorted(
@@ -164,4 +165,5 @@ if __name__ == "__main__":
 
     d = data(args.filename, args.debug)
     d.create_evalgraph(args.bucket, args.cutOff, args.absEval)
-    d.create_plygraph(args.plyBucket, args.plyCutOff)
+    if d.plies:
+        d.create_plygraph(args.plyBucket, args.plyCutOff)
