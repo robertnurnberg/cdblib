@@ -53,7 +53,7 @@ class data:
             ply_count = sorted(self.plies.items(), key=lambda x: x[0])
             print(", ".join([f"{ply}: {frequency}" for ply, frequency in ply_count]))
 
-    def create_evalgraph(self, bucketSize=10, cutOff=200, absEval=False):
+    def create_evalgraph(self, bucketSize=10, cutOff=200, absEval=False, density=True):
         evals = Counter()
 
         for e, freq in self.evals.items():
@@ -67,7 +67,7 @@ class data:
             weights=evals.values(),
             range=(rangeMin, rangeMax),
             bins=(rangeMax - rangeMin) // bucketSize,
-            density=True,
+            density=density,
             alpha=0.5,
             color="blue",
             edgecolor="black",
@@ -85,7 +85,7 @@ class data:
         plt.savefig(pgnname, dpi=300)
         print(f"Saved eval distribution plot in file {pgnname}.")
 
-    def create_plygraph(self, bucketSize=2, cutOff=200):
+    def create_plygraph(self, bucketSize=2, cutOff=200, density=True):
         plies = Counter()
         for p, freq in self.plies.items():
             plies[min(p, cutOff)] += freq
@@ -96,7 +96,7 @@ class data:
             weights=plies.values(),
             range=(rangeMin, rangeMax),
             bins=(rangeMax - rangeMin) // bucketSize,
-            density=True,
+            density=density,
             alpha=0.5,
             color="blue",
             edgecolor="black",
@@ -157,6 +157,12 @@ if __name__ == "__main__":
         default=60,
     )
     parser.add_argument(
+        "--density",
+        help="Plot density in histograms (or not).",
+        type=int,
+        default=1,
+    )
+    parser.add_argument(
         "--debug",
         action="store_true",
         help="Show frequency data on stdout.",
@@ -164,6 +170,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     d = data(args.filename, args.debug)
-    d.create_evalgraph(args.bucket, args.cutOff, args.absEval)
+    d.create_evalgraph(args.bucket, args.cutOff, args.absEval, args.density)
     if d.plies:
-        d.create_plygraph(args.plyBucket, args.plyCutOff)
+        d.create_plygraph(args.plyBucket, args.plyCutOff, args.density)
