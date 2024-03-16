@@ -15,7 +15,6 @@ def open_file(filename):
 
 
 def read_scores_from_epd_file(db, filename):
-    positions = set()
     with open_file(filename) as f:
         for line in f:
             fen = line2fen(line)
