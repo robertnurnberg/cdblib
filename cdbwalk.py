@@ -152,7 +152,7 @@ while True:  # if args.forever is true, run indefinitely; o/w stop after one run
                 if verbose:
                     print(f"{pc}men EGTB", end="")
             else:
-                r = cdb.queryall(board.epd())
+                r = cdb.showall(board.epd())
         if verbose >= 3:
             print("\n  URL:", url.replace(" ", "_"), end="")
         bt = 0
