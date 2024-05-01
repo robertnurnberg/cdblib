@@ -94,7 +94,7 @@ async def main():
     parser.add_argument(
         "--retainAll",
         action="store_true",
-        help="Store the full json data from cdb (by default only status, uci moves and their eval).",
+        help="Store the full json data from cdb (by default only uci moves and their scores).",
     )
     parser.add_argument(
         "--quiet",
