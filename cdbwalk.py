@@ -153,7 +153,7 @@ class cdbwalk:
                 if self.verbose:
                     retStr += f"{pc}men EGTB"
             else:
-                r = await self.cdb.queryall(board.epd())
+                r = await self.cdb.showall(board.epd())
         if self.verbose >= 3:
             retStr += f'\n  URL: {url.replace(" ", "_")}'
         bt = 0
