@@ -11,12 +11,13 @@ Provide a simple library with wrapper functions for the API of cdb. All the wrap
 
 ## Usage
 
-By way of example, six small application scripts are provided.
+By way of example, seven small application scripts are provided.
 
 * [`cdbwalk`](#cdbwalk) - walk through cdb towards the leafs, extending existing lines
 * [`pgn2cdb`](#pgn2cdb) - populate cdb with moves from games in a PGN, and monitoring their coverage on cdb
 * [`bulkqueue2cdb`](#bulkqueue2cdb) - bulk queue positions from files to cdb
 * [`fens2cdb`](#fens2cdb) - request evaluations from cdb for FENs stored in a file
+* [`cdb2bmepd`](#cdb2bmepd) - request (clear) best moves from cdb for FENs stored in a file
 * [`cdbpvpoll`](#cdbpvpoll) - monitor a position's PV on cdb over time
 * [`cdbbulkpv`](#cdbbulkpv) - bulk-request PVs from cdb for positions stored in a file
 
@@ -242,6 +243,40 @@ Done. Scored 6561 FENs in 142.6s.
 ```
 
 For help with very large source files, see also [Addons](addons/Readme.md).
+
+### `cdb2bmepd`
+
+A command line program to bulk-request (clear) best moves from cdb for all the FENs/EPDs stored within a file. 
+
+```
+usage: cdb2bmepd.py [-h] [--gap GAP] [--drawGap DRAWGAP] [--quiet] [-c CONCURRENCY] [-b BATCHSIZE] [-u USER] input [output]
+
+A simple script to request (clear) best moves from chessdb.cn for a list of FENs stored in a file. The script will output "{fen} bm {bm}; c0 {comment};" for every line containing a FEN with a clear best move on cdb. Lines beginning with "#" are ignored.
+
+positional arguments:
+  input                 source filename with FENs (w/ or w/o move counters)
+  output                optional destination filename (default: None)
+
+options:
+  -h, --help            show this help message and exit
+  --gap GAP             Necessary gap between best move and second best move. (default: 20)
+  --drawGap DRAWGAP     Necessary gap between 0cp best move and second best move. (Default: max(GAP // 2, 1)) (default: None)
+  --quiet               Suppress all unnecessary output to the screen. (default: False)
+  -c CONCURRENCY, --concurrency CONCURRENCY
+                        Maximum concurrency of requests to cdb. (default: 16)
+  -b BATCHSIZE, --batchSize BATCHSIZE
+                        Number of FENs processed in parallel. Small values guarantee more responsive output, large values give faster turnaround. (default: None)
+  -u USER, --user USER  Add this username to the http user-agent header. (default: None)
+``` 
+
+Sample usage and output:
+```
+> python cdb2bmepd.py -c 32 Grob_Test_Suite_2024-04-29.epd > Grob_Test_Suite_2024-04-29_bm.epd
+Read 47300 FENs from file Grob_Test_Suite_2024-04-29.epd.
+Started parsing the FENs with concurrency 32 ...
+Done. Processed 47300 FENs in 718.2s.
+Filtered 3627 positions with bm output.
+```
 
 ### `cdbpvpoll`
 
