@@ -6,7 +6,15 @@ import argparse, asyncio, sys, time, cdblib
 
 class fens2cdb:
     def __init__(
-        self, filename, output, shortFormat, quiet, enqueue, concurrency, user
+        self,
+        filename,
+        output,
+        shortFormat,
+        quiet,
+        enqueue,
+        concurrency,
+        user,
+        suppressErrors,
     ):
         self.input = filename
         self.lines = []
@@ -35,7 +43,7 @@ class fens2cdb:
         self.shortFormat = shortFormat
         self.enqueue = enqueue
         self.concurrency = concurrency
-        self.cdb = cdblib.cdbAPI(concurrency, user)
+        self.cdb = cdblib.cdbAPI(concurrency, user, not suppressErrors)
         self.unknown = cdblib.AtomicInteger()
 
     async def parse_all(self, batchSize=None):
@@ -159,6 +167,12 @@ async def main():
         "--user",
         help="Add this username to the http user-agent header.",
     )
+    parser.add_argument(
+        "-s",
+        "--suppressErrors",
+        action="store_true",
+        help="Suppress error messages from cdblib.",
+    )
     args = parser.parse_args()
 
     f2c = fens2cdb(
@@ -169,6 +183,7 @@ async def main():
         args.enqueue,
         args.concurrency,
         args.user,
+        args.suppressErrors,
     )
 
     await f2c.parse_all(args.batchSize)

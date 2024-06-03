@@ -45,10 +45,11 @@ class AtomicDict:
 
 
 class cdbAPI:
-    def __init__(self, concurrency, user=None):
+    def __init__(self, concurrency, user=None, showErrors=True):
         # use a session to keep alive the connection to the server
         self.session = requests.Session()
         self.user = "" if user is None else str(user)
+        self.showErrors = showErrors
         # a semaphore to limit the number of concurrent accesses to the API
         self.semaphoreAPI = asyncio.Semaphore(concurrency)
         # a thread pool to do some of the blocking IO
@@ -93,7 +94,7 @@ class cdbAPI:
                 # increase timeout after every attempt, up to a maximum
                 if timeout < 60:
                     timeout = min(timeout * 1.5, 60)
-                else:
+                elif self.showErrors:
                     print(
                         datetime.now().isoformat(),
                         " - failed to get reply for : ",

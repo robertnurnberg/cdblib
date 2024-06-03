@@ -7,8 +7,8 @@ import argparse, asyncio, logging, time, chess, chess.pgn, cdblib
 
 class dbcache:
     # local cache for cdbAPI responses that avoids duplicate queries to API
-    def __init__(self, concurrency, user=False):
-        self.cdbAPI = cdblib.cdbAPI(concurrency, user)
+    def __init__(self, concurrency, user=False, suppressErrors=False):
+        self.cdbAPI = cdblib.cdbAPI(concurrency, user, not suppressErrors)
         self.cache = cdblib.AtomicDict()
         self.req_received = cdblib.AtomicInteger()
         self.req_cached = cdblib.AtomicInteger()
@@ -34,7 +34,9 @@ class dbcache:
 
 
 class pgn2cdb:
-    def __init__(self, filename, verbose, depth, paint, concurrency, user):
+    def __init__(
+        self, filename, verbose, depth, paint, concurrency, user, suppressErrors
+    ):
         self.filename = filename
         self.verbose = verbose
         self.depth = depth
@@ -53,7 +55,7 @@ class pgn2cdb:
             self.gamelist.append(game)
         self.gn = len(self.gamelist)
         print(f"Read {self.gn} pgns from file {self.filename}.", flush=True)
-        self.db = dbcache(self.concurrency, user)
+        self.db = dbcache(self.concurrency, user, not suppressErrors)
         self.seen = cdblib.AtomicInteger()
         self.painted = cdblib.AtomicInteger()
 
@@ -233,6 +235,12 @@ async def main():
         "--user",
         help="Add this username to the http user-agent header.",
     )
+    parser.add_argument(
+        "-s",
+        "--suppressErrors",
+        action="store_true",
+        help="Suppress error messages from cdblib.",
+    )
     args = parser.parse_args()
     p2c = pgn2cdb(
         args.filename,
@@ -241,6 +249,7 @@ async def main():
         args.paint,
         args.concurrency,
         args.user,
+        args.suppressErrors,
     )
     await p2c.parse_all(args.batchSize)
 

@@ -5,7 +5,9 @@ import argparse, asyncio, sys, time, cdblib
 
 
 class cdb2bm:
-    def __init__(self, filename, output, gap, drawGap, quiet, concurrency, user):
+    def __init__(
+        self, filename, output, gap, drawGap, quiet, concurrency, user, suppressErrors
+    ):
         self.input = filename
         self.lines = []
         self.loaded = 0
@@ -33,7 +35,7 @@ class cdb2bm:
         self.gap = gap
         self.drawGap = drawGap
         self.concurrency = concurrency
-        self.cdb = cdblib.cdbAPI(concurrency, user)
+        self.cdb = cdblib.cdbAPI(concurrency, user, not suppressErrors)
         self.filtered = cdblib.AtomicInteger()
 
     def best_move(self, movelist):
@@ -148,6 +150,12 @@ async def main():
         "--user",
         help="Add this username to the http user-agent header.",
     )
+    parser.add_argument(
+        "-s",
+        "--suppressErrors",
+        action="store_true",
+        help="Suppress error messages from cdblib.",
+    )
     args = parser.parse_args()
 
     if args.drawGap is None:
@@ -161,6 +169,7 @@ async def main():
         args.quiet,
         args.concurrency,
         args.user,
+        args.suppressErrors,
     )
 
     await c2b.parse_all(args.batchSize)

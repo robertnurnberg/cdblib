@@ -32,9 +32,17 @@ async def main():
         "--user",
         help="Add this username to the http user-agent header.",
     )
+    parser.add_argument(
+        "-s",
+        "--suppressErrors",
+        action="store_true",
+        help="Suppress error messages from cdblib.",
+    )
     args = parser.parse_args()
 
-    cdb = cdblib.cdbAPI(concurrency=1, user=args.user)
+    cdb = cdblib.cdbAPI(
+        concurrency=1, user=args.user, showErrors=not args.suppressErrors
+    )
     q = await cdb.queryscore(args.epd)
     s = q.get("status")
     if s != "ok" and s != "unknown":

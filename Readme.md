@@ -35,7 +35,7 @@ git clone https://github.com/robertnurnberg/cdblib && pip install -r cdblib/requ
 A command line program to walk within the tree of cdb, starting either from a list of FENs or from the (opening) lines given in a PGN file, possibly extending each explored line within cdb by one ply.
 
 ```
-usage: cdbwalk.py [-h] [-v] [--moveTemp MOVETEMP] [--backtrack BACKTRACK] [--depthLimit DEPTHLIMIT] [--TBwalk] [-c CONCURRENCY] [-b BATCHSIZE] [-u USER] [--forever] filename
+usage: cdbwalk.py [-h] [-v] [--moveTemp MOVETEMP] [--backtrack BACKTRACK] [--depthLimit DEPTHLIMIT] [--TBwalk] [-c CONCURRENCY] [-b BATCHSIZE] [-u USER] [-s] [--forever] filename
 
 A script that walks within the chessdb.cn tree, starting from FENs or lines in a PGN file. Based on the given parameters, the script selects a move in each node, walking towards the leafs. Once an unknown position is reached, it is queued for analysis and the walk terminates.
 
@@ -56,6 +56,7 @@ options:
   -b BATCHSIZE, --batchSize BATCHSIZE
                         Number of positions processed in parallel. Small values guarantee more responsive output, large values give faster turnaround. (default: None)
   -u USER, --user USER  Add this username to the http user-agent header. (default: None)
+  -s, --suppressErrors  Suppress error messages from cdblib. (default: False)
   --forever             Run the script in an infinite loop. (default: False)
 ```
 
@@ -81,7 +82,7 @@ Sun 23 Jul 14:13:42 CEST 2023
 A command line program to populate cdb with moves from games stored in a PGN file, up to a desired depth. The script also provides information about the existing coverage of the lines on cdb.
 
 ```
-usage: pgn2cdb.py [-h] [-v] [-d DEPTH] [-p PAINT] [-c CONCURRENCY] [-b BATCHSIZE] [-u USER] filename
+usage: pgn2cdb.py [-h] [-v] [-d DEPTH] [-p PAINT] [-c CONCURRENCY] [-b BATCHSIZE] [-u USER] [-s] filename
 
 A simple script to pass pgns to chessdb.cn.
 
@@ -100,6 +101,7 @@ options:
   -b BATCHSIZE, --batchSize BATCHSIZE
                         Number of FENs processed in parallel. Small values guarantee more responsive output, large values give faster turnaround. (default: None)
   -u USER, --user USER  Add this username to the http user-agent header. (default: None)
+  -s, --suppressErrors  Suppress error messages from cdblib. (default: False)
 ``` 
 
 Sample usage and output:
@@ -177,7 +179,7 @@ Sat  5 Aug 23:11:51 CEST 2023
 A command line program to queue positions from games in PGN files, or from extended EPDs, to cdb. In contrast to `pgn2cdb`, this script provides no information about existing coverage on cdb, and simply queues _all_ positions of interest for analysis on cdb.
 
 ```
-usage: bulkqueue2cdb.py [-h] [-o OUTFILE] [-v] [--plyBegin PLYBEGIN] [--plyEnd PLYEND] [--pieceMin PIECEMIN] [--pieceMax PIECEMAX] [-c CONCURRENCY] [-u USER] filenames [filenames ...]
+usage: bulkqueue2cdb.py [-h] [-o OUTFILE] [-v] [--plyBegin PLYBEGIN] [--plyEnd PLYEND] [--pieceMin PIECEMIN] [--pieceMax PIECEMAX] [-c CONCURRENCY] [-u USER] [-s] filenames [filenames ...]
 
 A script to queue positions from files to chessdb.cn.
 
@@ -196,6 +198,7 @@ options:
   -c CONCURRENCY, --concurrency CONCURRENCY
                         Maximum concurrency of requests to cdb. (default: 16)
   -u USER, --user USER  Add this username to the http user-agent header. (default: None)
+  -s, --suppressErrors  Suppress error messages from cdblib. (default: False)
 ```
 
 Sample usage and output:
@@ -215,7 +218,7 @@ Done. Queued 66984 FENs from 9436 games in 791.6s.
 A command line program to bulk-request evaluations from cdb for all the FENs/EPDs stored within a file. 
 
 ```
-usage: fens2cdb.py [-h] [--shortFormat] [--quiet] [-e] [-c CONCURRENCY] [-b BATCHSIZE] [-u USER] input [output]
+usage: fens2cdb.py [-h] [--shortFormat] [--quiet] [-e] [-c CONCURRENCY] [-b BATCHSIZE] [-u USER] [-s] input [output]
 
 A simple script to request evals from chessdb.cn for a list of FENs stored in a file. The script will add "; EVALSTRING;" to every line containing a FEN. Lines beginning with "#" are ignored, as well as any text after the first four fields of each FEN.
 
@@ -233,6 +236,7 @@ options:
   -b BATCHSIZE, --batchSize BATCHSIZE
                         Number of FENs processed in parallel. Small values guarantee more responsive output, large values give faster turnaround. (default: None)
   -u USER, --user USER  Add this username to the http user-agent header. (default: None)
+  -s, --suppressErrors  Suppress error messages from cdblib. (default: False)
 ``` 
 
 Sample usage and output:
@@ -250,7 +254,7 @@ For help with very large source files, see also [Addons](addons/Readme.md).
 A command line program to bulk-request (clear) best moves from cdb for all the FENs/EPDs stored within a file. 
 
 ```
-usage: cdb2bmepd.py [-h] [--gap GAP] [--drawGap DRAWGAP] [--quiet] [-c CONCURRENCY] [-b BATCHSIZE] [-u USER] input [output]
+usage: cdb2bmepd.py [-h] [--gap GAP] [--drawGap DRAWGAP] [--quiet] [-c CONCURRENCY] [-b BATCHSIZE] [-u USER] [-s] input [output]
 
 A simple script to request (clear) best moves from chessdb.cn for a list of FENs stored in a file. The script will output "{fen} bm {bm}; c0 {comment};" for every line containing a FEN with a clear best move on cdb. Lines beginning with "#" are ignored.
 
@@ -268,6 +272,7 @@ options:
   -b BATCHSIZE, --batchSize BATCHSIZE
                         Number of FENs processed in parallel. Small values guarantee more responsive output, large values give faster turnaround. (default: None)
   -u USER, --user USER  Add this username to the http user-agent header. (default: None)
+  -s, --suppressErrors  Suppress error messages from cdblib. (default: False)
 ``` 
 
 Sample usage and output:
@@ -284,7 +289,7 @@ Filtered 3627 positions with bm output.
 A command line program to bulk-request json data from cdb for all the FENs/EPDs stored within a file. 
 
 ```
-usage: cdb2json.py [-h] [--retainAll] [--quiet] [-c CONCURRENCY] [-b BATCHSIZE] [-u USER] input [output]
+usage: cdb2json.py [-h] [--retainAll] [--quiet] [-c CONCURRENCY] [-b BATCHSIZE] [-u USER] [-s] input [output]
 
 A simple script to request json data from chessdb.cn for a list of FENs stored in a file.
 
@@ -301,6 +306,7 @@ options:
   -b BATCHSIZE, --batchSize BATCHSIZE
                         Number of FENs processed in parallel. Small values guarantee more responsive output, large values give faster turnaround. (default: None)
   -u USER, --user USER  Add this username to the http user-agent header. (default: None)
+  -s, --suppressErrors  Suppress error messages from cdblib. (default: False)
 ``` 
 
 Sample usage and output:
@@ -317,7 +323,7 @@ A command line program to monitor dynamic changes in a position's PV on cdb.
 
 ```
 usage: cdbpvpoll.py [-h] [--epd EPD] [--stable] [-sleep SLEEP] [--san] [-u USER]
-
+ [-s] 
 Monitor dynamic changes in a position's PV on chessdb.cn by polling it at regular intervals.
 
 options:
@@ -327,6 +333,7 @@ options:
   --sleep SLEEP         Time interval between polling requests in seconds. (default: 3600)
   --san                 Give PV in short algebraic notation (SAN). (default: False)
   -u USER, --user USER  Add this username to the http user-agent header. (default: None)
+  -s, --suppressErrors  Suppress error messages from cdblib. (default: False)
 ``` 
 
 Sample usage and output:
@@ -342,7 +349,7 @@ Sample usage and output:
 A command line program to bulk-request from cdb the PVs of all the positions stored in a file.
 
 ```
-usage: cdbbulkpv.py [-h] [--stable] [--san] [-c CONCURRENCY] [-b BATCHSIZE] [-u USER] [--forever] filename
+usage: cdbbulkpv.py [-h] [--stable] [--san] [-c CONCURRENCY] [-b BATCHSIZE] [-u USER] [-s] [--forever] filename
 
 A script that queries chessdb.cn for the PV of all positions in a file.
 
@@ -358,6 +365,7 @@ options:
   -b BATCHSIZE, --batchSize BATCHSIZE
                         Number of positions processed in parallel. Small values guarantee more responsive output, large values give faster turnaround. (default: None)
   -u USER, --user USER  Add this username to the http user-agent header. (default: None)
+  -s, --suppressErrors  Suppress error messages from cdblib. (default: False)
   --forever             Run the script in an infinite loop. (default: False)
 ```
 

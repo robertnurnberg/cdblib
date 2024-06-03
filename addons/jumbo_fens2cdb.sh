@@ -76,7 +76,7 @@ find ./ -type f -regex "./_tmp_jumbo_${namehash}_${size}_[0-9]*$" | sort | while
     if [ -e "$output_file" ] && [ "$(wc -l <"$output_file")" -eq "$size" ]; then
         echo "Chunk '$chunk' already processed completely. Skipping."
     else
-        python "$fens2cdb" -c "$concurrency" -ee "$chunk" >"$output_file"
+        python "$fens2cdb" -s -c "$concurrency" -ee "$chunk" >"$output_file"
     fi
 done
 
