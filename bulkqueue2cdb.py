@@ -36,7 +36,7 @@ class bulk2cdb:
                     f.write(fen + "\n")
             print(f"Wrote the unique positions to {args.outFile}.")
 
-        self.cdb = cdblib.cdbAPI(args.concurrency, args.user)
+        self.cdb = cdblib.cdbAPI(args.concurrency, args.user, not args.suppressErrors)
 
     def load_epds(self, filename):
         """returns a set of unique EPDs found in the given file"""
@@ -219,6 +219,12 @@ async def main():
         "-u",
         "--user",
         help="Add this username to the http user-agent header.",
+    )
+    parser.add_argument(
+        "-s",
+        "--suppressErrors",
+        action="store_true",
+        help="Suppress error messages from cdblib.",
     )
     args = parser.parse_args()
     p2c = bulk2cdb(args)

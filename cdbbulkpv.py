@@ -3,13 +3,13 @@ import chess, chess.pgn, cdblib
 
 
 class bulkpv:
-    def __init__(self, filename, stable, san, concurrency, user):
+    def __init__(self, filename, stable, san, concurrency, user, suppressErrors):
         self.filename = filename
         self.stable = stable
         self.isPGN = filename.endswith(".pgn") or filename.endswith(".pgn.gz")
         self.san = san if self.isPGN else False
         self.concurrency = concurrency
-        self.cdb = cdblib.cdbAPI(concurrency, user)
+        self.cdb = cdblib.cdbAPI(concurrency, user, not suppressErrors)
 
     def reload(self):
         self.metalist = []
@@ -123,12 +123,25 @@ async def main():
         help="Add this username to the http user-agent header.",
     )
     parser.add_argument(
+        "-s",
+        "--suppressErrors",
+        action="store_true",
+        help="Suppress error messages from cdblib.",
+    )
+    parser.add_argument(
         "--forever",
         action="store_true",
         help="Run the script in an infinite loop.",
     )
     args = parser.parse_args()
-    bpv = bulkpv(args.filename, args.stable, args.san, args.concurrency, args.user)
+    bpv = bulkpv(
+        args.filename,
+        args.stable,
+        args.san,
+        args.concurrency,
+        args.user,
+        args.suppressErrors,
+    )
     while True:  # if args.forever is true, run indefinitely; o/w stop after one run
         # re-reading the data in each loop allows updates to it in the background
         bpv.reload()

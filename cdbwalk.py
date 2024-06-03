@@ -37,6 +37,7 @@ class cdbwalk:
         TBwalk,
         concurrency,
         user,
+        suppressErrors,
     ):
         self.filename = filename
         self.isPGN = filename.endswith(".pgn") or filename.endswith(".pgn.gz")
@@ -46,7 +47,7 @@ class cdbwalk:
         self.depthLimit = depthLimit
         self.TBwalk = TBwalk
         self.concurrency = concurrency
-        self.cdb = cdblib.cdbAPI(concurrency, user)
+        self.cdb = cdblib.cdbAPI(concurrency, user, not suppressErrors)
 
     def reload(self):
         self.metalist = []
@@ -226,6 +227,12 @@ async def main():
         help="Add this username to the http user-agent header.",
     )
     parser.add_argument(
+        "-s",
+        "--suppressErrors",
+        action="store_true",
+        help="Suppress error messages from cdblib.",
+    )
+    parser.add_argument(
         "--forever",
         action="store_true",
         help="Run the script in an infinite loop.",
@@ -241,6 +248,7 @@ async def main():
         args.TBwalk,
         args.concurrency,
         args.user,
+        args.suppressErrors,
     )
     while True:  # if args.forever is true, run indefinitely; o/w stop after one run
         # re-reading the data in each loop allows updates to it in the background
