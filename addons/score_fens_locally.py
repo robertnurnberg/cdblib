@@ -59,7 +59,7 @@ def main():
         for line in f:
             fen = line2fen(line)
             line = line[:-1]  # remove the newline character
-            if fen not in db:
+            if fen not in db or "; cdb eval: " in line:
                 print(line)
             else:
                 score, ply = db[fen]
