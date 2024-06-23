@@ -114,7 +114,7 @@ class bulk2cdb:
             for ply, m in enumerate(moves):
                 if m is not None:
                     board.push(chess.Move.from_uci(m))
-                pc = 64 - str(board).count(".")  # piece count
+                pc = chess.popcount(board.occupied)  # piece count
                 if ply >= plyE or pc < self.pieceMin or not bool(board.legal_moves):
                     break
                 if (
