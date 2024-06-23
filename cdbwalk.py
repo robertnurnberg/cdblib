@@ -145,11 +145,7 @@ class cdbwalk:
                 r = {}
                 if self.verbose:
                     retStr += "1/2 - 1/2"
-            elif (
-                not self.TBwalk
-                and (pc := sum(p in "pnbrqk" for p in board.epd().lower().split()[0]))
-                <= 7
-            ):
+            elif (not self.TBwalk) and (pc := chess.popcount(board.occupied)) <= 7:
                 r = {}
                 if self.verbose:
                     retStr += f"{pc}men EGTB"

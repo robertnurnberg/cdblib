@@ -117,7 +117,7 @@ class pgn2cdb:
                 )
             board.push(move)
             plies += 1
-            pc = 64 - str(board).count(".")  # count pieces left on the board
+            pc = chess.popcount(board.occupied)  # piece count
             if plies >= self.depth or pc <= 7:
                 break  # cdb only stores pos if >= 8
         if self.verbose:
