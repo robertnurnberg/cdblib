@@ -168,7 +168,7 @@ async def main():
     parser.add_argument(
         "-c",
         "--concurrency",
-        help="Maximum concurrency of requests to cdb. Values > 1 meaningful only if QueryPV is True and MultiPV > 1.",
+        help="Maximum concurrency of requests to cdb. Values > 1 are meaningful only if QueryPV is True and MultiPV > 1.",
         type=int,
         default=8,
     )
