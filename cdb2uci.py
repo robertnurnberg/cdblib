@@ -1,6 +1,6 @@
 import argparse, asyncio, sys, time, cdblib, chess
 
-VERSION = "cdb2uci engine 0.3"
+VERSION = "cdb2uci engine 0.8"
 VALUE_MATE = 30000
 VALUE_TBWIN = 25000
 
@@ -19,11 +19,12 @@ class Engine:
             concurrency=args.concurrency, user=VERSION, showErrors=False
         )
         print(VERSION, flush=True)
+        self.enqueue = args.enqueue
         self.multipv = args.MultiPV
         self.querypv = args.QueryPV
         self.parse_epd("fen " + args.epd)
 
-    async def go(self):
+    async def get_movelist(self):
         r = await self.cdb.showall(self.board.epd())
         while "status" not in r or "moves" not in r or r["status"] != "ok":
             await asyncio.sleep(1)
@@ -43,8 +44,16 @@ class Engine:
             else:
                 score = None
             movelist.append([m["uci"], score])
-        if movelist[0][1] is None:
-            asyncio.ensure_future(self.cdb.queue(self.board.epd()))
+        return movelist
+
+    async def go(self, tb_with_cr):
+        movelist = await self.get_movelist()
+        while not tb_with_cr and self.enqueue and movelist[0][1] is None:
+            await self.cdb.queue(self.board.epd())
+            if self.enqueue < 2:
+                break
+            await asyncio.sleep(1)
+            movelist = await self.get_movelist()
         return movelist
 
     def parse_epd(self, epd):
@@ -71,10 +80,15 @@ class Engine:
                 print(
                     "option name MultiPV type spin default 1 min 1 max 256",
                 )
+                print(
+                    "option name Enqueue type spin default 0 min 0 max 2",
+                )
                 print("option name QueryPV type check default false\nuciok", flush=True)
             elif parts[0] == "setoption":
                 if len(parts) > 4 and parts[2] == "MultiPV":
                     self.multipv = int(parts[4])
+                if len(parts) > 4 and parts[2] == "Enqueue":
+                    self.enqueue = int(parts[4])
                 elif len(parts) > 4 and parts[2] == "QueryPV":
                     self.querypv = bool(parts[4].lower() == "true")
             elif parts[0] == "ucinewgame":
@@ -89,11 +103,12 @@ class Engine:
                 if not bool(self.board.legal_moves):
                     continue
                 tic = time.time()
-                r = await self.go()
-                if (
+                tb_with_cr = (
                     chess.popcount(self.board.occupied) <= 7
                     and self.board.castling_rights
-                ):
+                )
+                r = await self.go(tb_with_cr)
+                if tb_with_cr:
                     depth = nodes = 0
                     r[0][1] = "cp 0"
                     print(
@@ -142,6 +157,13 @@ async def main():
     parser = argparse.ArgumentParser(
         description="A simple UCI engine that only queries chessdb.cn. On successful probing of a position it will report depth 1, otherwise depth 0 and score cp 0. For go commands any limits (including time) will be ignored. The https://backscattering.de/chess/uci for details on the UCI protocol.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument(
+        "-e",
+        "--enqueue",
+        action="count",
+        default=0,
+        help="-e queues unknown positions once, -ee until an eval comes back. The latter may be desirable in engine vs engine matches.",
     )
     parser.add_argument(
         "-c",
