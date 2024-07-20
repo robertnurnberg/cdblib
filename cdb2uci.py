@@ -1,6 +1,6 @@
 import argparse, asyncio, sys, time, cdblib, chess
 
-VERSION = "cdb2uci engine 0.2"
+VERSION = "cdb2uci engine 0.3"
 VALUE_MATE = 30000
 VALUE_TBWIN = 25000
 
@@ -19,9 +19,9 @@ class Engine:
             concurrency=args.concurrency, user=VERSION, showErrors=False
         )
         print(VERSION, flush=True)
-        self.board = chess.Board()
         self.multipv = args.MultiPV
         self.querypv = args.QueryPV
+        self.parse_epd("fen " + args.epd)
 
     async def go(self):
         r = await self.cdb.showall(self.board.epd())
@@ -47,6 +47,18 @@ class Engine:
             asyncio.ensure_future(self.cdb.queue(self.board.epd()))
         return movelist
 
+    def parse_epd(self, epd):
+        parts = epd.split()
+        index = parts.index("moves") if "moves" in parts else 0
+        if parts[0] == "startpos":
+            fen = chess.STARTING_FEN
+        else:
+            fen_end = min(index if index else 7, 7)
+            fen = " ".join(parts[1:fen_end])
+        self.board = chess.Board(fen)
+        for m in parts[index + 1 :] if index else []:
+            self.board.push_uci(m)
+
     async def UCIinterface(self):
         for line in sys.stdin:
             parts = line.split()
@@ -70,15 +82,7 @@ class Engine:
             elif parts[0] == "isready":
                 print("readyok", flush=True)
             elif parts[0] == "position" and len(parts) > 1:
-                index = parts.index("moves") if "moves" in parts else 0
-                if parts[1] == "startpos":
-                    fen = chess.STARTING_FEN
-                else:
-                    fen_end = min(index if index else 8, 8)
-                    fen = " ".join(parts[2:fen_end])
-                self.board = chess.Board(fen)
-                for m in parts[index + 1 :] if index else []:
-                    self.board.push_uci(m)
+                self.parse_epd(" ".join(parts[1:]))
             elif parts[0] == "d":
                 print(self.board, flush=True)
             elif parts[0] == "go":
@@ -136,7 +140,7 @@ class Engine:
 
 async def main():
     parser = argparse.ArgumentParser(
-        description="A simple UCI engine that only queries chessdb.cn. On successful probing of a position it will report depth 1, otherwise depth 0 and score 0 cp. For go commands any limits (including time) will be ignored.",
+        description="A simple UCI engine that only queries chessdb.cn. On successful probing of a position it will report depth 1, otherwise depth 0 and score cp 0. For go commands any limits (including time) will be ignored. The https://backscattering.de/chess/uci for details on the UCI protocol.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
@@ -145,6 +149,11 @@ async def main():
         help="Maximum concurrency of requests to cdb. Values > 1 meaningful only if QueryPV is True and MultiPV > 1.",
         type=int,
         default=8,
+    )
+    parser.add_argument(
+        "--epd",
+        help="Extended EPD of board on engine start-up.",
+        default=chess.STARTING_FEN,
     )
     parser.add_argument(
         "--MultiPV",
