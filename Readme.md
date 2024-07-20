@@ -408,7 +408,7 @@ options:
   --QueryPV             Value of UCI option QueryPV on engine start-up. (default: False)
 ```
 
-In Linux the actual executable for the engine can then be created with e.g. `echo "python /path_to_cdblib/cdb2uci.py -c 1 -ee" > cdb2uci.sh && chmod +x cdb2uci.sh`.
+In Linux the actual executable for the engine can then be created with e.g. `echo "#! /bin/bash\n\npython /path_to_cdblib/cdb2uci.py -c 1 -ee" > cdb2uci.sh && chmod +x cdb2uci.sh`.
 
 
 ---
