@@ -394,13 +394,11 @@ A simple UCI engine wrapper to interact with cdb.
 ```
 usage: cdb2uci.py [-h] [-e] [-c CONCURRENCY] [--epd EPD] [--MultiPV MULTIPV] [--QueryPV]
 
-A simple UCI engine that only queries chessdb.cn. On successful probing of a position it will report depth 1, otherwise depth 0 and score cp 0.
-For go commands any limits (including time) will be ignored. The https://backscattering.de/chess/uci for details on the UCI protocol.
+A simple UCI engine that only queries chessdb.cn. On successful probing of a position it will report depth 1, otherwise depth 0 and score cp 0. For go commands any limits (including time) will be ignored. The https://backscattering.de/chess/uci for details on the UCI protocol.
 
 options:
   -h, --help            show this help message and exit
-  -e, --enqueue         -e queues unknown positions once, -ee until an eval comes back. The latter may be desirable in engine vs engine
-                        matches. (default: 0)
+  -e, --enqueue         -e queues unknown positions once, -ee until an eval comes back. The latter may be desirable in engine vs engine matches. (default: 0)
   -c CONCURRENCY, --concurrency CONCURRENCY
                         Maximum concurrency of requests to cdb. Values > 1 are meaningful only if QueryPV is True and MultiPV > 1. (default: 8)
   --epd EPD             Extended EPD of board on engine start-up. (default: rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1)
@@ -408,7 +406,7 @@ options:
   --QueryPV             Value of UCI option QueryPV on engine start-up. (default: False)
 ```
 
-In Linux the actual executable for the engine can be created with e.g. `echo "#! /bin/bash\n\npython /path_to_cdblib/cdb2uci.py -c 1 -ee" > cdb2uci.sh && chmod +x cdb2uci.sh`. Such an executable can then be used within Chess GUIs or in chess engine tournaments.
+In Linux the actual executable for the engine can be created with e.g. `echo "#! /bin/bash\n\npython /path_to_cdblib/cdb2uci.py -c 1 -ee" > cdb2uci.sh && chmod +x cdb2uci.sh`. Such an executable can then be used within chess GUIs or in chess engine tournaments.
 
 
 ---
