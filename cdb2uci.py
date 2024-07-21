@@ -1,6 +1,6 @@
 import argparse, asyncio, sys, time, cdblib, chess
 
-VERSION = "cdb2uci engine 0.81"
+VERSION = "cdb2uci engine 0.9"
 VALUE_MATE = 30000
 VALUE_TBWIN = 25000
 
@@ -24,8 +24,9 @@ class Engine:
         self.querypv = args.QueryPV
         self.debug = args.debug
         self.parse_epd("fen " + args.epd)
+        self.go_task = None
 
-    async def get_movelist(self):
+    async def query_cdb_for_movelist(self):
         if self.debug:
             print(f"info string Querying cdb for FEN {self.board.epd()}", flush=True)
         r = await self.cdb.showall(self.board.epd())
@@ -58,8 +59,8 @@ class Engine:
             movelist.append([m["uci"], score])
         return movelist
 
-    async def go(self, tb_with_cr):
-        movelist = await self.get_movelist()
+    async def get_movelist(self, tb_with_cr):
+        movelist = await self.query_cdb_for_movelist()
         while not tb_with_cr and self.enqueue and movelist[0][1] is None:
             if self.debug:
                 print(f"info string Queueing FEN {self.board.epd()}", flush=True)
@@ -67,8 +68,56 @@ class Engine:
             if self.enqueue < 2:
                 break
             await asyncio.sleep(1)
-            movelist = await self.get_movelist()
+            movelist = await self.query_cdb_for_movelist()
         return movelist
+
+    async def go(self):
+        tic = time.time()
+        tb_with_cr = (
+            chess.popcount(self.board.occupied) <= 7 and self.board.castling_rights
+        )
+        r = await self.get_movelist(tb_with_cr)
+        if tb_with_cr:
+            depth = nodes = 0
+            r[0][1] = "cp 0"
+            print(
+                f"info string Probed 7men position with castling rights: eval and bestmove will be unreliable."
+            )
+        else:
+            depth = int(r[0][1] is not None)
+            nodes = 0
+            for i in range(len(r)):
+                if r[i][1] is None:
+                    r[i][1] = "cp 0"
+                else:
+                    nodes += 1
+        elapsed = round(1000 * (time.time() - tic))
+        nps = round(1000 * nodes / max(1, elapsed))
+        multipv = min(self.multipv, max(nodes, 1))
+        tasks = []
+        for i in range(multipv):
+            print(
+                f"info depth {depth} seldepth {depth} multipv {i+1} score {r[i][1]} time {elapsed} nodes {nodes} nps {nps} pv {r[i][0]}",
+                flush=True,
+            )
+            if self.querypv:
+                self.board.push_uci(r[i][0])
+                tasks.append(
+                    asyncio.create_task(self.cdb.querypvstable(self.board.epd())),
+                )
+                self.board.pop()
+        for idx, query in enumerate(tasks):
+            q = await query
+            pv = cdblib.json2pv(q)
+            if pv:
+                nodes += pv.count(" ") + 1
+                elapsed = round(1000 * (time.time() - tic))
+                nps = round(1000 * nodes / max(1, elapsed))
+            print(
+                f"info depth {depth} seldepth {depth} multipv {idx+1} score {r[idx][1]} time {elapsed} nodes {nodes} nps {nps} pv {r[idx][0]} {pv}",
+                flush=True,
+            )
+        print(f"bestmove {r[0][0]}", flush=True)
 
     def parse_epd(self, epd):
         parts = epd.split()
@@ -83,12 +132,20 @@ class Engine:
             self.board.push_uci(m)
 
     async def UCIinterface(self):
-        for line in sys.stdin:
+        while True:
+            line = await asyncio.get_event_loop().run_in_executor(
+                None, sys.stdin.readline
+            )
             parts = line.split()
             if not parts:
                 continue
             if parts[0] == "quit":
+                if self.go_task:
+                    self.go_task.cancel()
                 break
+            elif parts[0] == "stop":
+                if self.go_task:
+                    self.go_task.cancel()
             elif parts[0] == "uci":
                 print(f"id name {VERSION}\nid author Noob, really.\n")
                 print(
@@ -117,57 +174,10 @@ class Engine:
             elif parts[0] == "d":
                 print(self.board, flush=True)
             elif parts[0] == "go":
-                if not bool(self.board.legal_moves):
-                    continue
-                tic = time.time()
-                tb_with_cr = (
-                    chess.popcount(self.board.occupied) <= 7
-                    and self.board.castling_rights
-                )
-                r = await self.go(tb_with_cr)
-                if tb_with_cr:
-                    depth = nodes = 0
-                    r[0][1] = "cp 0"
-                    print(
-                        f"info string Probed 7men position with castling rights: eval and bestmove will be unreliable."
-                    )
-                else:
-                    depth = int(r[0][1] is not None)
-                    nodes = 0
-                    for i in range(len(r)):
-                        if r[i][1] is None:
-                            r[i][1] = "cp 0"
-                        else:
-                            nodes += 1
-                elapsed = round(1000 * (time.time() - tic))
-                nps = round(1000 * nodes / max(1, elapsed))
-                multipv = min(self.multipv, max(nodes, 1))
-                tasks = []
-                for i in range(multipv):
-                    print(
-                        f"info depth {depth} seldepth {depth} multipv {i+1} score {r[i][1]} time {elapsed} nodes {nodes} nps {nps} pv {r[i][0]}",
-                        flush=True,
-                    )
-                    if self.querypv:
-                        self.board.push_uci(r[i][0])
-                        tasks.append(
-                            asyncio.create_task(
-                                self.cdb.querypvstable(self.board.epd())
-                            ),
-                        )
-                        self.board.pop()
-                for idx, query in enumerate(tasks):
-                    q = await query
-                    pv = cdblib.json2pv(q)
-                    if pv:
-                        nodes += pv.count(" ") + 1
-                        elapsed = round(1000 * (time.time() - tic))
-                        nps = round(1000 * nodes / max(1, elapsed))
-                    print(
-                        f"info depth {depth} seldepth {depth} multipv {idx+1} score {r[idx][1]} time {elapsed} nodes {nodes} nps {nps} pv {r[idx][0]} {pv}",
-                        flush=True,
-                    )
-                print(f"bestmove {r[0][0]}", flush=True)
+                if self.go_task:
+                    self.go_task.cancel()
+                if bool(self.board.legal_moves):
+                    self.go_task = asyncio.create_task(self.go())
 
 
 async def main():
