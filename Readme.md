@@ -404,6 +404,7 @@ options:
   --epd EPD             Extended EPD of board on engine start-up. (default: rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1)
   --MultiPV MULTIPV     Value of UCI option MultiPV on engine start-up. (default: 1)
   --QueryPV             Value of UCI option QueryPV on engine start-up. (default: False)
+  --debug               Run in debug mode (with additional output). (default: False)
 ```
 
 In Linux the actual executable for the engine can be created with e.g. `echo "#! /bin/bash\n\npython /path_to_cdblib/cdb2uci.py -c 1 -ee" > cdb2uci.sh && chmod +x cdb2uci.sh`. Such an executable can then be used within chess GUIs or in chess engine tournaments.

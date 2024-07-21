@@ -1,6 +1,6 @@
 import argparse, asyncio, sys, time, cdblib, chess
 
-VERSION = "cdb2uci engine 0.8"
+VERSION = "cdb2uci engine 0.81"
 VALUE_MATE = 30000
 VALUE_TBWIN = 25000
 
@@ -22,13 +22,25 @@ class Engine:
         self.enqueue = args.enqueue
         self.multipv = args.MultiPV
         self.querypv = args.QueryPV
+        self.debug = args.debug
         self.parse_epd("fen " + args.epd)
 
     async def get_movelist(self):
+        if self.debug:
+            print(f"info string Querying cdb for FEN {self.board.epd()}", flush=True)
         r = await self.cdb.showall(self.board.epd())
+        if self.debug:
+            print(f"info string Obtained result {r}", flush=True)
         while "status" not in r or "moves" not in r or r["status"] != "ok":
             await asyncio.sleep(1)
+            if self.debug:
+                print(
+                    f"info string Re-querying cdb for FEN {self.board.epd()}",
+                    flush=True,
+                )
             r = await self.cdb.showall(self.board.epd())
+            if self.debug:
+                print(f"info string Obtained result {r}", flush=True)
             print(
                 f"info string Got response with status {r.get('status')} from cdb.",
                 flush=True,
@@ -49,6 +61,8 @@ class Engine:
     async def go(self, tb_with_cr):
         movelist = await self.get_movelist()
         while not tb_with_cr and self.enqueue and movelist[0][1] is None:
+            if self.debug:
+                print(f"info string Queueing FEN {self.board.epd()}", flush=True)
             await self.cdb.queue(self.board.epd())
             if self.enqueue < 2:
                 break
@@ -84,6 +98,9 @@ class Engine:
                     "option name Enqueue type spin default 0 min 0 max 2",
                 )
                 print("option name QueryPV type check default false\nuciok", flush=True)
+            elif parts[0] == "debug":
+                if len(parts) > 1:
+                    self.debug = bool(parts[1].lower() == "on")
             elif parts[0] == "setoption":
                 if len(parts) > 4 and parts[2] == "MultiPV":
                     self.multipv = int(parts[4])
@@ -187,6 +204,11 @@ async def main():
         "--QueryPV",
         action="store_true",
         help="Value of UCI option QueryPV on engine start-up.",
+    )
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="Run in debug mode (with additional output).",
     )
     args = parser.parse_args()
 
