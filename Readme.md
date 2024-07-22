@@ -11,13 +11,14 @@ Provide a simple library with wrapper functions for the API of cdb. All the wrap
 
 ## Usage
 
-By way of example, five small application scripts are provided.
+By way of example, six small application scripts are provided.
 
 * [`cdbwalk`](#cdbwalk) - walk through cdb towards the leafs, extending existing lines
 * [`pgn2cdb`](#pgn2cdb) - populate cdb with moves from games in a PGN
 * [`fens2cdb`](#fens2cdb) - request evaluations from cdb for FENs stored in a file
 * [`cdbpvpoll`](#cdbpvpoll) - monitor a position's PV on cdb over time
 * [`cdbbulkpv`](#cdbbulkpv) - bulk-request PVs from cdb for positions stored in a file
+* [`cdb2uci`](#cdb2uci) - a simple UCI engine wrapper to interact with cdb
 
 ## Installation
 
@@ -242,6 +243,27 @@ Done processing TCEC_S24_sufi_book.pgn.
 > date
 Wed 23 Aug 11:18:55 CEST 2023
 ```
+
+### `cdb2uci`
+
+A simple UCI engine wrapper to interact with cdb.
+```
+usage: cdb2uci.py [-h] [-e] [--epd EPD] [--MultiPV MULTIPV] [--QueryPV] [--debug]
+
+A simple UCI engine that only queries chessdb.cn. On successful probing of a position it will report depth 1, otherwise depth 0 and score cp 0.
+For go commands any limits (including time) will be ignored. The https://backscattering.de/chess/uci for details on the UCI protocol.
+
+options:
+  -h, --help         show this help message and exit
+  -e, --enqueue      -e queues unknown positions once, -ee until an eval comes back. The latter may be desirable in engine vs engine matches. (default: 0)
+  --epd EPD          Extended EPD of board on engine start-up. (default: rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1)
+  --MultiPV MULTIPV  Value of UCI option MultiPV on engine start-up. (default: 1)
+  --QueryPV          Value of UCI option QueryPV on engine start-up. (default: False)
+  --debug            Run in debug mode (with additional output). (default: False)
+```
+
+In Linux the actual executable for the engine can be created with e.g. `echo "#! /bin/bash\n\npython /path_to_cdblib/cdb2uci.py -c 1 -ee" > cdb2uci.sh && chmod +x cdb2uci.sh`. Such an executable can then be used within chess GUIs or in chess engine tournaments.
+
 
 ---
 &nbsp;

@@ -8,10 +8,11 @@ from datetime import datetime
 
 
 class cdbAPI:
-    def __init__(self, user=None):
+    def __init__(self, user=None, showErrors=True):
         # use a session to keep alive the connection to the server
         self.session = requests.Session()
         self.user = "" if user is None else str(user)
+        self.showErrors = showErrors
 
     def __apicall(self, url, timeout):
         try:
@@ -41,7 +42,7 @@ class cdbAPI:
                 # increase timeout after every attempt, up to a maximum
                 if timeout < 60:
                     timeout = min(timeout * 1.5, 60)
-                else:
+                elif self.showErrors:
                     print(
                         datetime.now().isoformat(),
                         " - failed to get reply for : ",
