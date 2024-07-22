@@ -73,7 +73,9 @@ while True:  # if args.forever is true, run indefinitely; o/w stop after one run
         else:
             pv = cdblib.json2pv(r)
             line = epd if isPGN else metalist[i]
-            print(f"{line}{' ;' if line[-1] != ';' else ''} cdb eval: {score}; PV: {pv};")
+            print(
+                f"{line}{' ;' if line[-1] != ';' else ''} cdb eval: {score}; PV: {pv};"
+            )
     print(f"Done processing {args.filename}.", file=sys.stderr)
     if not args.forever:
         break
