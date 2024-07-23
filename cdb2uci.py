@@ -1,6 +1,6 @@
 import argparse, asyncio, sys, time, cdblib, chess
 
-VERSION = "cdb2uci engine 0.9"
+VERSION = "cdb2uci engine 0.91"
 VALUE_MATE = 30000
 VALUE_TBWIN = 25000
 
@@ -50,7 +50,7 @@ class Engine:
         for m in r["moves"]:
             score = m["score"]
             if type(score) == int:
-                if score > VALUE_TBWIN:
+                if abs(score) > VALUE_TBWIN:
                     score = f"mate {score2mate(score)}"
                 else:
                     score = f"cp {score}"
