@@ -1,6 +1,6 @@
 import argparse, asyncio, sys, time, cdblib, chess
 
-VERSION = "cdb2uci engine 0.91"
+VERSION = "cdb2uci engine 0.95"
 VALUE_MATE = 30000
 VALUE_TBWIN = 25000
 
@@ -47,16 +47,36 @@ class Engine:
                 flush=True,
             )
         movelist = []
+        can_claim_draw = False
         for m in r["moves"]:
-            score = m["score"]
-            if type(score) == int:
-                if abs(score) > VALUE_TBWIN:
-                    score = f"mate {score2mate(score)}"
-                else:
-                    score = f"cp {score}"
+            move, score = m["uci"], (m["score"] if type(m["score"]) == int else None)
+            if score and score > 0:
+                self.board.push_uci(move)
+                if (
+                    self.board.is_stalemate()
+                    or self.board.is_insufficient_material()
+                    or self.board.can_claim_draw()
+                ):
+                    if self.debug:
+                        print(
+                            f"info string After move {move} opponent can claim draw, so change score from {score} to 0.",
+                            flush=True,
+                        )
+                    can_claim_draw = True
+                    score = 0
+                self.board.pop()
+            movelist.append([move, score])
+        # if scores were changed, sort movelist stably, non-None scores first
+        if can_claim_draw:
+            movelist.sort(key=lambda m: (float("inf") if m[1] is None else -m[1]))
+        for m in movelist:
+            score = m[1]
+            if score is None:
+                continue
+            if abs(score) > VALUE_TBWIN:
+                m[1] = f"mate {score2mate(score)}"
             else:
-                score = None
-            movelist.append([m["uci"], score])
+                m[1] = f"cp {score}"
         return movelist
 
     async def get_movelist(self, tb_with_cr):
