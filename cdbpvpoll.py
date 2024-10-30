@@ -11,7 +11,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument(
     "--epd",
     help="FEN/EPD of the position to monitor",
-    default="rnbqkbnr/pppppppp/8/8/6P1/8/PPPPPP1P/RNBQKBNR b KQkq g3",
+    default="rnbqkbnr/pppppppp/8/8/6P1/8/PPPPPP1P/RNBQKBNR b KQkq -",
 )
 parser.add_argument(
     "--stable", action="store_true", help='pass "&stable=1" option to API'
