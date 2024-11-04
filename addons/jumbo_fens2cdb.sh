@@ -79,7 +79,7 @@ split -l "$size" -d -a "$num_digits" "$epdfile" "_tmp_jumbo_${namehash}_${size}_
 
 find ./ -type f -regex "./_tmp_jumbo_${namehash}_${size}_[0-9]*$" | sort $reverse_flag | while read -r chunk; do
     output_file="$chunk"_cdb.epd
-    if [ -e "$output_file" ] && [ "$(wc -l <"$output_file")" -eq "$size" ]; then
+    if [ -e "$output_file" ] && [ "$(wc -l <"$output_file")" -eq "$(wc -l <"$chunk")" ]; then
         echo "Chunk '$chunk' already processed completely. Skipping."
     else
         python "$fens2cdb" -s -c "$concurrency" -ee "$chunk" >"$output_file"
