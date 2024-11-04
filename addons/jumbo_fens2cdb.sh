@@ -10,6 +10,7 @@ default_concurrency=32
 default_size=100000
 concurrency=$default_concurrency
 size=$default_size
+reverse_flag=""
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -21,11 +22,16 @@ while [[ $# -gt 0 ]]; do
         size="$2"
         shift 2
         ;;
+    -r | --reverse)
+        reverse_flag="-r"
+        shift
+        ;;
     -h | --help)
         echo "Usage: $0 [OPTIONS] file.epd(.gz)"
         echo "Options:"
         echo "  -c, --concurrency CONCURRENCY   Set the concurrency level (default: $default_concurrency)"
-        echo "  -s, --size SIZE                 Set the size (default: $default_size)"
+        echo "  -s, --size SIZE                 Set the chunk size (default: $default_size)"
+        echo "  -r, --reverse                   Process the chunks in reverse order"
         echo
         echo "The script can be used for massive data uploads to chessdb.cn. It splits"
         echo "file.epd(.gz) into chunks of SIZE, then feeds them sequentially to cdb"
@@ -71,7 +77,7 @@ namehash=$(echo -n "$epdfile" | md5sum | cut -d ' ' -f 1)
 
 split -l "$size" -d -a "$num_digits" "$epdfile" "_tmp_jumbo_${namehash}_${size}_"
 
-find ./ -type f -regex "./_tmp_jumbo_${namehash}_${size}_[0-9]*$" | sort | while read -r chunk; do
+find ./ -type f -regex "./_tmp_jumbo_${namehash}_${size}_[0-9]*$" | sort $reverse_flag | while read -r chunk; do
     output_file="$chunk"_cdb.epd
     if [ -e "$output_file" ] && [ "$(wc -l <"$output_file")" -eq "$size" ]; then
         echo "Chunk '$chunk' already processed completely. Skipping."
