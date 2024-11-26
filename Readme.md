@@ -423,7 +423,14 @@ In Linux the actual executable for the engine can be created with e.g. `echo "#!
 * [robertnurnberg/cdbmatetrack](https://github.com/robertnurnberg/cdbmatetrack) - track cdb's progress on the problem suite from [matetrack](https://github.com/vondele/matetrack)
 * [robertnurnberg/caissatrack](https://github.com/robertnurnberg/caissatrack) - track cdb's evaluations of the 100k most popular positions in
 [Caissabase](http://www.caissabase.co.uk)
-* [robertnurnberg/uhotrack](https://github.com/robertnurnberg/uhotrack) - track cdb's evaluations of the positions in the UHO books from
-[sp-cc.de](https://www.sp-cc.de/uho_xxl_project.htm)
+* [robertnurnberg/uhotrack](https://github.com/robertnurnberg/uhotrack) - track cdb's evaluations of the positions in the UHO Lichess book from
+[official-stockfish/books](https://github.com/official-stockfish/books)
+* [robertnurnberg/chopstrack](https://github.com/robertnurnberg/chopstrack) - track cdb's evaluations of the positions in the CHOPS (Complex Human OPeningS) book
+
+### Repositories for offline access to cdb
+
+* [vondele/cdbdirect](https://github.com/vondele/cdbdirect) - directly probe a local copy of a snapshot of cdb
+* [vondele/cdbsubtree](https://github.com/vondele/cdbsubtree) - count the number of positions in a subtree of (a snapshot of) cdb
+* [vondele/cdbtreesearch](https://github.com/vondele/cdbtreesearch) - softmax and mini-max searches in (a snapshot of) cdb
 ---
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
