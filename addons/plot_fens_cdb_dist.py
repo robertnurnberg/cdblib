@@ -62,11 +62,16 @@ class data:
             evals[e] += freq
         rangeMin, rangeMax = min(evals.keys()), max(evals.keys())
         fig, ax = plt.subplots()
+        if bucketSize == 1:
+            bins = (rangeMax - rangeMin) + 1
+        else:
+            bins = (rangeMax - rangeMin) // bucketSize
+        bin_edges = [rangeMin + i * bucketSize for i in range(bins + 1)]
         ax.hist(
             evals.keys(),
             weights=evals.values(),
             range=(rangeMin, rangeMax),
-            bins=(rangeMax - rangeMin) // bucketSize,
+            bins=bin_edges,
             density=density,
             alpha=0.5,
             color="blue",
@@ -75,11 +80,12 @@ class data:
         fig.suptitle(
             f"Eval distribution for {self.filename}.",
         )
-        ax.set_title(
-            f"(Evals outside of [-{cutOff},{cutOff}] are included in the {'' if absEval else '+/-'}{cutOff} bucket{'' if absEval else 's'}.)",
-            fontsize=6,
-            family="monospace",
-        )
+        if min(self.evals.keys()) < -cutOff or max(self.evals.keys()) > cutOff:
+            ax.set_title(
+                f"(Evals outside of [-{cutOff},{cutOff}] are included in the {'' if absEval else '+/-'}{cutOff} bucket{'' if absEval else 's'}.)",
+                fontsize=6,
+                family="monospace",
+            )
         prefix, _, _ = self.filename.rpartition(".")
         pgnname = prefix + ".png"
         plt.savefig(pgnname, dpi=300)
@@ -91,11 +97,16 @@ class data:
             plies[min(p, cutOff)] += freq
         rangeMin, rangeMax = min(plies.keys()), max(plies.keys())
         fig, ax = plt.subplots()
+        if bucketSize == 1:
+            bins = (rangeMax - rangeMin) + 1
+        else:
+            bins = (rangeMax - rangeMin) // bucketSize
+        bin_edges = [rangeMin + i * bucketSize for i in range(bins + 1)]
         ax.hist(
             plies.keys(),
             weights=plies.values(),
             range=(rangeMin, rangeMax),
-            bins=(rangeMax - rangeMin) // bucketSize,
+            bins=bin_edges,
             density=density,
             alpha=0.5,
             color="blue",
@@ -104,11 +115,12 @@ class data:
         fig.suptitle(
             f"min_ply distribution for {self.filename}.",
         )
-        ax.set_title(
-            f"(Ply values > {cutOff} are included in the {cutOff} bucket.)",
-            fontsize=6,
-            family="monospace",
-        )
+        if max(self.plies.keys()) > cutOff:
+            ax.set_title(
+                f"(Ply values > {cutOff} are included in the {cutOff} bucket.)",
+                fontsize=6,
+                family="monospace",
+            )
         prefix, _, _ = self.filename.rpartition(".")
         pgnname = prefix + "_ply.png"
         plt.savefig(pgnname, dpi=300)
