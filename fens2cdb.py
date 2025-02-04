@@ -108,6 +108,8 @@ class fens2cdb:
                     score = cdblib.json2eval(r)
                     if timeout < 120:
                         timeout = min(timeout * 1.5, 120)
+        if score == "":
+            return line
         if self.shortFormat:
             if score == "mated":
                 score = "#"
@@ -115,7 +117,7 @@ class fens2cdb:
                 _, M, ply = score.partition("M")
                 if M == "" or not ply.isnumeric():
                     score = ""
-        elif score != "":
+        else:
             if "ply" in r:
                 score = f"{score}, ply: {r['ply']}"
             score = f"cdb eval: {score}"
