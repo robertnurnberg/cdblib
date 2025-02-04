@@ -52,8 +52,12 @@ for line in lines:
         fen = " ".join(line.split()[:4])  # cdb ignores move counters anyway
         r = cdb.queryscore(fen)
         score = cdblib.json2eval(r)
+        scored += 1
         if r.get("status") == "unknown" and score == "":
             unknown += 1
+        if score == "":
+            print(line, file=output)
+            continue
         if args.shortFormat:
             if score == "mated":
                 score = "#"
@@ -61,12 +65,11 @@ for line in lines:
                 _, M, ply = score.partition("M")
                 if M == "" or not ply.isnumeric():
                     score = ""
-        elif score != "":
+        else:
             if "ply" in r:
                 score = f"{score}, ply: {r['ply']}"
             score = f"cdb eval: {score}"
         print(f"{line}{' ;' if line[-1] != ';' else ''} {score};", file=output)
-        scored += 1
 
 if display:
     elapsed = time.time() - tic
