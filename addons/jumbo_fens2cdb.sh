@@ -11,6 +11,7 @@ default_size=100000
 concurrency=$default_concurrency
 size=$default_size
 reverse_flag=""
+ee_flag="-ee"
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -26,19 +27,25 @@ while [[ $# -gt 0 ]]; do
         reverse_flag="-r"
         shift
         ;;
+    -q | --quick)
+        ee_flag="-e"
+        shift
+        ;;
     -h | --help)
         echo "Usage: $0 [OPTIONS] file.epd(.gz)"
         echo "Options:"
         echo "  -c, --concurrency CONCURRENCY   Set the concurrency level (default: $default_concurrency)"
         echo "  -s, --size SIZE                 Set the chunk size (default: $default_size)"
         echo "  -r, --reverse                   Process the chunks in reverse order"
+        echo "  -q, --quick                     Queue each unknown position only once"
         echo
         echo "The script can be used for massive data uploads to chessdb.cn. It splits"
-        echo "file.epd(.gz) into chunks of SIZE, then feeds them sequentially to cdb"
-        echo "with CONCURRENCY, guaranteeing an evaluation for each position in the"
-        echo "file. Larger values of SIZE need more RAM but are faster, while smaller"
-        echo "values overall take more time but are more robust. E.g.\ restarting an"
-        echo "interrupted upload will continue from the last completed chunk."
+        echo "file.epd(.gz) into chunks of SIZE, then feeds them sequentially to cdb with"
+        echo "CONCURRENCY. By default each unknown position is enqueued to cdb until an"
+        echo "evaluation is received, thus guaranteeing an evaluation for each position in"
+        echo "the file upon completion. Larger values of SIZE need more RAM but are faster,"
+        echo "while smaller values overall take more time but are more robust. E.g."
+        echo "restarting an interrupted upload will continue from the last completed chunk."
         exit 0
         ;;
     *)
@@ -71,7 +78,7 @@ fi
 
 total_lines=$(wc -l <"$epdfile")
 size=$((size < total_lines ? size : total_lines))
-chunk_number=$((total_lines / size + 1))
+chunk_number=$((total_lines / size))
 num_digits=${#chunk_number}
 namehash=$(echo -n "$epdfile" | md5sum | cut -d ' ' -f 1)
 
@@ -82,7 +89,7 @@ find ./ -type f -regex "./_tmp_jumbo_${namehash}_${size}_[0-9]*$" | sort $revers
     if [ -e "$output_file" ] && [ "$(wc -l <"$output_file")" -eq "$(wc -l <"$chunk")" ]; then
         echo "Chunk '$chunk' already processed completely. Skipping."
     else
-        python "$fens2cdb" -s -c "$concurrency" -ee "$chunk" >"$output_file"
+        python "$fens2cdb" -s -c "$concurrency" "$ee_flag" "$chunk" >"$output_file"
     fi
 done
 
