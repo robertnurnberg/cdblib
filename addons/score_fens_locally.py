@@ -21,19 +21,18 @@ def read_scores_from_epd_file(db, filename):
             if fen == "":
                 continue
             line = line.strip()
-            _, _, cdb = line.partition(" cdb eval: ")
+            _, p, cdb = line.rpartition(" cdb eval: ")
             if "ply" in cdb:
                 score, _, ply = cdb.partition(", ply: ")
                 ply = int(ply[:-1])
             else:
-                score, _, _ = cdb.partition(";")
                 ply = None
-            if score == "":
+            if cdb == "":
                 continue
             if fen not in db or (
                 ply is not None and (db[fen][1] is None or db[fen][1] > ply)
             ):
-                db[fen] = (score, ply)
+                db[fen] = (p + cdb, ply)
 
 
 def main():
@@ -62,11 +61,8 @@ def main():
             if fen not in db or "; cdb eval: " in line:
                 print(line)
             else:
-                score, ply = db[fen]
-                if ply is not None:
-                    score = f"{score}, ply: {ply}"
-                score = f"cdb eval: {score}"
-                print(f"{line}{' ;' if line[-1] != ';' else ''} {score};")
+                cdb, _ = db[fen]
+                print(f"{line}{' ;' if line[-1] != ';' else ''}{cdb}")
 
 
 if __name__ == "__main__":
