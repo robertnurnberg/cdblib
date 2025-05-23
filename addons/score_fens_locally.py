@@ -22,6 +22,8 @@ def read_scores_from_epd_file(db, filename):
                 continue
             line = line.strip()
             _, p, cdb = line.rpartition(" cdb eval: ")
+            if not p:
+                continue
             if "ply" in cdb:
                 score, _, ply = cdb.partition(", ply: ")
                 ply = int(ply[:-1])
