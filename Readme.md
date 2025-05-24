@@ -423,6 +423,7 @@ In Linux the actual executable for the engine can be created with e.g. `echo "#!
 * [robertnurnberg/cdbmatetrack](https://github.com/robertnurnberg/cdbmatetrack) - track cdb's progress on the problem suite from [matetrack](https://github.com/vondele/matetrack)
 * [robertnurnberg/caissatrack](https://github.com/robertnurnberg/caissatrack) - track cdb's evaluations of the 100k most popular positions in
 [Caissabase](http://www.caissabase.co.uk)
+* [robertnurnberg/ecotrack](https://github.com/robertnurnberg/ecotrack) - track cdb's evaluations of the most common ECO openings
 * [robertnurnberg/uhotrack](https://github.com/robertnurnberg/uhotrack) - track cdb's evaluations of the positions in the UHO Lichess book from
 [official-stockfish/books](https://github.com/official-stockfish/books)
 * [robertnurnberg/chopstrack](https://github.com/robertnurnberg/chopstrack) - track cdb's evaluations of the positions in the CHOPS (Complex Human OPeningS) book
