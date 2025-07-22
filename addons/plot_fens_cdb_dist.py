@@ -13,17 +13,32 @@ class data:
         self.connected = 0
         self.evals = Counter()
         self.plies = Counter()
+        self.plydiffs = Counter()
         with open_file(filename) as f:
             for line in f:
                 line = line.strip()
                 if line:
                     if line.startswith("#"):  # ignore comments
                         continue
-                    _, _, cdb = line.partition(" cdb eval: ")
+                    fen, _, cdb = line.partition(" cdb eval: ")
                     if "ply" in cdb:
                         self.connected += 1
                         cdb, _, ply = cdb.partition(", ply: ")
-                        self.plies[int(ply[:-1])] += 1
+                        ply = int(ply[:-1])
+                        self.plies[ply] += 1
+                        fields = fen.split()
+                        if (
+                            len(fields) >= 6
+                            and fields[4].isdigit()
+                            and fields[5].isdigit()
+                        ):
+                            move = int(fields[5])
+                            p = (
+                                (move - 1) * 2
+                                if fields[1] == "w"
+                                else (move - 1) * 2 + 1
+                            )
+                            self.plydiffs[ply - p] += 1
                     else:
                         cdb, _, _ = cdb.partition(";")
                     if cdb.lstrip("-").isnumeric():
@@ -126,6 +141,32 @@ class data:
         plt.savefig(pgnname, dpi=300)
         print(f"Saved min_ply distribution plot in file {pgnname}.")
 
+    def create_plydiffgraph(self, bucketSize=2, density=True):
+        rangeMin, rangeMax = min(self.plydiffs.keys()), max(self.plydiffs.keys())
+        fig, ax = plt.subplots()
+        if bucketSize == 1:
+            bins = (rangeMax - rangeMin) + 1
+        else:
+            bins = (rangeMax - rangeMin) // bucketSize
+        bin_edges = [rangeMin + i * bucketSize for i in range(bins + 1)]
+        ax.hist(
+            self.plydiffs.keys(),
+            weights=self.plydiffs.values(),
+            range=(rangeMin, rangeMax),
+            bins=bin_edges,
+            density=density,
+            alpha=0.5,
+            color="blue",
+            edgecolor="black",
+        )
+        fig.suptitle(
+            f"(cdb min_ply - true ply) distribution for {self.filename}.",
+        )
+        prefix, _, _ = self.filename.rpartition(".")
+        pgnname = prefix + "_plydiff.png"
+        plt.savefig(pgnname, dpi=300)
+        print(f"Saved (cdb ply - true ply) distribution plot in file {pgnname}.")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -179,9 +220,22 @@ if __name__ == "__main__":
         action="store_true",
         help="Show frequency data on stdout.",
     )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="count",
+        default=0,
+        help="Increase output with -v, -vv, -vvv etc.",
+    )
     args = parser.parse_args()
 
     d = data(args.filename, args.debug)
     d.create_evalgraph(args.bucket, args.cutOff, args.absEval, args.density)
     if d.plies:
         d.create_plygraph(args.plyBucket, args.plyCutOff, args.density)
+    if d.plydiffs:
+        d.create_plydiffgraph(args.plyBucket, args.density)
+        if args.verbose:
+            print("cdb min_ply - true ply:")
+            for k in sorted(d.plydiffs.keys()):
+                print(f"{k}: {d.plydiffs[k]}")
