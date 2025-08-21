@@ -101,7 +101,8 @@ while [ $count_unknown -ne 0 ]; do
         if [ $count_scores -ne 0 ]; then
             tmpname="$(mktemp -q)"
             echo "Incorporating $count_scores scores from '$meta_unknown_cdb' into '$meta_all' ..."
-            python "$score_locally" "$meta_all" "$meta_unknown_cdb" >"$tmpname" && mv "$tmpname" "$meta_all"
+            python "$score_locally" "$meta_all" "$meta_unknown_cdb" >"$tmpname"
+            mv "$tmpname" "$meta_all"
         else
             echo "No new scores found in $meta_unknown_cdb. Retrying ..."
         fi
