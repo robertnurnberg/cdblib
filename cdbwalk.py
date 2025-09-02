@@ -165,6 +165,23 @@ class cdbwalk:
         return retStr
 
 
+def _parse_loops(value):
+    """
+    Argparse type for --loops. Accepts a positive integer or one of:
+    'forever' -> math.inf
+    """
+    v = str(value).strip().lower()
+    if v == "forever":
+        return math.inf
+    try:
+        n = int(v)
+    except ValueError:
+        raise argparse.ArgumentTypeError("--loops must be a positive integer or 'forever'")
+    if n <= 0:
+        raise argparse.ArgumentTypeError("--loops must be a positive integer or 'forever'")
+    return n
+
+
 async def main():
     parser = argparse.ArgumentParser(
         description="A script that walks within the chessdb.cn tree, starting from FENs or lines in a PGN file. Based on the given parameters, the script selects a move in each node, walking towards the leafs. Once an unknown position is reached, it is queued for analysis and the walk terminates.",
@@ -229,10 +246,12 @@ async def main():
         help="Suppress error messages from cdblib.",
     )
     parser.add_argument(
-        "--forever",
-        action="store_true",
-        help="Run the script in an infinite loop.",
-    )
+        "-l", 
+        "--loops",
+        type=_parse_loops,
+        default=1,
+        help="How many passes to run. Use 'forever' for unlimited.",
+)
     args = parser.parse_args()
 
     walk = cdbwalk(
@@ -246,12 +265,14 @@ async def main():
         args.user,
         args.suppressErrors,
     )
-    while True:  # if args.forever is true, run indefinitely; o/w stop after one run
+    loops = args.loops
+    count = 0
+    while True:
         # re-reading the data in each loop allows updates to it in the background
         walk.reload()
         await walk.parse_all(args.batchSize)
-
-        if not args.forever:
+        count += 1
+        if not math.isinf(loops) and count >= loops:
             break
 
 
