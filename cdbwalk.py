@@ -228,11 +228,19 @@ async def main():
         action="store_true",
         help="Suppress error messages from cdblib.",
     )
-    parser.add_argument(
+    lf = parser.add_mutually_exclusive_group(required=False)
+    lf.add_argument(
+        "-l", "--loops",
+        type=int,
+        help="Run the scripts for N passes.",
+        default=1
+    )
+    lf.add_argument(
         "--forever",
         action="store_true",
         help="Run the script in an infinite loop.",
     )
+
     args = parser.parse_args()
 
     walk = cdbwalk(
@@ -246,13 +254,17 @@ async def main():
         args.user,
         args.suppressErrors,
     )
-    while True:  # if args.forever is true, run indefinitely; o/w stop after one run
-        # re-reading the data in each loop allows updates to it in the background
-        walk.reload()
-        await walk.parse_all(args.batchSize)
+    if args.loops <= 0:
+        parser.error("--loops must be a positive integer")
 
-        if not args.forever:
-            break
+    if args.forever:
+        while True:
+            walk.reload()
+            await walk.parse_all(args.batchSize)
+    else:
+        for _ in range(args.loops):
+            walk.reload()
+            await walk.parse_all(args.batchSize)
 
 
 if __name__ == "__main__":

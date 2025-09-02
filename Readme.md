@@ -36,7 +36,7 @@ git clone https://github.com/robertnurnberg/cdblib && pip install -r cdblib/requ
 A command line program to walk within the tree of cdb, starting either from a list of FENs or from the (opening) lines given in a PGN file, possibly extending each explored line within cdb by one ply.
 
 ```
-usage: cdbwalk.py [-h] [-v] [--moveTemp MOVETEMP] [--backtrack BACKTRACK] [--depthLimit DEPTHLIMIT] [--TBwalk] [-c CONCURRENCY] [-b BATCHSIZE] [-u USER] [-s] [--forever] filename
+usage: cdbwalk.py [-h] [-v] [--moveTemp MOVETEMP] [--backtrack BACKTRACK] [--depthLimit DEPTHLIMIT] [--TBwalk] [-c CONCURRENCY] [-b BATCHSIZE] [-u USER] [-s] [-loops LOOPS | --forever] filename
 
 A script that walks within the chessdb.cn tree, starting from FENs or lines in a PGN file. Based on the given parameters, the script selects a move in each node, walking towards the leafs. Once an unknown position is reached, it is queued for analysis and the walk terminates.
 
@@ -58,7 +58,11 @@ options:
                         Number of positions processed in parallel. Small values guarantee more responsive output, large values give faster turnaround. (default: None)
   -u USER, --user USER  Add this username to the http user-agent header. (default: None)
   -s, --suppressErrors  Suppress error messages from cdblib. (default: False)
+  -l LOOPS, --loops LOOPS
+                        Run the scripts for N passes (default 1)
   --forever             Run the script in an infinite loop. (default: False)
+  
+Note: --loops and --forever are mutually exclusive.
 ```
 
 Sample usage and output:
