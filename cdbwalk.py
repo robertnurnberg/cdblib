@@ -1,7 +1,7 @@
 """
    Script that makes chessdb.cn explore certain openings or book exits.
 """
-import argparse, asyncio, math, random, time, chess, chess.pgn, cdblib
+import argparse, asyncio, itertools, math, random, time, chess, chess.pgn, cdblib
 
 
 def select_move(movelist, temp):
@@ -230,10 +230,7 @@ async def main():
     )
     lf = parser.add_mutually_exclusive_group(required=False)
     lf.add_argument(
-        "-l", "--loops",
-        type=int,
-        help="Run the scripts for N passes.",
-        default=1
+        "-l", "--loops", type=int, help="Run the script for N passes.", default=1
     )
     lf.add_argument(
         "--forever",
@@ -257,14 +254,10 @@ async def main():
     if args.loops <= 0:
         parser.error("--loops must be a positive integer")
 
-    if args.forever:
-        while True:
-            walk.reload()
-            await walk.parse_all(args.batchSize)
-    else:
-        for _ in range(args.loops):
-            walk.reload()
-            await walk.parse_all(args.batchSize)
+    for _ in itertools.count() if args.forever else range(args.loops):
+        # re-reading the data in each loop allows updates to it in the background
+        walk.reload()
+        await walk.parse_all(args.batchSize)
 
 
 if __name__ == "__main__":
