@@ -170,7 +170,11 @@ class pgn2cdb:
                 retStr += f"      plies = {plies}, cdbply = {cdbply}.\n"
         if new_fens and self.verbose >= 2:
             retStr += f"    Queued new positions until ply {plies+1}.\n"
-        if cdbply > -1 and plies < finalply:
+        if plies == 0 and cdbply == -1:
+            if self.verbose:
+                retStr += f"    Position at depth {plies} is not connected to the root"
+                retStr += ", no painting possible.\n" if self.paint else ".\n"
+        elif cdbply > -1 and plies < finalply:
             if self.verbose:
                 retStr += f"    Position at depth {plies} is connected to the root, with distance {cdbply}.\n"
             paintTo = min(self.paint, finalply)
