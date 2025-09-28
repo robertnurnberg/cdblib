@@ -85,7 +85,7 @@ class fens2cdb:
                         "They have now been queued for analysis.",
                         file=self.display,
                     )
-                else:
+                elif self.enqueue >= 2:
                     print(
                         "They have been queued for analysis, and their evals have been obtained.",
                         file=self.display,
@@ -95,12 +95,14 @@ class fens2cdb:
         if line.startswith("#"):  # ignore comments
             return line
         fen = " ".join(line.split()[:4])  # cdb ignores move counters anyway
-        r = await self.cdb.queryscore(fen)
+        r = await (
+            self.cdb.queryscore(fen) if self.enqueue >= 0 else self.cdb.readscore(fen)
+        )
         score = cdblib.json2eval(r)
         if r.get("status") == "unknown" and score == "":
             self.unknown.inc()
             timeout = 5
-            while self.enqueue and r["status"] == "unknown":
+            while self.enqueue >= 1 and r["status"] == "unknown":
                 r = await self.cdb.queue(fen)
                 if self.enqueue >= 2:
                     await asyncio.sleep(timeout)
@@ -175,7 +177,21 @@ async def main():
         action="store_true",
         help="Suppress error messages from cdblib.",
     )
+    parser.add_argument(
+        "--suppressLearning",
+        action="store_true",
+        help="Suppress cdb's automatic learning, hence read-only.",
+    )
     args = parser.parse_args()
+
+    if args.suppressLearning:
+        if args.enqueue:
+            print(
+                "Options --suppressLearning and --enqueue are exclusive.",
+                file=sys.stderr,
+            )
+            quit()
+        args.enqueue = -1
 
     f2c = fens2cdb(
         args.input,
