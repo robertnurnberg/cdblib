@@ -240,7 +240,7 @@ options:
                         Number of FENs processed in parallel. Small values guarantee more responsive output, large values give faster turnaround. (default: None)
   -u USER, --user USER  Add this username to the http user-agent header. (default: None)
   -s, --suppressErrors  Suppress error messages from cdblib. (default: False)
-  --suppressLearning    Suppress cdb's automatic learning, hence read-only. (default: False)
+  --suppressLearning    Suppress cdb's automatic learning. (default: False)
 ``` 
 
 Sample usage and output:

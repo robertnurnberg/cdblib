@@ -180,7 +180,7 @@ async def main():
     parser.add_argument(
         "--suppressLearning",
         action="store_true",
-        help="Suppress cdb's automatic learning, hence read-only.",
+        help="Suppress cdb's automatic learning.",
     )
     args = parser.parse_args()
 
