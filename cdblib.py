@@ -216,6 +216,10 @@ class cdbAPI:
         # returns dict with keys "status", "eval", "ply"
         return await self.generic_call("queryscore", fen)
 
+    async def readscore(self, fen):
+        # returns dict with keys "status", "eval", "ply"
+        return await self.generic_call("queryscore", fen, "&learn=0")
+
     async def querypv(self, fen):
         # returns dict with keys "status", "score", "depth", "pv", "pvSAN"
         # also triggers automatic back-propagation on cdb

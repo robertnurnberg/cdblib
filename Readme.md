@@ -221,7 +221,7 @@ Done. Queued 66984 FENs from 9436 games in 791.6s.
 A command line program to bulk-request evaluations from cdb for all the FENs/EPDs stored within a file. 
 
 ```
-usage: fens2cdb.py [-h] [--shortFormat] [--quiet] [-e] [-c CONCURRENCY] [-b BATCHSIZE] [-u USER] [-s] input [output]
+usage: fens2cdb.py [-h] [--shortFormat] [--quiet] [-e] [-c CONCURRENCY] [-b BATCHSIZE] [-u USER] [-s] [--suppressLearning] input [output]
 
 A simple script to request evals from chessdb.cn for a list of FENs stored in a file. The script will add "; EVALSTRING;" to every line containing a FEN. Lines beginning with "#" are ignored, as well as any text after the first four fields of each FEN.
 
@@ -240,6 +240,7 @@ options:
                         Number of FENs processed in parallel. Small values guarantee more responsive output, large values give faster turnaround. (default: None)
   -u USER, --user USER  Add this username to the http user-agent header. (default: None)
   -s, --suppressErrors  Suppress error messages from cdblib. (default: False)
+  --suppressLearning    Suppress cdb's automatic learning. (default: False)
 ``` 
 
 Sample usage and output:
