@@ -35,12 +35,21 @@ class dbcache:
 
 class pgn2cdb:
     def __init__(
-        self, filename, verbose, depth, paint, concurrency, user, suppressErrors
+        self,
+        filename,
+        verbose,
+        depth,
+        paint,
+        paintfromroot,
+        concurrency,
+        user,
+        suppressErrors,
     ):
         self.filename = filename
         self.verbose = verbose
         self.depth = depth
         self.paint = min(paint, depth)
+        self.paintfromroot = paintfromroot
         self.concurrency = concurrency
         pgn = cdblib.open_file_rt(self.filename)
         logging.getLogger("chess.pgn").setLevel(logging.CRITICAL)
@@ -151,7 +160,7 @@ class pgn2cdb:
                 retStr += f"    Position at depth {plies} is new to chessdb.cn.\n"
         new_fens, finalply, poppedMoves = False, plies, []
         # now walk back until we are connected to root
-        while plies and (cdbply == -1 or cdbply > plies):
+        while plies and (self.paintfromroot or cdbply == -1 or cdbply > plies):
             if r["status"] == "unknown":
                 if not new_fens and self.verbose >= 2:
                     retStr += f"    Queueing new positions from ply {plies} ... \n"
@@ -221,6 +230,11 @@ async def main():
         help="Depth in plies to try to extend the root's connected component to in each line.",
     )
     parser.add_argument(
+        "--paintFromRoot",
+        action="store_true",
+        help="Do the painting starting from root (avoids gaps and helps reduce min_ply).",
+    )
+    parser.add_argument(
         "-c",
         "--concurrency",
         help="Maximum concurrency of requests to cdb.",
@@ -251,6 +265,7 @@ async def main():
         args.verbose,
         args.depth,
         args.paint,
+        args.paintFromRoot,
         args.concurrency,
         args.user,
         args.suppressErrors,
