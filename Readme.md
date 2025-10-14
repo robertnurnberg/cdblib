@@ -85,7 +85,7 @@ Sun 23 Jul 14:13:42 CEST 2023
 A command line program to populate cdb with moves from games stored in a PGN file, up to a desired depth. The script also provides information about the existing coverage of the lines on cdb.
 
 ```
-usage: pgn2cdb.py [-h] [-v] [-d DEPTH] [-p PAINT] [-c CONCURRENCY] [-b BATCHSIZE] [-u USER] [-s] filename
+usage: pgn2cdb.py [-h] [-v] [-d DEPTH] [-p PAINT] [--paintFromRoot] [-c CONCURRENCY] [-b BATCHSIZE] [-u USER] [-s] filename
 
 A simple script to pass pgns to chessdb.cn.
 
@@ -99,6 +99,7 @@ options:
                         Number of plies to be added to chessdb.cn. (default: 30)
   -p PAINT, --paint PAINT
                         Depth in plies to try to extend the root's connected component to in each line. (default: 0)
+  --paintFromRoot       Do the painting starting from root (avoids gaps and helps reduce min_ply). (default: False)
   -c CONCURRENCY, --concurrency CONCURRENCY
                         Maximum concurrency of requests to cdb. (default: 16)
   -b BATCHSIZE, --batchSize BATCHSIZE
