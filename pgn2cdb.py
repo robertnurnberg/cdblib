@@ -109,7 +109,7 @@ class pgn2cdb:
                 )
             else:
                 print(
-                    f"All lines are already in starting position's connected component to depth {self.paint}."
+                    f"No painting needed/possible to extend starting position's connected component to depth {self.paint}."
                 )
 
     async def parse_single_line(self, lineIdx):
