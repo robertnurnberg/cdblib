@@ -431,6 +431,7 @@ In Linux the actual executable for the engine can be created with e.g. `echo "#!
 * [robertnurnberg/uhotrack](https://github.com/robertnurnberg/uhotrack) - track cdb's evaluations of the positions in the UHO Lichess book from
 [official-stockfish/books](https://github.com/official-stockfish/books)
 * [robertnurnberg/chopstrack](https://github.com/robertnurnberg/chopstrack) - track cdb's evaluations of the positions in the CHOPS (Complex Human OPeningS) book
+* [robertnurnberg/litrack](https://github.com/robertnurnberg/litrack) - track cdb's coverage of human games from the [Lichess open database](https://database.lichess.org)
 
 ### Repositories for offline access to cdb
 
