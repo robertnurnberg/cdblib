@@ -59,6 +59,9 @@ class pgn2cdb:
                 if isinstance(e, chess.IllegalMoveError):
                     move = str(e).split(":")[-1].strip()
                     print(f"Ignoring illegal move {move}")
+                    if self.verbose >= 2:
+                        print(f"----- affected game -------\n{game}")
+                        print(f"---------------------------")
                 else:
                     print(f'Encountered error "{e}". Will try to continue.')
             self.gamelist.append(game)
