@@ -135,8 +135,6 @@ class pgn2cdb:
         if self.verbose:
             retStr += f"  For pgn {lineIdx+1}/{self.gn} read {plies}/{self.depth} plies. Final position has {pc} pieces.\n"
 
-        if plies == 0:
-            return retStr  # some pgn's include empty games
         if board.is_checkmate() or board.is_stalemate() or pc <= 7:
             # mates, stalemates and 7men are not stored as nodes on chessdb.cn
             if self.verbose:
@@ -146,8 +144,12 @@ class pgn2cdb:
                     )
                 else:
                     retStr += f"    Position at depth {plies} is in 7men EGTB.\n"
+            if plies == 0:  # some pgn's include empty games
+                self.seen.inc()
+                return retStr
             board.pop()
             plies -= 1
+
         r = await self.db.get(board.epd())
         cdbply = r.get("ply", -1)
         if r["status"] == "ok":
@@ -163,7 +165,7 @@ class pgn2cdb:
                 retStr += f"    Position at depth {plies} is new to chessdb.cn.\n"
         new_fens, finalply, poppedMoves = False, plies, []
         # now walk back until we are connected to root
-        while plies and (self.paintfromroot or cdbply == -1 or cdbply > plies):
+        while plies > -1 and (self.paintfromroot or cdbply == -1 or cdbply > plies):
             if r["status"] == "unknown":
                 if not new_fens and self.verbose >= 2:
                     retStr += f"    Queueing new positions from ply {plies} ... \n"
@@ -173,15 +175,17 @@ class pgn2cdb:
                 if self.verbose >= 2:
                     retStr += f"    Queued new positions until ply {plies+1}.\n"
                 new_fens = False
-            move = board.pop()
-            poppedMoves.append(move)
-            r = await self.db.get(board.epd())
-            cdbply = r.get("ply", -1)
+            if plies > 0:
+                move = board.pop()
+                poppedMoves.append(move)
+                r = await self.db.get(board.epd())
+                cdbply = r.get("ply", -1)
             plies -= 1
             if self.verbose >= 4:
                 retStr += f"      plies = {plies}, cdbply = {cdbply}.\n"
         if new_fens and self.verbose >= 2:
             retStr += f"    Queued new positions until ply {plies+1}.\n"
+        plies = 0 if plies == -1 else plies
         if plies == 0 and cdbply == -1:
             if self.verbose:
                 retStr += f"    Position at depth {plies} is not connected to the root"
