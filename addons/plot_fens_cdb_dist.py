@@ -20,7 +20,7 @@ class data:
                 if line:
                     if line.startswith("#"):  # ignore comments
                         continue
-                    fen, _, cdb = line.partition(" cdb eval: ")
+                    fen, _, cdb = line.rpartition(" cdb eval: ")
                     if "ply" in cdb:
                         self.connected += 1
                         cdb, _, ply = cdb.partition(", ply: ")
