@@ -144,10 +144,10 @@ class pgn2cdb:
                     )
                 else:
                     retStr += f"    Position at depth {plies} is in 7men EGTB.\n"
-            board.pop()
             if plies == 0:  # some pgn's include empty games
                 self.seen.inc()
                 return retStr
+            board.pop()
             plies -= 1
 
         r = await self.db.get(board.epd())
