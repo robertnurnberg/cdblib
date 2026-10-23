@@ -183,7 +183,7 @@ Sat  5 Aug 23:11:51 CEST 2023
 A command line program to queue positions from games in PGN files, or from extended EPDs, to cdb. In contrast to `pgn2cdb`, this script provides no information about existing coverage on cdb, and simply queues _all_ positions of interest for analysis on cdb.
 
 ```
-usage: bulkqueue2cdb.py [-h] [-o OUTFILE] [-v] [--plyBegin PLYBEGIN] [--plyEnd PLYEND] [--pieceMin PIECEMIN] [--pieceMax PIECEMAX] [-c CONCURRENCY] [-u USER] [-s] filenames [filenames ...]
+usage: bulkqueue2cdb.py [-h] [-o OUTFILE] [-v] [--plyBegin PLYBEGIN] [--plyEnd PLYEND] [--pieceMin PIECEMIN] [--pieceMax PIECEMAX] [--moves] [-c CONCURRENCY] [-u USER] [-s] filenames [filenames ...]
 
 A script to queue positions from files to chessdb.cn.
 
@@ -199,6 +199,7 @@ options:
   --plyEnd PLYEND       Ply in each line until which positions will be queued to cdb. A value of None means including the final move of the line. (default: None)
   --pieceMin PIECEMIN   Only queue positions with at least this many pieces (cdb only stores positions with 8 pieces or more). (default: 8)
   --pieceMax PIECEMAX   Only queue positions with at most this many pieces. (default: 32)
+  --moves               Also queue all the children of each selected position. (default: False)
   -c CONCURRENCY, --concurrency CONCURRENCY
                         Maximum concurrency of requests to cdb. (default: 16)
   -u USER, --user USER  Add this username to the http user-agent header. (default: None)
