@@ -29,6 +29,12 @@ class bulk2cdb:
             f"Found {len(self.fens)} unique positions from {self.gameCount} games/lines in {len(args.filenames)} file(s) to send to cdb.",
             flush=True,
         )
+        if args.moves:
+            print(
+                f"Adding the children of the {len(self.fens)} positions ...", flush=True
+            )
+            self.add_children()
+            print(f"Done. Total unique positions: {len(self.fens)}.", flush=True)
         if args.outFile:
             fens = sorted(list(self.fens))
             with open(args.outFile, "w") as f:
@@ -131,6 +137,19 @@ class bulk2cdb:
         print(f"Loaded {len(epds)} unique EPDs from file {filename}.")
         return epds, len(epdlist)
 
+    def add_children(self):
+        """add all the children of the positions in self.fens to self.fens"""
+        children = set()
+        for fen in self.fens:
+            board = chess.Board(fen)
+            for move in list(board.legal_moves):
+                board.push(move)
+                pc = chess.popcount(board.occupied)
+                if self.pieceMin <= pc <= self.pieceMax and bool(board.legal_moves):
+                    children.add(board.epd())
+                board.pop()
+        self.fens.update(children)
+
     async def parse_all(self):
         print(
             f"Started parsing the FENs with concurrency {self.concurrency} ...",
@@ -207,6 +226,11 @@ async def main():
         help="Only queue positions with at most this many pieces.",
         type=int,
         default=32,
+    )
+    parser.add_argument(
+        "--moves",
+        action="store_true",
+        help="Also queue all the children of each selected position.",
     )
     parser.add_argument(
         "-c",
